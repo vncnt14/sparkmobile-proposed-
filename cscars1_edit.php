@@ -37,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     mysqli_stmt_close($stmt);
 
     // Send the JSON response back to the client
-    header("cscars1.php");
+    header("cars-profile.php");
     echo json_encode($response);
 }
 ?>

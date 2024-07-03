@@ -6,7 +6,7 @@ include('config.php');  // You'll need to replace this with your actual database
 
 // Redirect to the login page if the user is not logged in
 if (!isset($_SESSION['username'])) {
-    header("Location index.php");
+    header("Location: index.php");
     exit;
 }
 
@@ -41,6 +41,7 @@ mysqli_close($connection);
     />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link rel="stylesheet" href="css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <title>SPARK MOBILE</title>
     <link rel="icon" href="NEW SM LOGO.png" type="image/x-icon">
     <link rel="shortcut icon" href="NEW SM LOGO.png" type="image/x-icon">
@@ -120,13 +121,7 @@ img{
   margin: auto;
 
 }
-.img-account-profile{
-  width: 300px; /* Adjust the size as needed */
-  height: 150px;
-  object-fit: cover;
-  border-radius: 10%;
-}
-li:hover{
+li :hover{
   background: #072797;
 }
 .v-1{
@@ -158,8 +153,39 @@ li:hover{
 .nav-links ul li:hover a {
   color: white;
 }
-  </style>
+.section{
+  margin-left: 200px;
+}
+.text-box {
+  padding: 6px 6px 6px 230px;
+  background: orangered;
+  border-radius: 10px;
+  width: 50%;
+  height: auto;
+  position: absolute;
+  top: 20%;
+  left: 30%;
+}
+.text-box .btn {
+  background-color: #072797;
+  text-decoration: none;
+  width: 58%;
 
+}
+.container-vinfo{
+  margin-left: 20px
+}
+.v-3{
+  font-weight: bold;
+}
+.profile-picture {
+  width: 300px; /* Adjust the size as needed */
+  height: 150px;
+  object-fit: cover;
+  border-radius: 10%;
+}
+
+</style>
   <body>
     <!-- top navigation bar -->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
@@ -195,10 +221,11 @@ li:hover{
           <ul class="navbar-nav">
             <li class="nav-item dropdown">
               <li class="">
-                <a href="csnotification.html" class="nav-link px-3">
+                <a href="csnotification.php" class="nav-link px-3">
                   <span class="me-2"><i class="fas fa-bell"></i></i></span>
                 </a>
               </li>
+              
               <a
                 class="nav-link dropdown-toggle ms-2"
                 href="#"
@@ -239,39 +266,39 @@ li:hover{
               <div class="ms-3"id="dateTime"></div>
             </li>
             <li>
-                <li>
-                    <a href="csdashboard.php" class="nav-link px-3">
+                <li class="">
+                    <a href="profile.php" class="nav-link px-3">
                       <span class="me-2"><i class="fas fa-user"></i></i></span>
                       <span class="start">PROFILE</span>
                     </a>
-                  </li>
-                <li>
-              
+                </li>
+                
             <li class="v-1">
-              <a href="cscars1.php" class="nav-link px-3">
+              <a href="cars-profile.php" class="nav-link px-3">
                 <span class="me-2"><i class="fas fa-car"></i></i></span>
                 <span>MY CARS</span>
               </a>
             </li>
-            <li>
-            <a
-                class="nav-link px-3 sidebar-link"
-                data-bs-toggle="collapse"
-                href="#layouts">
-                <span class="me-2"><i class="fas fa-calendar"></i></i></span>
-                <span>BOOKINGS</span>
-                <span class="ms-auto">
-                  <span class="right-icon">
-                    <i class="bi bi-chevron-down"></i>
-                  </span>
-                </span>
-              </a>
+            <li class="">
+                  <a
+                    class="nav-link px-3 sidebar-link"
+                    data-bs-toggle="collapse"
+                    href="#layouts">
+                    <span class="me-2"><i class="fas fa-calendar"></i></i></span>
+                    <span>BOOKINGS</span>
+                    <span class="ms-auto">
+                      <span class="right-icon">
+                        <i class="bi bi-chevron-down"></i>
+                      </span>
+                    </span>
+                  </a>
+                </li>
               <div class="collapse" id="layouts">
                     <ul class="navbar-nav ps-3">
                       <li class="v-1">
                         <a href="setappoinment.php" class="nav-link px-3">
                         <span class="me-2"
-                          >Set Appointment</span>
+                            >Set Appointment</span>
                         </a>
                     </li>  
                     <li class="v-1">
@@ -313,46 +340,46 @@ li:hover{
                     </ul>
               </div>
             </li>
-            <li>
-              <a
-                class="nav-link px-3 sidebar-link"
-                data-bs-toggle="collapse"
-                href="#layouts2">
-                <span class="me-2"><i class="fas fa-money-bill"></i>
-                </i></i></span>
-                <span>PAYMENTS</span>
-                <span class="ms-auto">
-                  <span class="right-icon">
-                    <i class="bi bi-chevron-down"></i>
+            <li> 
+                <a
+                  class="nav-link px-3 sidebar-link"
+                  data-bs-toggle="collapse"
+                  href="#layouts2">
+                  <span class="me-2"><i class="fas fa-money-bill"></i>
+                  </i></i></span>
+                  <span>PAYMENTS</span>
+                  <span class="ms-auto">
+                    <span class="right-icon">
+                      <i class="bi bi-chevron-down"></i>
+                    </span>
                   </span>
-                </span>
-              </a>
-            </li> 
-              <div class="collapse" id="layouts2">
-                <ul class="navbar-nav ps-3">
-                  <li class="v-1">
-                    <a href="#" class="nav-link px-3">
-                      <span class="me-2"
-                      >Payment options</span>
-                    </a>
-                  </li>
-                  <li class="v-1">
-                    <a href="#" class="nav-link px-3">
-                      <span class="me-2"
-                      >Car wash invoice</span>
-                    </a>
-                  </li>
-                  <li class="v-1">
-                    <a href="#" class="nav-link px-3">
-                      <span class="me-2"
-                      >Payment History</span>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </li>
+                </a>
+                <div class="collapse" id="layouts2">
+                  <ul class="navbar-nav ps-3">
+                    <li class="v-1">
+                      <a href="#" class="nav-link px-3">
+                        <span class="me-2"
+                        >Payment options</span>
+                      </a>
+                    </li>
+                    <li class="v-1">
+                      <a href="#" class="nav-link px-3">
+                        <span class="me-2"
+                        >Car wash invoice</span>
+                      </a>
+                    </li>
+                    <li class="v-1">
+                      <a href="#" class="nav-link px-3">
+                        <span class="me-2"
+                        >Payment History</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </li>
             <li>
-                <a href="#" class="nav-link px-3">
+            <li>
+                <a href="csreward.html" class="nav-link px-3">
                   <span class="me-2"><i class="fas fa-medal"></i>
                   </i></span>
                   <span>REWARDS</span>
@@ -372,80 +399,53 @@ li:hover{
     </div>
     <!-- main content -->
     <main>
-      
-          <div class="personal-details">
-              <div class="container-fluid py-3">
-                  <div class="row">
-                      <h2 class="text-black">Vehicle Details</h2>
-                      <!-- Account page navigation-->
-                      <hr class="mt-0 mb-4">
-                      <div class="row">
-                         
-                          <!-- Label Dropdown -->
-                          <div class="col-md-12 mb-4 text-dark">
-                              <table class=" table table-bordered border-gray">
-                                  <thead class="v-2 text-light">
-                                      <tr>
-                                          <th scope="col">Label</th>
-                                          <th scope="col">Profile</th>
-                                          <th scope="col">Plate Number</th>
-                                          <th scope="col">Chassis Number</th>
-                                          <th scope="col">Engine Number</th>
-                                          <th scope="col">Brand</th>
-                                          <th scope="col">Model</th>
-                                          <th scope="col">Color</th>
-                                          
-                                        <th scope="col-md-2">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                  <!-- Inside the <tbody> section -->
-                                  <?php
-                                    if ($result) {
-                                        foreach ($result as $row) {
-                                            echo '<tr>';
-                                            echo '<td>' . (isset($row['label']) ? $row['label'] : 'label') . '</td>';
-                                            echo '<td><img src="' . (isset($row['profile']) ? $row['profile'] : 'profile') . '" alt="Profile Image" style="width: 100px; height: auto;"></td>';
-                                            echo '<td>' . (isset($row['platenumber']) ? $row['platenumber'] : 'N/A') . '</td>';
-                                            echo '<td>' . (isset($row['chassisnumber']) ? $row['chassisnumber'] : 'N/A') . '</td>';
-                                            echo '<td>' . (isset($row['enginenumber']) ? $row['enginenumber'] : 'N/A') . '</td>';
-                                            echo '<td>' . (isset($row['brand']) ? $row['brand'] : 'brand') . '</td>';
-                                            echo '<td>' . (isset($row['model']) ? $row['model'] : 'model') . '</td>';
-                                            echo '<td>' . (isset($row['color']) ? $row['color'] : 'color') . '</td>';
-                                            // Displaying status as a button
-                                            echo '<td><a href="cscars2.php?vehicle_id=' . (isset($row['vehicle_id']) ? $row['vehicle_id'] : '') . '" class="btn btn-primary">Edit</a></td>';
-                                            echo '</tr>';
-                                        }
-                                    } else {
-                                        echo '<tr><td colspan="9">Error: ' . mysqli_error($connection) . '</td></tr>';
-                                    }
-                                  ?>
+    <div class="container-vinfo text-dark me-4">
+    <div class="container mt-3">
+        <div class="d-flex align-items-center">
+            <h4 class="mb-0">MY GARAGE</h4>
+            <a href="cars-register.php" class="btn btn-primary ml-auto">Add Vehicles</a>
+        </div>
+    </div>
+    <div class="v-2 card-header mt-2">
+            <div class="row row-cols-1 row-cols-md-1 g-4">
+            <?php
+              // Assuming $result contains the vehicles associated with the user
+              if ($result) {
+                  $count = mysqli_num_rows($result);
+                  $colClass = $count > 1 ? 'col-md-6' : 'offset-md-3 col-md-6'; // Determine column class based on the number of cars
 
-
-
-                                </tbody>
-                            </table>
-                            <div class="offset-md-6">
-                              <a href="cscar_register.php"><button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal" data-bs-target="#editModal">Add Vehicles</button></a>
-                            </div>
-                         </div>
-                    </div>
-                </div>
+                  foreach ($result as $row) {
+                      echo '<div class="' . $colClass . '">'; // Apply column class
+                      echo '<div class="card mb-2">';
+                      
+                      // Profile picture section
+                      
+                      echo '<div class="card-header v-1 text-light">';
+                      echo '<h5 class="card-title">' . (isset($row['label']) ? $row['label'] : 'label') . '</h5>';
+                      echo '</div>';
+                      echo '<div class="card-body container-fluid">';
+                      echo '<img src="' . (isset($row['profile']) ? $row['profile'] : 'N/A') . '" alt="Profile Picture" class="card-img-top profile-picture container-fluid">';
+                      echo '<p class="card-text mt-3"><strong>Plate Number:</strong> ' . (isset($row['platenumber']) ? $row['platenumber'] : 'N/A') . '</p>';
+                      echo '<p class="card-text"><strong>Brand:</strong> ' . (isset($row['brand']) ? $row['brand'] : 'N/A') . '</p>';
+                      echo '<p class="card-text"><strong>Model:</strong> ' . (isset($row['model']) ? $row['model'] : 'N/A') . '</p>';
+                      echo '<p class="card-text"><strong>Color:</strong> ' . (isset($row['color']) ? $row['color'] : 'N/A') . '</p>';
+                      // Add other card details as needed
+                      echo '<a href="cars-profile-info.php?vehicle_id=' . (isset($row['vehicle_id']) ? $row['vehicle_id'] : '') . '" class="btn btn-primary">Edit Vehicle</a>';
+                      echo '</div>';
+                      echo '</div>';
+                      echo '</div>';
+                  }
+              } else {
+                  echo '<p class="text-danger">Error: ' . mysqli_error($connection) . '</p>';
+              }
+              ?>
             </div>
         </div>
+    </div>
 
-</main>
-                      <script>
-                        function submitForm() {
-                        // Get the form element
-                        const form = document.getElementById('editVehicleForm');
 
-                        // Submit the form
-                        form.submit();
-                        }
-                      </script>
-      <script>
-                      
+    <!-- Custom JavaScript to display the range value -->
+    <script>
         function updateDateTime() {
             // Get the current date and time
             var currentDateTime = new Date();
@@ -463,7 +463,7 @@ li:hover{
 
         // Initial call to display date and time immediately
         updateDateTime();
-      </script>
+    </script>
 
     <script src="./js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
@@ -471,5 +471,8 @@ li:hover{
     <script src="./js/jquery.dataTables.min.js"></script>
     <script src="./js/dataTables.bootstrap5.min.js"></script>
     <script src="./js/script.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
   </body>
 </html>

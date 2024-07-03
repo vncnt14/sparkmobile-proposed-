@@ -267,14 +267,14 @@ li :hover{
             </li>
             <li>
                 <li class="">
-                    <a href="csdashboard.php" class="nav-link px-3">
+                    <a href="profile.php" class="nav-link px-3">
                       <span class="me-2"><i class="fas fa-user"></i></i></span>
                       <span class="start">PROFILE</span>
                     </a>
                 </li>
                 
             <li>
-              <a href="cscars1.php" class="nav-link px-3">
+              <a href="cars-profile.php" class="nav-link px-3">
                 <span class="me-2"><i class="fas fa-car"></i></i></span>
                 <span>MY CARS</span>
               </a>

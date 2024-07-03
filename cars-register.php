@@ -228,7 +228,7 @@ $userData = mysqli_fetch_assoc($result);
         </li>
 
         <li class="v-1">
-          <a href="cscars1.php" class="nav-link px-3">
+          <a href="cars-profile.php" class="nav-link px-3">
             <span class="me-2"><i class="fas fa-car"></i></i></span>
             <span>MY CARS</span>
           </a>
@@ -338,7 +338,7 @@ $userData = mysqli_fetch_assoc($result);
     <div class="personal-details">
       <div class="container-fluid py-3">
         <div class="row">
-          <h2 class="text-black">Vehicle Details</h2>
+          <h2 class="text-black">Add Vehicle Details</h2>
           <!-- Account page navigation-->
           <hr class="mt-0 mb-4">
           <form action="cscar_create.php" method="POST" enctype="multipart/form-data">
