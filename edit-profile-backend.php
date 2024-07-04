@@ -1,49 +1,36 @@
 <?php
-// edit_vehicle.php
-
 session_start();
-if (!isset($_SESSION['username'])) {
-    header("Location: index.php");
-    exit;
-}
+include('config.php');
 
-require_once "config.php";
 
-// Check if the request method is POST
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    // Validate and sanitize the input data
-    $id = $_POST['edit_id'] ?? '';
-    $firstname = $_POST['edit_firstname'] ?? '';
-    $lastname = $_POST['edit_lastname'] ?? '';
-    $phonenumber = $_POST['edit_contact'] ?? '';
-    $completeaddress = $_POST['edit_completeadd'] ?? '';
-    $emailaddress = $_POST['edit_email'] ?? '';
-    $username = $_POST['edit_username'] ?? '';
-    $password = $_POST['edit_password'] ?? '';
 
-    // Perform additional validation as needed (e.g., checking if required fields are not empty)
+    // Retrieve and sanitize form data
+    $user_id = $_POST['user_id'];
+	$firstname = $_POST['firstname'];
+	$lastname = $_POST['lastname'];
+	$contact = $_POST['contact'];
+	$street_address = $_POST['street_address'];
+	$email = $_POST['email'];
+	$username = $_POST['username'];
+	$password = $_POST['password'];
+    $gender = $_POST['gender'];
+    $role = $_POST['role'];
+    $optional_address = $_POST['optional_address'];
+    $barangay = $_POST['barangay'];
+    $city = $_POST['city'];
+    $province = $_POST['province'];
 
-    // Prepare and execute the UPDATE query using parameterized statements
-    $query = "UPDATE carowners SET firstname = ?, lastname = ?, contact= ?, completeadd = ?, email = ?, username = ?, password = ? WHERE id = ?";
-    $stmt = mysqli_prepare($connection, $query);
-    mysqli_stmt_bind_param($stmt, "sssssssi", $firstname, $lastname, $contact, $completeadd, $email, $username, $password,  $userID);
-
-    $response = array();
-
-    if (mysqli_stmt_execute($stmt)) {
-        // Update successful
-        $response['success'] = true;
-    } else {
-        // Update failed
-        $response['success'] = false;
-        $response['message'] = "Error: " . mysqli_error($connection);
-    }
-
-    // Close the statement
-    mysqli_stmt_close($stmt);
-
-    // Send the JSON response back to the client
-    header("Content-Type: application/json");
-    echo json_encode($response);
+    // Use prepared statements to prevent SQL injection
+    $sql = "UPDATE users SET firstname='$firstname', lastname='$lastname', contact='$contact',street_address='$street_address', email='$email', username='$username', password='$password', gender='$gender', role='$role', optional_address='$optional_address', barangay='$barangay', city='$city', province='$province' WHERE user_id = '$user_id'";
+	if(mysqli_query($connection, $sql)){
+	echo '<script language="javascript">';
+	echo 'alert("Profile successfully updated!");';
+	echo 'window.location="profile.php";';
+	echo'</script>';	
+} else {
+	echo'<script language="javascript">';
+	echo'alert("Error Updating!");';
+	echo'window.location="cars-profile.php";';
+	echo '</script>';
 }
 ?>

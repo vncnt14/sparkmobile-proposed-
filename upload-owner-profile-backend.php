@@ -19,7 +19,7 @@
             if (!$update = mysqli_query($connection, "UPDATE users SET profile = '$profile' WHERE user_id='$user_id'")) {
                 echo mysqli_error($connection);
             } else {
-                header("location: edit-profile.php");
+                header("location: owner-edit-profile.php");
                 exit();
             }
         }

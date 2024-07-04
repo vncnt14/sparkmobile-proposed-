@@ -5,27 +5,24 @@ session_start();
 include('config.php');  // You'll need to replace this with your actual database connection code
 
 // Redirect to the login page if the user is not logged in
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['username'])) {
   header("Location index.php");
   exit;
 }
 
 // Fetch user information based on ID
-$userID = $_SESSION['user_id'];
-$vehicle_id = $_GET['vehicle_id'];
+$userID = $_SESSION['user_id']; // Assuming you have a user ID stored in the session
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
-$query = "SELECT * FROM vehicles WHERE vehicle_id = '$vehicle_id'";
+$query = "SELECT * FROM users WHERE user_id = '$userID'";
 // Execute the query and fetch the user data
 $result = mysqli_query($connection, $query);
-$vehicleData = mysqli_fetch_assoc($result);
-
+$userData = mysqli_fetch_assoc($result);
 
 // Close the database connection
 mysqli_close($connection);
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -129,15 +126,14 @@ mysqli_close($connection);
     border-radius: 50px;
     display: block;
     margin: auto;
-
   }
 
   .img-account-profile {
-    width: 300px;
-    /* Adjust the size as needed */
-    height: 150px;
-    object-fit: cover;
-    border-radius: 10%;
+    width: 80%;
+    height: auto;
+    border-radius: 50%;
+    display: block;
+    margin: auto;
   }
 
   li:hover {
@@ -177,6 +173,14 @@ mysqli_close($connection);
   .nav-links ul li:hover a {
     color: white;
   }
+
+  .img-account-profile {
+    width: 200px;
+    /* Adjust the size as needed */
+    height: 200px;
+    object-fit: cover;
+    border-radius: 50%;
+  }
 </style>
 
 <body>
@@ -196,7 +200,7 @@ mysqli_close($connection);
         <ul class="navbar-nav">
           <li class="nav-item dropdown">
           <li class="">
-            <a href="csnotification.html" class="nav-link px-3">
+            <a href="notification.html" class="nav-link px-3">
               <span class="me-2"><i class="fas fa-bell"></i></i></span>
             </a>
           </li>
@@ -207,7 +211,7 @@ mysqli_close($connection);
             <li><a class="dropdown-item" href="#">Profile</a></li>
             <li><a class="dropdown-item" href="#">Visual</a></li>
             <li>
-              <a class="dropdown-item" href="index.php">Log out</a>
+              <a class="dropdown-item" href="logout.php">Log out</a>
             </li>
           </ul>
           </li>
@@ -231,14 +235,15 @@ mysqli_close($connection);
         <div class="ms-3" id="dateTime"></div>
         </li>
         <li>
-        <li>
+        <li class="v-1">
           <a href="profile.php" class="nav-link px-3">
             <span class="me-2"><i class="fas fa-user"></i></i></span>
             <span class="start">PROFILE</span>
           </a>
         </li>
         <li>
-        <li class="v-1">
+
+        <li class="">
           <a href="cars-profile.php" class="nav-link px-3">
             <span class="me-2"><i class="fas fa-car"></i></i></span>
             <span>MY CARS</span>
@@ -266,12 +271,12 @@ mysqli_close($connection);
               </a>
             </li>
             <li class="v-1">
-              <a href="csrequest_slot.php" class="nav-link px-3">
+              <a href="#" class="nav-link px-3">
                 <span class="me-2">Request Slot</span>
               </a>
             </li>
             <li class="v-1">
-              <a href="process3.php" class="nav-link px-3">
+              <a href="#" class="nav-link px-3">
                 <span class="me-2">Select Service</span>
               </a>
             </li>
@@ -293,7 +298,6 @@ mysqli_close($connection);
           </ul>
         </div>
         </li>
-
         <li>
           <a class="nav-link px-3 sidebar-link" data-bs-toggle="collapse" href="#layouts2">
             <span class="me-2"><i class="fas fa-money-bill"></i>
@@ -346,211 +350,116 @@ mysqli_close($connection);
   </div>
   <!-- main content -->
   <main>
-
     <div class="personal-details">
       <div class="container-fluid py-3">
         <div class="row">
-          <h2 class="text-black">Vehicle Details</h2>
+          <h2 class="text-black">Shop Owner Details</h2>
           <!-- Account page navigation-->
           <hr class="mt-0 mb-4">
-          <form action="cars-upload.php" method="POST" enctype="multipart/form-data">
-            <div class="row">
-              <!-- Profile picture card -->
-              <div class="col-xl-4 mb-4 mb-xl-4">
-                <div class="card">
+          <div class="row">
+            <!-- Profile picture card -->
+            <div class="col-xl-4 mb-4 mb-xl-4">
+              <div class="card">
+                <form action="upload-owner-profile-backend.php" method="POST" enctype="multipart/form-data">
                   <center>
-                    <div class="v-1 card-header text-light"><?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>'s vehicle</div>
+                    <div class=" v-1 card-header text-light"><?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>'s profile</div>
                   </center>
                   <div class="card-body text-center">
-                    <img class="img-account-profile mb-2" src="<?php echo $vehicleData['profile']; ?>" alt="">
-                    <div class="small font-italic text-dark mb-6">JPG or PNG no larger than 5 MB</div>
+                    <img class="img-account-profile mb-3" src="<?php echo $userData['profile']; ?>" alt="">
+                    <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
                     <label for="profile"></label>
                     <div class="input-group">
-                      <input type="hidden" name="vehicle_id" id="vehicle_id" value="<?php echo $vehicleData['vehicle_id']; ?>">
                       <input type="file" class="form-control" id="profile" name="profile" accept="image/*">
+
                     </div>
-                    <button type="submit" class="btn-primary btn col-mb-4">Submit Profile</button>
-                  </div>
-                </div>
-          </form>
-          <form action="cars-profile-info-backend.php" method="POST">
-        </div>
-        <!-- Label Dropdown -->
-
-        <div class="col-md-4 mb-4">
-          <div class="form-group mb-3">
-            <input type="hidden" class="form-control" id="vehicle_id" name="vehicle_id" value="<?php echo $vehicleData['vehicle_id']; ?>">
-            <label for="label" class="form-label text-black">Label:</label>
-            <select class="form-select" id="label" name="label" required>
-              <option value="<?php echo $vehicleData['label']; ?>" selected><?php echo $vehicleData['label']; ?></option>
-              <option value="Personal">Personal</option>
-              <option value="Work">Work</option>
-              <option value="Rent">Rent</option>
-            </select>
+                    <button type="submit" class="btn btn-primary">Submit Profile</button>
+                </form>
+              </div>
+            </div>
+            <form action="update-owner-profile-backend.php" method="POST">
           </div>
-          <!-- Plate Number and Chassis Number -->
+          <div class="col-md-4 mb-4">
+            <div class="form-group mb-3">
+              <label for="firstname">First Name:</label>
+              <input type="text" class="form-control" id="firstname" name="firstname" value="<?php echo $userData['firstname']; ?>" placeholder="Edit your First Name" required>
+              <input type="hidden" class="form-control" id="role" name="role">
+            </div>
+            <div class="form-group mb-3">
+              <label for="lastname">Last Name:</label>
+              <input type="text" class="form-control" id="lastname" name="lastname" value="<?php echo $userData['lastname']; ?>" placeholder="Edit your Last Name" required>
+            </div>
+            <div class="form-group mb-3">
+              <label for="contact">Phone Number:</label>
+              <input type="text" class="form-control" id="contact" name="contact" value="<?php echo $userData['contact']; ?>" placeholder="Edit your Contact" required>
+            </div>
+            <div class="form-group mb-3 text-dark">
+              <label for="role">User Type:</label>
+              <select class="form-select" id="role" name="role">>
+                <option value="customer"></option>
+                <option value="user" <?php if ($userData['role'] == 'user') echo 'selected'; ?>>User</option>
+                <option value="owner" <?php if ($userData['role'] == 'owner') echo 'selected'; ?>>Owner</option>
+                <option value="admin" <?php if ($userData['role'] == 'admin') echo 'selected'; ?>>Admin</option>
+                <option value="staff" <?php if ($userData['role'] == 'staff') echo 'selected'; ?>>Staff</option>
+              </select>
+            </div>
 
-          <div class="form-group mb-3">
-            <label for="platenumber">Plate Number:</label>
-            <input type="text" class="form-control" id="platenumber" name="platenumber" value="<?php echo $vehicleData['platenumber']; ?>">
           </div>
-          <div class="form-group mb-3">
-            <label for="chassisnumber">Chassis Number:</label>
-            <input type="text" class="form-control" id="chassisnumber" name="chassisnumber" value="<?php echo $vehicleData['chassisnumber']; ?>">
-
-          </div>
-
-        </div>
-        <!-- Engine Number and Vehicle Type -->
-        <div class="col-md-4 mb-4">
-          <div class="form-group mb-3">
-            <label for="enginenumber">Engine Number:</label>
-            <input type="text" class="form-control" id="enginenumber" name="enginenumber" value="<?php echo $vehicleData['enginenumber']; ?>">
-          </div>
-          <div class="form-group mb-4">
-            <label for="brand">Brand:</label>
-            <select class="form-select" id="brand" name="brand" onchange="updateModels()" required>
-              <option value="<?php echo $vehicleData['brand']; ?>" selected><?php echo $vehicleData['brand']; ?></option>
-              <option value="Toyota">Toyota</option>
-              <option value="Suzuki">Suzuki</option>
-              <option value="Honda">Honda</option>
-              <option value="Mitsubishi">Mitsubishi</option>
-              <option value="Ford">Ford</option>
-              <option value="Nissan">Nissan</option>
-              <option value="Hyundai">Hyundai</option>
-              <option value="Isuzu">Isuzu</option>
-              <option value="Chevrolet">Chevrolet</option>
-              <option value="Mazda">Mazda</option>
-            </select>
+          <div class="col-md-4 mb-4">
+            <div class="form-group mb-3">
+              <label for="address">Complete Address:</label>
+              <input type="text" class="form-control" id="address" name="address" value="<?php echo $userData['address']; ?>" placeholder="Edit your Address" required>
+            </div>
+            <div class="form-group mb-3">
+              <label for="email">Email:</label>
+              <input type="email" class="form-control" id="email" name="email" value="<?php echo $userData['email']; ?>" placeholder="Edit your Email" required>
+            </div>
+            <div class="form-group mb-3">
+              <label for="username">Username:</label>
+              <input type="text" class="form-control" id="username" name="username" value="<?php echo $userData['username']; ?>" required>
+            </div>
+            <div class="form-group mb-3">
+              <label for="password">Password:</label>
+              <input type="password" class="form-control" id="password" name="password" value="<?php echo $userData['password']; ?>" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
           </div>
 
-          <div class="form-group mb-4">
-            <label for="model">Model:</label>
-            <select class="form-select" id="model" name="model" required>
-              <option value="<?php echo $vehicleData['model']; ?>" selected><?php echo $vehicleData['model']; ?></option>
-
-            </select>
-          </div>
-          <!-- Color, Size, and Edit Button -->
-
-          <div class="form-group mb-4">
-            <label for="color">Color:</label>
-            <select class="form-select" id="color" name="color" required>
-              <option value="<?php echo $vehicleData['color']; ?>" selected><?php echo $vehicleData['color']; ?></option>
-              <option value="Red">Red</option>
-              <option value="Black">Black</option>
-              <option value="Blue">Blue</option>
-              <option value="Gray">Gray</option>
-              <option value="White">White</option>
-            </select>
-          </div>
-          <button type="submit" class="btn btn-primary btn-md">Edit your vehicle details</button></a>
         </div>
       </div>
     </div>
     </div>
-    </div>
 
-    </div>
-    </div>
+    <script>
+      function updateDateTime() {
+        // Get the current date and time
+        var currentDateTime = new Date();
 
-    </div>
-    </form>
+        // Format the date and time
+        var date = currentDateTime.toDateString();
+        var time = currentDateTime.toLocaleTimeString();
 
-  </main>
-
-  <script>
-    function updateModels() {
-      var brandSelect = document.getElementById("brand");
-      var modelSelect = document.getElementById("model");
-
-      // Clear existing options
-      modelSelect.innerHTML = '<option value="#" selected>Choose</option>';
-
-      // Get selected brand
-      var selectedBrand = brandSelect.value;
-
-      // Add models based on the selected brand
-      switch (selectedBrand) {
-        case "Toyota":
-          addModels(["Vios", "Fortuner", "Innova", "Hilux"]);
-          break;
-        case "Suzuki":
-          addModels(["Swift", "Dzire", "Ertiga", "Jimny"]);
-          break;
-        case "Honda":
-          addModels(["Civic", "City", "CR-V", "BR-V"]);
-          break;
-        case "Mitsubishi":
-          addModels(["Montero Sport", "Mirage", "Strada", "Xpander"]);
-          break;
-        case "Ford":
-          addModels(["Everest", "Ranger", "EcoSport", "Explorer"]);
-          break;
-        case "Nissan":
-          addModels(["Almera", "Terra", "Navara", "X-Trail"]);
-          break;
-        case "Hyundai":
-          addModels(["Accent", "Kona", "Tucson", "Santa Fe"]);
-          break;
-        case "Isuzu":
-          addModels(["mu-X", "D-MAX"]);
-          break;
-        case "Chevrolet":
-          addModels(["Trailblazer", "Spark", "Malibu"]);
-          break;
-        case "Mazda":
-          addModels(["Mazda2", "Mazda3", "CX-5"]);
-          break;
-          // Add cases for other brands
-          // ...
-
-        default:
-          // Handle default case or add default models
-          break;
+        // Display the formatted date and time
+        document.getElementById('dateTime').innerHTML = '<p>Date: ' + date + '</p><p>Time: ' + time + '</p>';
       }
-    }
 
-    function addModels(models) {
-      var modelSelect = document.getElementById("model");
+      // Update the date and time every second
+      setInterval(updateDateTime, 1000);
 
-      // Add models to the select element
-      models.forEach(function(model) {
-        var option = document.createElement("option");
-        option.value = model;
-        option.text = model;
-        modelSelect.add(option);
-      });
-    }
-  </script>
+      // Initial call to display date and time immediately
+      updateDateTime();
+    </script>
 
 
-  <script>
-    function updateDateTime() {
-      // Get the current date and time
-      var currentDateTime = new Date();
 
-      // Format the date and time
-      var date = currentDateTime.toDateString();
-      var time = currentDateTime.toLocaleTimeString();
 
-      // Display the formatted date and time
-      document.getElementById('dateTime').innerHTML = '<p>Date: ' + date + '</p><p>Time: ' + time + '</p>';
-    }
 
-    // Update the date and time every second
-    setInterval(updateDateTime, 1000);
 
-    // Initial call to display date and time immediately
-    updateDateTime();
-  </script>
-
-  <script src="./js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
-  <script src="./js/jquery-3.5.1.js"></script>
-  <script src="./js/jquery.dataTables.min.js"></script>
-  <script src="./js/dataTables.bootstrap5.min.js"></script>
-  <script src="./js/script.js"></script>
+    <script src="./js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
+    <script src="./js/jquery-3.5.1.js"></script>
+    <script src="./js/jquery.dataTables.min.js"></script>
+    <script src="./js/dataTables.bootstrap5.min.js"></script>
+    <script src="./js/script.js"></script>
 </body>
 
 </html>

@@ -36,20 +36,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['email'] = $row['email'];
             $_SESSION['role'] = $row['role'];
 
-            if ($row['role'] === 'user') {
+            if ($row['role'] === 'User') {
                 header("Location: profile.php");
                 exit();
-            } elseif ($row['role'] === 'admin') {
+            } elseif ($row['role'] === 'Admin') {
                 header("Location: csdashboard_admin.php");
                 exit();
-            } elseif ($row['role'] === 'staff') {
+            } elseif ($row['role'] === 'Staff') {
                 header("Location: csdashboard_staff.php");
                 exit();    
-            } elseif ($row['role'] === 'manager') {
+            } elseif ($row['role'] === 'Manager') {
                 header("Location: csdashboard_manager.php");
                 exit();
 
+            }elseif ($row['role'] === 'Owner') {
+                header("Location: dashboard-owner.php");
+                exit();
+
             }
+            
         } else {
             echo '<script>';
             echo 'alert("Invalid Username or Password");';

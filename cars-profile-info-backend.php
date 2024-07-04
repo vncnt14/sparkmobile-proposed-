@@ -24,7 +24,7 @@ include('config.php');
 } else {
 	echo'<script language="javascript">';
 	echo'alert("Error Updating!");';
-	echo'window.location="cscars2.php";';
+	echo'window.location="cars-profile.php";';
 	echo '</script>';
 }
 ?>

@@ -55,7 +55,7 @@ mysqli_close($connection);
   }
 
   :root {
-    --offcanvas-width: 200px;
+    --offcanvas-width: 220px;
     --topNavbarHeight: 56px;
   }
 
@@ -189,10 +189,10 @@ mysqli_close($connection);
     object-fit: cover;
     border-radius: 50%;
   }
-  .profile-btn{
+  .shop-btn{
 
-margin-left: 57%;
-}
+    margin-left: 60%;
+  }
 </style>
 
 <body>
@@ -248,15 +248,15 @@ margin-left: 57%;
         </li>
         <li>
         <li class="">
-          <a href="dashboard.php" class="nav-link px-3">
+          <a href="dashboard-owner.php" class="nav-link px-3">
             <span class="me-2"><i class="fas fa-home"></i></i></span>
             <span class="start">DASHBOARD</span>
           </a>
         </li>
         <li class="v-1">
-          <a href="profile.php" class="nav-link px-3">
+          <a href="shop-profile.php" class="nav-link px-3">
             <span class="me-2"><i class="fas fa-user"></i></i></span>
-            <span class="start">PROFILE</span>
+            <span class="start">SHOP PROFILE</span>
           </a>
         </li>
         <li>
@@ -264,7 +264,7 @@ margin-left: 57%;
         <li class="">
           <a href="cars-profile.php" class="nav-link px-3">
             <span class="me-2"><i class="fas fa-car"></i></i></span>
-            <span>MY CARS</span>
+            <span>MY SALES</span>
           </a>
         </li>
         <li><a class="nav-link px-3 sidebar-link" data-bs-toggle="collapse" href="#layouts">
@@ -374,9 +374,9 @@ margin-left: 57%;
         <div class="container-fluid py-3">
           <div class="row">
             <div class="container mt-3">
-              <div class="d-flex">
-                <h2 class="mb-0 text-dark">Car Owner Details</h2>
-                <a href="edit-profile.php" class="profile-btn btn btn-primary">Edit Personal Details <i class=" ms-2 fas fa-arrow-right"></i></a>
+              <div class="d-flex align-items-center">
+                <h2 class="mb-0 text-dark">Shop Owner Details</h2>
+                <a href="shop-profile.php? user_id=<?php echo $userData['user_id']?>" class="shop-btn btn btn-primary">Shop Profile<i class="  ms-3 fas fa-arrow-right"></i></a>
               </div>
             </div>
             <!-- Account page navigation-->
@@ -396,76 +396,52 @@ margin-left: 57%;
                   </div>
                 </div>
               </div>
-
-              <!-- First Name, Phone Number, Username and Gender -->
+              <!-- Label Dropdown -->
               <div class=" col-md-4 mb-4">
                 <div class="form-group mb-3 text-dark">
                   <label for="firstname">First Name:</label>
                   <input type="text" class="form-control" id="firstname" name="firstname" placeholder="Edit your First Name" value="<?php echo $userData['firstname']; ?>" readonly>
                 </div>
-                
-                <div class="form-group mb-3 text-dark">
-                  <label for="contact">Phone Number:</label>
-                  <input type="text" class="form-control" id="contact" name="contact" placeholder="Edit your Contact" value="<?php echo $userData['contact']; ?>"  readonly>
-                </div>
 
-                <div class="form-group mb-3 text-dark">
-                  <label for="username">Username:</label>
-                  <input type="text" class="form-control" id="username" name="username" value="<?php echo $userData['username']; ?>" readonly>
-                </div>
+                <!-- Plate Number and Chassis Number -->
 
-                <div class="form-group mb-3 text-dark">
-                  <label for="gender">Gender:</label>
-                  <input type="text" class="form-control" id="gender" name="gender" value="<?php echo isset($userData['gender']) ? htmlspecialchars($userData['gender']) : ''; ?>" readonly>
-                </div>
-                
-              </div>
-              <!-- Last Name, Email, Password, User Type and User Type -->
-              <div class="col-md-4 mb-4">
                 <div class="form-group mb-3 text-dark">
                   <label for="lastname">Last Name:</label>
                   <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Edit your Last Name" value="<?php echo $userData['lastname']; ?>" readonly>
                 </div>
-
+                <div class="form-group mb-3 text-dark">
+                  <label for="contact">Phone Number:</label>
+                  <input type="text" class="form-control" id="contact" name="contact" placeholder="Edit your Contact" value="<?php echo $userData['contact']; ?>" readonly>
+                </div>
+                <div class="form-group mb-3 text-dark">
+                  <label for="rolw">User Type:</label>
+                  <input type="text" class="form-control" id="role" name="role" value="<?php echo $userData['role']; ?>" readonly>
+                </div>
+              </div>
+              <!-- Engine Number and Vehicle Type -->
+              <div class="col-md-4 mb-4">
+                <div class="form-group mb-3 text-dark">
+                  <label for="completeadd">Complete Address:</label>
+                  <input type="text" class="form-control" id="address" name="address" placeholder="Edit your Complete Address" value="<?php echo $userData['address']; ?>" readonly>
+                </div>
                 <div class="form-group mb-3 text-dark">
                   <label for="email">Email:</label>
                   <input type="email" class="form-control" id="email" name="email" placeholder="Edit your Email" value="<?php echo $userData['email']; ?>" readonly>
                 </div>
 
+                <!-- Color, Size, and Edit Button -->
+
+                <div class="form-group mb-3 text-dark">
+                  <label for="username">Username:</label>
+                  <input type="text" class="form-control" id="username" name="username" value="<?php echo $userData['username']; ?>" readonly>
+                </div>
                 <div class="form-group mb-3 text-dark">
                   <label for="password">Password:</label>
                   <input type="password" class="form-control" id="password" name="password" value="<?php echo $userData['password']; ?>" readonly>
                 </div>
-
-                <div class="form-group mb-3 text-dark">
-                  <label for="rolw">User Type:</label>
-                  <input type="text" class="form-control" id="role" name="role" value="<?php echo $userData['role']; ?>" readonly>
-                </div>
-              
+                <a href="owner-edit-profile.php"><button type="button" class="btn btn-primary btn-md">Edit your personal details</button></a>
 
               </div>
-              <!-- Address, Address Line 2, Barangay, City,  and Province  -->
-              <h2 class="text-dark">Compelete Address</h2>
-              <div class="form-group mb-3 text-dark">
-                  <label for="street_address">Street Address:</label>  
-                  <input type="text" class="form-control" id="street_address" name="street_address" placeholder="Edit your Complete Address" value="<?php echo isset($userData['street_address']) ? htmlspecialchars($userData['street_address']) : ''; ?>" readonly>
-                </div>
-                <div class="form-group mb-3 text-dark">
-                  <label for="optional_address">Address Line 2 (optional):</label>
-                  <input type="text" class="form-control" id="optional_address" name="optional_address" placeholder="(e.g., apartment, suite, unit, building, floor, block, lot)" value="<?php echo isset($userData['optional_address']) ? htmlspecialchars($userData['optional_address']) : ''; ?>" readonly>
-                </div>
-                <div class="form-group mb-3 text-dark">
-                  <label for="barangay">Barangay:</label>
-                  <input type="text" class="form-control" id="barangay" name="barangay" placeholder="Edit your Barangay" value="<?php echo isset($userData['barangay']) ? htmlspecialchars($userData['barangay']) : ''; ?>" readonly>
-                </div>
-                <div class="form-group mb-3 text-dark">
-                  <label for="city">City:</label>
-                  <input type="text" class="form-control" id="city" name="city"  placeholder="Edit your City" value="<?php echo isset($userData['city']) ? htmlspecialchars($userData['city']) : ''; ?>" readonly>
-                </div>
-                <div class="form-group mb-3 text-dark">
-                  <label for="province">Province:</label>
-                  <input type="text" class="form-control" id="province" name="province"  placeholder="Edit your Province" value="<?php echo isset($userData['province']) ? htmlspecialchars($userData['province']) : ''; ?>" readonly>
-                </div>
             </div>
           </div>
         </div>

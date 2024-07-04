@@ -127,7 +127,7 @@
             <center><img src="NEW SM LOGO.png" alt=""></center>
             <div class="form">
               <form action="cslogin.php" method="POST">
-                <center><h2 class="mb-3">Welcome</h2></center>
+                <center><h2 class="mb-3">Login</h2></center>
                 <div class="mb-3">
                   <span class="input-group-addon"><i class="fa fa-user"></i></span>
                   <label for="username">Username</label>
