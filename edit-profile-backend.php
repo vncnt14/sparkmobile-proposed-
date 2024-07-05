@@ -30,7 +30,7 @@ include('config.php');
 } else {
 	echo'<script language="javascript">';
 	echo'alert("Error Updating!");';
-	echo'window.location="cars-profile.php";';
+	echo'window.location="profile.php";';
 	echo '</script>';
 }
 ?>

@@ -19,7 +19,7 @@ include('config.php');
 	if(mysqli_query($connection, $sql)){
 	echo '<script language="javascript">';
 	echo 'alert("Vechicle details successfully updated!");';
-	echo 'window.location="cscars1.php";';
+	echo 'window.location="cars-profile.php";';
 	echo'</script>';	
 } else {
 	echo'<script language="javascript">';

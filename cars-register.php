@@ -171,6 +171,9 @@ $userData = mysqli_fetch_assoc($result);
   .nav-links ul li:hover a {
     color: white;
   }
+  .add-btn{
+  margin-left: 54%;
+  }
 </style>
 
 <body>
@@ -338,7 +341,12 @@ $userData = mysqli_fetch_assoc($result);
     <div class="personal-details">
       <div class="container-fluid py-3">
         <div class="row">
-          <h2 class="text-black">Add Vehicle Details</h2>
+        <div class="container mt-3">
+          <div class="d-flex align-items-center">
+                  <h2 class="mb-0 text-dark">Add Vehicle</h2>
+                  <a href="cars-profile.php" class="add-btn btn btn-primary ml-auto"><i class=" me-3 fas fa-arrow-left"></i>My Garage</a>
+          </div>
+        </div>
           <!-- Account page navigation-->
           <hr class="mt-0 mb-4">
           <form action="cscar_create.php" method="POST" enctype="multipart/form-data">
@@ -428,7 +436,7 @@ $userData = mysqli_fetch_assoc($result);
                     <option value="White">White</option>
                   </select>
                 </div>
-                <button type="submit" class="btn btn-primary btn-md">Save changes</button>
+                <button type="submit" class="btn btn-primary btn-md"><i class=" me-3 fas fa-check"></i>Save changes</button>
               </div>
             </div>
         </div>

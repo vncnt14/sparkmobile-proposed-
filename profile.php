@@ -191,7 +191,7 @@ mysqli_close($connection);
   }
   .profile-btn{
 
-margin-left: 57%;
+margin-left: 43.5%;
 }
 </style>
 

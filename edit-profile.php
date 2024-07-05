@@ -191,10 +191,10 @@ mysqli_close($connection);
   }
   .profile-btn{
 
-  margin-left: 57%;
+  margin-left: 43.5%;
   }
   .address-btn{
-  margin-left: 60%;
+  margin-left: 43.5%;
   margin-top: -2px;
   }
 </style>
@@ -470,7 +470,7 @@ mysqli_close($connection);
                   <!-- Address, Address Line 2, Barangay, City,  and Province  -->
                   <div class="container mt-3">
                     <div class="d-flex">
-                      <h2 class="mb-0 text-dark">Car Owner Details</h2>
+                      <h2 class="mb-0 text-dark">Compelete Address</h2>
                       <button type="submit" class="address-btn btn btn-primary"><i class=" me-3 fas fa-check"></i>Save Changes</button>
                     </div>
                   </div>

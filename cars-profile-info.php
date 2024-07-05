@@ -177,6 +177,9 @@ mysqli_close($connection);
   .nav-links ul li:hover a {
     color: white;
   }
+  .garage-btn{
+  margin-left: 50%;
+  }
 </style>
 
 <body>
@@ -350,7 +353,12 @@ mysqli_close($connection);
     <div class="personal-details">
       <div class="container-fluid py-3">
         <div class="row">
-          <h2 class="text-black">Vehicle Details</h2>
+        <div class="container mt-3">
+          <div class="d-flex align-items-center">
+              <h2 class="mb-0 text-dark">Vehicle Details</h2>
+              <a href="cars-profile.php" class="garage-btn btn btn-primary ml-auto"><i class=" me-3 fas fa-arrow-left"></i>My Garage</a>
+          </div>
+        </div>
           <!-- Account page navigation-->
           <hr class="mt-0 mb-4">
           <form action="cars-upload.php" method="POST" enctype="multipart/form-data">
@@ -444,7 +452,7 @@ mysqli_close($connection);
               <option value="White">White</option>
             </select>
           </div>
-          <button type="submit" class="btn btn-primary btn-md">Edit your vehicle details</button></a>
+          <button type="submit" class="btn btn-primary btn-md"><i class=" me-3 fas fa-check"></i>Save Changes</button></a>
         </div>
       </div>
     </div>

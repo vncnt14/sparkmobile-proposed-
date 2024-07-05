@@ -23,7 +23,7 @@
             if (!$update_result = mysqli_query($connection, $update_query)) {
                 echo "Error: " . mysqli_error($connection);
             } else {
-                header("Location: cscars2.php?vehicle_id=" . $vehicle_id); // Redirect to the specified page
+                header("Location: cars-profile-info.php?vehicle_id=" . $vehicle_id); // Redirect to the specified page
                 exit();
             }
         }

@@ -1,56 +1,36 @@
 <?php
 session_start();
+include('config.php');
 
-// Include database connection file
-include('config.php');  // You'll need to replace this with your actual database connection code
 
-// Redirect to the login page if the user is not logged in
-if (!isset($_SESSION['username'])) {
-    header("Location: index.php");
-    exit;
-}
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Collect form data
-    $firstname = $_POST['firstname'];
-    $lastname = $_POST['lastname'];
-    $email = $_POST['email'];
-    $contact = $_POST['contact'];
-    $address = $_POST['address'];
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+    // Retrieve and sanitize form data
+    $user_id = $_POST['user_id'];
+	$firstname = $_POST['firstname'];
+	$lastname = $_POST['lastname'];
+	$contact = $_POST['contact'];
+	$street_address = $_POST['street_address'];
+	$email = $_POST['email'];
+	$username = $_POST['username'];
+	$password = $_POST['password'];
+    $gender = $_POST['gender'];
     $role = $_POST['role'];
+    $optional_address = $_POST['optional_address'];
+    $barangay = $_POST['barangay'];
+    $city = $_POST['city'];
+    $province = $_POST['province'];
 
-    // Validate the form data (you may add more robust validation)
-    if (empty($firstname) || empty($lastname) || empty($email) || empty($contact)) {
-        echo "All fields are required.";
-        exit;
-    }
-
-    // Assuming you have a user ID stored in the session
-    $userID = $_SESSION['user_id'];
-
-    // Update the user's profile in the database
-    $query = "UPDATE users SET firstname='$firstname', lastname='$lastname', contact='$contact', address='$address', email='$email', username='$username', password='$password', role='$role' WHERE user_id=$userID";
-
-
-    if (mysqli_query($connection, $query)) {
-	echo "<script>alert('Profile updated successfully.');</script>";
-	    echo "<script>
-        	setTimeout(function() {
-            		window.location.href = 'owner-profile.php';
-        	}, 1000); // Redirect after 1 seconds
-      		</script>";
-	    exit;
-    } else {
-        echo "Error updating profile: " . mysqli_error($connection);
-    }
-
-    // Close the database connection
-    mysqli_close($connection);
+    // Use prepared statements to prevent SQL injection
+    $sql = "UPDATE users SET firstname='$firstname', lastname='$lastname', contact='$contact',street_address='$street_address', email='$email', username='$username', password='$password', gender='$gender', role='$role', optional_address='$optional_address', barangay='$barangay', city='$city', province='$province' WHERE user_id = '$user_id'";
+	if(mysqli_query($connection, $sql)){
+	echo '<script language="javascript">';
+	echo 'alert("Profile successfully updated!");';
+	echo 'window.location="owner-profile.php";';
+	echo'</script>';	
 } else {
-    // If the request method is not POST, redirect to the edit profile page
-    header("Location: edit_csdashboard.php");
-    exit;
+	echo'<script language="javascript">';
+	echo'alert("Error Updating!");';
+	echo'window.location="owner-profile.php";';
+	echo '</script>';
 }
 ?>
