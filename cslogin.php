@@ -50,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 exit();
 
             }elseif ($row['role'] === 'Owner') {
-                header("Location: dashboard-owner.php");
+                header("Location: owner-dashboard.php");
                 exit();
 
             }

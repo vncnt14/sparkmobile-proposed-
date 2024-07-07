@@ -252,14 +252,14 @@ mysqli_close($connection);
                 <li class="">
                     <a href="owner-profile.php" class="nav-link px-3">
                         <span class="me-2"><i class="fas fa-user"></i></i></span>
-                        <span class="start">SHOP PROFILE</span>
+                        <span class="start">PROFILE</span>
                     </a>
                 </li>
                 <li>
 
                 <li class="">
                     <a href="cars-profile.php" class="nav-link px-3">
-                        <span class="me-2"><i class="fas fa-car"></i></i></span>
+                        <span class="me-2"><i class="fas fa-money-bill"></i></i></span>
                         <span>MY SALES</span>
                     </a>
                 </li>
@@ -315,7 +315,7 @@ mysqli_close($connection);
                 </li>
                 <li>
                     <a class="nav-link px-3 sidebar-link" data-bs-toggle="collapse" href="#layouts2">
-                        <span class="me-2"><i class="fas fa-money-bill"></i>
+                        <span class="me-2"><i class="fas fa-user"></i>
                             </i></i></span>
                         <span>EMPLOYEES</span>
                         <span class="ms-auto">

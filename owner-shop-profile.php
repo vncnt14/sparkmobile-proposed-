@@ -22,8 +22,8 @@ $result = mysqli_query($connection, $query);
 $userData = mysqli_fetch_assoc($result);
 
 $shop_query = "SELECT *FROM shops WHERE user_id = '$userID'";
-$shop_result = mysqli_query($connection, $query);
-$shopData = mysqli_fetch_assoc($result);
+$shop_result = mysqli_query($connection, $shop_query);
+$shopData = mysqli_fetch_assoc($shop_result);
 
 
 
@@ -197,7 +197,10 @@ mysqli_close($connection);
 
   .profile-btn {
 
-    margin-left: 50.1%;
+    margin-left: 50%;
+  }
+  .owner-btn{
+    margin-left: 51%
   }
 </style>
 
@@ -254,13 +257,13 @@ mysqli_close($connection);
         </li>
         <li>
         <li class="">
-          <a href="dashboard.php" class="nav-link px-3">
+          <a href="owner-dashboard.php" class="nav-link px-3">
             <span class="me-2"><i class="fas fa-home"></i></i></span>
             <span class="start">DASHBOARD</span>
           </a>
         </li>
         <li class="v-1">
-          <a href="profile.php" class="nav-link px-3">
+          <a href="owner-profile.php" class="nav-link px-3">
             <span class="me-2"><i class="fas fa-user"></i></i></span>
             <span class="start">PROFILE</span>
           </a>
@@ -382,7 +385,7 @@ mysqli_close($connection);
             <div class="container mt-3">
               <div class="d-flex">
                 <h2 class="mb-0 text-dark">Shop Details</h2>
-                <a href="owner-profile.php" class="profile-btn btn btn-primary">
+                <a href="owner-profile.php" class="owner-btn btn btn-primary">
                   <i class="me-3 fas fa-arrow-left"></i>Owner Profile 
                 </a>
 
@@ -398,7 +401,7 @@ mysqli_close($connection);
                     <div class="v-1 card-header text-light"><?php echo $userData['firstname']; ?>'s shop</div>
                   </center>
                   <div class="card-body text-center">
-                    <img class="img-account-profile mb-3" src="<?php echo $userData['profile']; ?>" alt="">
+                    <img class="img-account-profile mb-3" src="<?php echo $shopData['profile']; ?>" alt="">
 
                     <label for="profile"></label>
 
@@ -409,46 +412,36 @@ mysqli_close($connection);
               <!-- First Name, Phone Number, Username and Gender -->
               <div class=" col-md-4 mb-4">
                 <div class="form-group mb-3 text-dark">
-                  <label for="firstname">Shop Name:</label>
-                  <input type="text" class="form-control" id="firstname" name="firstname" placeholder="Edit your First Name" value="<?php echo $userData['firstname']; ?>" readonly>
+                  <label for="shop_name">Shop/Business Name:</label>
+                  <input type="text" class="form-control" id="shop_name" name="shop_name" placeholder="Edit Shop Name" value="<?php echo isset($shopData['shop_name']) ? htmlspecialchars($shopData['shop_name']) : ''; ?>" readonly>
                 </div>
 
                 <div class="form-group mb-3 text-dark">
-                  <label for="contact">Shop Contact:</label>
-                  <input type="text" class="form-control" id="contact" name="contact" placeholder="Edit your Contact" value="<?php echo $userData['contact']; ?>" readonly>
+                  <label for="shop_contact">Shop Contact Number:</label>
+                  <input type="text" class="form-control" id="shop_contact" name="shop_contact" placeholder="Edit Shop Contact Number" value="<?php echo isset($shopData['shop_contact']) ? htmlspecialchars($shopData['shop_contact']) : ''; ?>" readonly>
                 </div>
 
                 <div class="form-group mb-3 text-dark">
-                  <label for="username">Username:</label>
-                  <input type="text" class="form-control" id="username" name="username" value="<?php echo $userData['username']; ?>" readonly>
-                </div>
-
-                <div class="form-group mb-3 text-dark">
-                  <label for="gender">Gender:</label>
-                  <input type="text" class="form-control" id="gender" name="gender" value="<?php echo isset($userData['gender']) ? htmlspecialchars($userData['gender']) : ''; ?>" readonly>
+                  <label for="operating_hours">Operating Hours:</label>
+                  <input type="text" class="form-control" id="operating_hours" name="operating_hours" placeholder="Edit Operating Hours " value="<?php echo isset($shopData['operating_hours']) ? htmlspecialchars($shopData['operating_hours']) : ''; ?>" readonly>
                 </div>
 
               </div>
               <!-- Last Name, Email, Password, User Type and User Type -->
               <div class="col-md-4 mb-4">
                 <div class="form-group mb-3 text-dark">
-                  <label for="lastname">Shop Email:</label>
-                  <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Edit your Last Name" value="<?php echo $userData['lastname']; ?>" readonly>
+                  <label for="shop_email">Shop Email:</label>
+                  <input type="text" class="form-control" id="shop_email" name="shop_email" placeholder="Edit Shop Email" value="<?php echo isset($shopData['shop_email']) ? htmlspecialchars($shopData['shop_email']) : ''; ?>" readonly>
                 </div>
 
                 <div class="form-group mb-3 text-dark">
-                  <label for="email">Email:</label>
-                  <input type="email" class="form-control" id="email" name="email" placeholder="Edit your Email" value="<?php echo $userData['email']; ?>" readonly>
+                  <label for="website_link">Website link (Optional):</label>
+                  <input type="email" class="form-control" id="website_link" name="website_link" placeholder="Edit Shop Website Link" value="<?php echo isset($shopData['website_link']) ? htmlspecialchars($shopData['website_link']) : ''; ?>" readonly>
                 </div>
 
                 <div class="form-group mb-3 text-dark">
-                  <label for="password">Password:</label>
-                  <input type="password" class="form-control" id="password" name="password" value="<?php echo $userData['password']; ?>" readonly>
-                </div>
-
-                <div class="form-group mb-3 text-dark">
-                  <label for="rolw">User Type:</label>
-                  <input type="text" class="form-control" id="role" name="role" value="<?php echo $userData['role']; ?>" readonly>
+                    <label for="description">Description:</label>
+                    <textarea class="form-control" id="description" name="description" placeholder="Edit Shop Description" readonly><?php echo isset($shopData['description']) ? htmlspecialchars($shopData['description']) : ''; ?></textarea>
                 </div>
 
 
@@ -457,28 +450,57 @@ mysqli_close($connection);
               <div class="container mt-3">
                 <div class="d-flex">
                   <h2 class="mb-0 text-dark">Shop Location</h2>
-                  <a href="owner-edit-profile.php" class="profile-btn btn btn-primary">Edit Shop Details <i class=" ms-2 fas fa-arrow-right"></i></a>
+                  <a href="owner-shop-profile-edit.php?user_id=<?php echo $userData['user_id']; ?>" class="profile-btn btn btn-primary">
+                  Edit Shop Details
+                  <a href="owner-shop-profile-add.php?user_id=<?php echo $userData['user_id']; ?>" class="add-btn btn btn-primary ms-3">
+                  <i class="me-3 fas fa-plus"></i>Add Shop
+                </a>
                 </div>
               </div>
               <div class="form-group mb-3 text-dark">
                 <label for="street_address">Street Address:</label>
-                <input type="text" class="form-control" id="street_address" name="street_address" placeholder="Edit your Complete Address" value="<?php echo isset($userData['street_address']) ? htmlspecialchars($userData['street_address']) : ''; ?>" readonly>
+                <input type="text" class="form-control" id="street_address" name="street_address" placeholder="Edit your Complete Address" value="<?php echo isset($shopData['street_address']) ? htmlspecialchars($shopData['street_address']) : ''; ?>" readonly>
               </div>
               <div class="form-group mb-3 text-dark">
                 <label for="optional_address">Address Line 2 (optional):</label>
-                <input type="text" class="form-control" id="optional_address" name="optional_address" placeholder="(e.g., apartment, suite, unit, building, floor, block, lot)" value="<?php echo isset($userData['optional_address']) ? htmlspecialchars($userData['optional_address']) : ''; ?>" readonly>
+                <input type="text" class="form-control" id="optional_address" name="optional_address" placeholder="(e.g., apartment, suite, unit, building, floor, block, lot)" value="<?php echo isset($shopData['optional_address']) ? htmlspecialchars($shopData['optional_address']) : ''; ?>" readonly>
               </div>
               <div class="form-group mb-3 text-dark">
                 <label for="barangay">Barangay:</label>
-                <input type="text" class="form-control" id="barangay" name="barangay" placeholder="Edit your Barangay" value="<?php echo isset($userData['barangay']) ? htmlspecialchars($userData['barangay']) : ''; ?>" readonly>
+                <input type="text" class="form-control" id="barangay" name="barangay" placeholder="Edit your Barangay" value="<?php echo isset($shopData['barangay']) ? htmlspecialchars($shopData['barangay']) : ''; ?>" readonly>
               </div>
               <div class="form-group mb-3 text-dark">
                 <label for="city">City:</label>
-                <input type="text" class="form-control" id="city" name="city" placeholder="Edit your City" value="<?php echo isset($userData['city']) ? htmlspecialchars($userData['city']) : ''; ?>" readonly>
+                <input type="text" class="form-control" id="city" name="city" placeholder="Edit your City" value="<?php echo isset($shopData['city']) ? htmlspecialchars($shopData['city']) : ''; ?>" readonly>
               </div>
               <div class="form-group mb-3 text-dark">
                 <label for="province">Province:</label>
-                <input type="text" class="form-control" id="province" name="province" placeholder="Edit your Province" value="<?php echo isset($userData['province']) ? htmlspecialchars($userData['province']) : ''; ?>" readonly>
+                <input type="text" class="form-control" id="province" name="province" placeholder="Edit your Province" value="<?php echo isset($shopData['province']) ? htmlspecialchars($shopData['province']) : ''; ?>" readonly>
+              </div>
+              <div class="form-group mb-3 text-dark">
+                <label for="province">Postal/ZIP Code:</label>
+                <input type="text" class="form-control" id="postal" name="postal" placeholder="Edit your Postal Code" value="<?php echo isset($shopData['postal']) ? htmlspecialchars($shopData['postal']) : ''; ?>" readonly>
+              </div>
+              <div class="col-xl-4 mb-4 mb-xl-4">
+                <h2 class="text-dark mt-3">Business Permit</h2>
+                <div class="card">
+                  <form action="upload-permit-backend.php" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="shop_id" id="shop_id" value="<?php echo $shopData['shop_id'];?>">
+                    <center>
+                      <div class="v-1 card-header text-light"><?php echo isset($shopData['shop_name']) ? htmlspecialchars($shopData['shop_name']) : ''; ?>'s permit</div>
+                    </center>
+                    <div class="card-body text-center">
+                      <img class="img-account-profile mb-3" src="<?php echo $shopData['profile']; ?>" alt="">
+                      <label for="profile"></label>
+                      <div class="input-group">
+              
+
+                    </div>
+                 
+
+                    </div>
+                  </form>
+                </div>
               </div>
             </div>
           </div>

@@ -460,6 +460,7 @@ mysqli_close($connection);
                       <select class="form-select" id="role" name="role">>
                         <option value="customer"></option>
                         <option value="User" <?php if ($userData['role'] == 'User') echo 'selected'; ?>>User</option>
+                        <option value="Owner" <?php if ($userData['role'] == 'Owner') echo 'selected'; ?>>Owner</option>
                         <option value="Admin" <?php if ($userData['role'] == 'Admin') echo 'selected'; ?>>Admin</option>
                         <option value="Staff" <?php if ($userData['role'] == 'Staff') echo 'selected'; ?>>Staff</option>
                       </select>
