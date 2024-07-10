@@ -2,7 +2,7 @@
     include('config.php');
     include('session.php');
     
-    $user_id = $_SESSION['user_id']; // Assuming you have 'user_id' in your session
+    $shop_id = $_SESSION['shop_id']; // Assuming you have 'user_id' in your session
 
     if (isset($_FILES['permit']['tmp_name'])) {
         $file = $_FILES['permit']['tmp_name'];
@@ -19,7 +19,7 @@
             if (!$update = mysqli_query($connection, "UPDATE shops SET permit = '$permit' WHERE user_id='$user_id'")) {
                 echo mysqli_error($connection);
             } else {
-                header("location: owner-shop-profile-edit.php?user_id=" . $user_id);
+                header("location: owner-shop-profile-edit.php?shop_id=" . $shop_id);
                 exit();
             }
         }

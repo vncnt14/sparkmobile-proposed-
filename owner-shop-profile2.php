@@ -11,8 +11,9 @@ if (!isset($_SESSION['username'])) {
 }
 
 // Fetch user information based on ID
-$userID = $_GET['user_id'];
+$userID = $_SESSION['user_id'];
 $vehicle_id = $_SESSION['vehicle_id'];
+$shop_id = $_GET['shop_id'];
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
@@ -21,7 +22,7 @@ $query = "SELECT * FROM users WHERE user_id = '$userID'";
 $result = mysqli_query($connection, $query);
 $userData = mysqli_fetch_assoc($result);
 
-$shop_query = "SELECT *FROM shops WHERE user_id = '$userID'";
+$shop_query = "SELECT *FROM shops WHERE shop_id = '$shop_id'";
 $shop_result = mysqli_query($connection, $shop_query);
 $shopData = mysqli_fetch_assoc($shop_result);
 
@@ -450,10 +451,9 @@ mysqli_close($connection);
               <div class="container mt-3">
                 <div class="d-flex">
                   <h2 class="mb-0 text-dark">Shop Location</h2>
-                  <a href="owner-shop-profile-edit.php?user_id=<?php echo $userData['user_id']; ?>" class="profile-btn btn btn-primary">
+                  <a href="owner-shop-profile-edit.php?shop_id=<?php echo $shopData['shop_id']; ?>" class="profile-btn btn btn-primary">
                   Edit Shop Details
-                  <a href="owner-shop-profile-add.php?user_id=<?php echo $userData['user_id']; ?>" class="add-btn btn btn-primary ms-3">
-                  <i class="me-3 fas fa-plus"></i>Add Shop
+                  
                 </a>
                 </div>
               </div>

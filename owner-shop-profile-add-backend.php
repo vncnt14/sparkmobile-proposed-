@@ -23,7 +23,7 @@ $stmt->bind_param("issssssssssss", $user_id, $shop_name, $shop_email, $shop_cont
 
 if ($stmt->execute()) {
     echo '<script language="javascript">';
-    echo 'alert("Shop Profile successfully updated!");';
+    echo 'alert("Shop added succesfully!");';
     echo 'window.location="owner-shop-profile.php?user_id=' . $user_id . '";';
     echo '</script>';
 

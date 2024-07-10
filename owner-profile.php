@@ -379,7 +379,7 @@ mysqli_close($connection);
             <div class="container mt-3">
               <div class="d-flex">
                 <h2 class="mb-0 text-dark">Owner Details</h2>
-                <a href="owner-shop-profile.php?user_id=<?php echo $userData['user_id']; ?>" class="profile-btn btn btn-primary">
+                <a href="owner-shop-profile1.php?user_id=<?php echo $userData['user_id']; ?>" class="profile-btn btn btn-primary">
                   Shop Profile <i class="ms-2 fas fa-arrow-right"></i>
                 </a>
 

@@ -21,6 +21,9 @@ $query = "SELECT * FROM users WHERE user_id = '$userID'";
 $result = mysqli_query($connection, $query);
 $userData = mysqli_fetch_assoc($result);
 
+$shop_query = "SELECT * FROM shops";
+$shop_result = mysqli_query($connection, $shop_query);
+
 
 
 
@@ -189,6 +192,11 @@ mysqli_close($connection);
         object-fit: cover;
         border-radius: 50%;
     }
+    .card:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
 </style>
 
 <body>
@@ -378,6 +386,25 @@ mysqli_close($connection);
 
         <div>
             <h1 class="ms-3 text-dark text-center mt-3">Shops Near You</h1>
+        </div>
+        <div class="container mt-3 text-dark">
+            <div class="row">
+                <?php if ($shop_result && mysqli_num_rows($shop_result) > 0) : ?>
+                    <?php while ($shopData = mysqli_fetch_assoc($shop_result)) : ?>
+                        <div class="col-md-4 mb-3">
+                            <div class="card">
+                                <img src="<?php echo htmlspecialchars($shopData['profile']); ?>" class="card-img-top" alt="<?php echo htmlspecialchars($shopData['shop_name']); ?> Profile Image">
+                                <h5 class="card-title text-center"><?php echo htmlspecialchars($shopData['shop_name']); ?></h5>
+                                <div class="card-body">
+                                    <center><button type="button" class="btn btn-primary">View Shop</button></center>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endwhile; ?>
+                <?php else : ?>
+                    <p class="text-center">No shops available.</p>
+                <?php endif; ?>
+            </div>
         </div>
 
     </main>
