@@ -380,7 +380,7 @@ mysqli_close($connection);
             <div class="container mt-3">
               <div class="d-flex">
                 <h2 class="mb-0 text-dark">Car Owner Details</h2>
-                <a href="profile.php" class="profile-btn btn btn-primary"><i class=" me-3 fas fa-arrow-left"></i> Car Owner Details</a>
+                <a href="user-profile.php" class="profile-btn btn btn-primary"><i class=" me-3 fas fa-arrow-left"></i> Car Owner Details</a>
               </div>
             </div>
             <!-- Account page navigation-->
@@ -389,7 +389,7 @@ mysqli_close($connection);
               <!-- Profile picture card -->
               <div class="col-xl-4 mb-4 mb-xl-4">
                 <div class="card">
-                  <form action="upload-profile-backend.php" method="POST" enctype="multipart/form-data">
+                  <form action="user-profile-upload-backend.php" method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="user_id" id="user_id" value="<?php echo $userData['user_id'];?>">
                     <center>
                       <div class="v-1 card-header text-light"><?php echo $userData['firstname']; ?>'s profile</div>
@@ -410,7 +410,7 @@ mysqli_close($connection);
 
               <!-- First Name, Phone Number, Username and Gender -->
               <div class=" col-md-4 mb-4">
-                <form action="edit-profile-backend.php" method="POST">
+                <form action="user-edit-profile-backend.php" method="POST">
                   <input type="hidden" name="user_id" id="user_id" value="<?php echo $userData['user_id'];?>">
                     <div class="form-group mb-3 text-dark">
                       <label for="firstname">First Name:</label>

@@ -28,7 +28,7 @@ $shop_result = mysqli_query($connection, $shop_query);
 
 
 // Close the database connection
-mysqli_close($connection);
+
 ?>
 
 <!DOCTYPE html>
@@ -252,13 +252,13 @@ mysqli_close($connection);
                 </li>
                 <li>
                 <li class="v-1">
-                    <a href="profile.php" class="nav-link px-3">
+                    <a href="user-dashboard.php" class="nav-link px-3">
                         <span class="me-2"><i class="fas fa-home"></i></i></span>
                         <span class="start">DASHBOARD</span>
                     </a>
                 </li>
                 <li class="">
-                    <a href="profile.php" class="nav-link px-3">
+                    <a href="user-profile.php" class="nav-link px-3">
                         <span class="me-2"><i class="fas fa-user"></i></i></span>
                         <span class="start">PROFILE</span>
                     </a>
@@ -374,18 +374,52 @@ mysqli_close($connection);
     <!-- main content -->
     <main>
         <div class="container mt-3">
-            <div class="input-group input-group-sm">
-                <input type="text" class="form-control form-control-sm" placeholder="Search Car Wash Shop">
-                <div class="input-group-append">
-                    <button class="btn btn-outline-secondary btn-lg ms-4" type="button">
-                        <i class="fa fa-search"></i>
-                    </button>
+            <form action="" method="GET" id="search-form">
+                <div class="input-group input-group-sm">
+                    <input type="text" name="query" class="form-control form-control-sm" placeholder="Search Car Wash Shop">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary btn-lg ms-4" type="submit">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
                 </div>
-            </div>
+            </form>
+        </div>
+        
+        <div class="container mt-3">
+            <?php
+            if (isset($_GET['query'])) {
+                // Include the config.php file to connect to the database
+                
+
+                // Get the search query
+                $query = $connection->real_escape_string($_GET['query']);
+
+                $sql = "SELECT * FROM shops WHERE shop_name LIKE '%$query%' OR barangay LIKE '%$query%'";
+                $result = $connection->query($sql);
+
+                echo '<h3 class="text-dark">Search Results for "' . htmlspecialchars($query) . '"</h3>';
+                if ($result->num_rows > 0) {
+                    echo '<ul class="list-group">';
+                    while($row = $result->fetch_assoc()) {
+                        echo '<div class="list-group-item">';
+                        echo '<h5>' . htmlspecialchars($row["shop_name"]) . '</h5>';
+                        echo '<p>' . htmlspecialchars($row["barangay"]) . '</p>';
+                        echo '</div>';
+                    }
+                    echo '</ul>';
+                } else {
+                    echo '<p class="text-dark">No results found.</p>';
+                }
+
+                mysqli_close($connection);
+            }
+            ?>
         </div>
 
+
         <div>
-            <h1 class="ms-3 text-dark text-center mt-3">Shops Near You</h1>
+            <h2 class="ms-3 text-dark text-center mt-3">Shops Near You</h2>
         </div>
         <div class="container mt-3 text-dark">
             <div class="row">

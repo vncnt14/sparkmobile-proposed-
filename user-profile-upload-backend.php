@@ -16,10 +16,10 @@
             move_uploaded_file($_FILES['profile']['tmp_name'], "uploads/" . $_FILES['profile']['name']);
             $profile = "uploads/" . $_FILES['profile']['name'];
 
-            if (!$update = mysqli_query($connection, "UPDATE shop SET profile = '$profile' WHERE user_id='$user_id'")) {
+            if (!$update = mysqli_query($connection, "UPDATE users SET profile = '$profile' WHERE user_id='$user_id'")) {
                 echo mysqli_error($connection);
             } else {
-                header("location: owner-edit-profile.php");
+                header("location: user-profile-edit.php");
                 exit();
             }
         }

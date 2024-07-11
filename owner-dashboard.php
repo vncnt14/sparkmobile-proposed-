@@ -238,7 +238,7 @@ mysqli_close($connection);
 
 
                 <div class=" welcome fw-bold px-3 mb-3">
-                    <h5 class="text-center">Welcome back <?php echo $userData['firstname']; ?>!</h5>
+                    <h5 class="text-center">Welcome back owner <?php echo $userData['firstname']; ?>!</h5>
                 </div>
                 <div class="ms-3" id="dateTime"></div>
                 </li>

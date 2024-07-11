@@ -25,12 +25,12 @@ include('config.php');
 	if(mysqli_query($connection, $sql)){
 	echo '<script language="javascript">';
 	echo 'alert("Profile successfully updated!");';
-	echo 'window.location="profile.php";';
+	echo 'window.location="user-profile.php";';
 	echo'</script>';	
 } else {
 	echo'<script language="javascript">';
 	echo'alert("Error Updating!");';
-	echo'window.location="profile.php";';
+	echo'window.location="user-profile.php";';
 	echo '</script>';
 }
 ?>

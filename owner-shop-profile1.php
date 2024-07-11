@@ -272,7 +272,7 @@ li :hover{
             </li>
             <li>
                 <li class="">
-                    <a href="profile.php" class="nav-link px-3">
+                    <a href="owner-profile.php" class="nav-link px-3">
                       <span class="me-2"><i class="fas fa-user"></i></i></span>
                       <span class="start">PROFILE</span>
                     </a>

@@ -376,7 +376,7 @@ margin-left: 43.5%;
             <div class="container mt-3">
               <div class="d-flex">
                 <h2 class="mb-0 text-dark">Car Owner Details</h2>
-                <a href="edit-profile.php" class="profile-btn btn btn-primary">Edit Personal Details <i class=" ms-2 fas fa-arrow-right"></i></a>
+                <a href="user-profile-edit.php" class="profile-btn btn btn-primary">Edit Personal Details <i class=" ms-2 fas fa-arrow-right"></i></a>
               </div>
             </div>
             <!-- Account page navigation-->

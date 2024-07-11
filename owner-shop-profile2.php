@@ -264,7 +264,7 @@ mysqli_close($connection);
           </a>
         </li>
         <li class="v-1">
-          <a href="owner-profile.php" class="nav-link px-3">
+          <a href="user-profile.php" class="nav-link px-3">
             <span class="me-2"><i class="fas fa-user"></i></i></span>
             <span class="start">PROFILE</span>
           </a>
@@ -379,7 +379,7 @@ mysqli_close($connection);
   </div>
   <!-- main content -->
   <main>
-    <form action="" method="POST">
+   
       <div class="personal-details">
         <div class="container-fluid py-3">
           <div class="row">

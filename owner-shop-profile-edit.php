@@ -265,7 +265,7 @@ mysqli_close($connection);
           </a>
         </li>
         <li class="v-1">
-          <a href="owner-profile.php" class="nav-link px-3">
+          <a href="user-profile.php" class="nav-link px-3">
             <span class="me-2"><i class="fas fa-user"></i></i></span>
             <span class="start">PROFILE</span>
           </a>
@@ -387,7 +387,7 @@ mysqli_close($connection);
             <div class="container mt-3">
               <div class="d-flex">
                 <h2 class="mb-0 text-dark">Edit Shop Details</h2>
-                <a href="owner-shop-profile.php?user_id=<?php echo $userData['user_id']; ?>" class="shop-btn btn btn-primary">
+                <a href="owner-shop-profile1.php?user_id=<?php echo $userData['user_id']; ?>" class="shop-btn btn btn-primary">
                   <i class="ms-2 fas fa-arrow-left me-3"></i>Cancel 
                 </a>
 
@@ -399,7 +399,7 @@ mysqli_close($connection);
               <!-- Profile picture card -->
               <div class="col-xl-4 mb-4 mb-xl-4">
                     <div class="card">
-                    <form action="upload-profile-backend.php" method="POST" enctype="multipart/form-data">
+                    <form action="owner-profile-upload-backend.php" method="POST" enctype="multipart/form-data">
                         <input type="hidden" name="shop_id" id="shop_id" value="<?php echo $shopData['shop_id'];?>">
                         <center>
                         <div class="v-1 card-header text-light"><?php echo isset($shopData['shop_name']) ? htmlspecialchars($shopData['shop_name']) : ''; ?>'s permit</div>
@@ -421,6 +421,7 @@ mysqli_close($connection);
               <!-- First Name, Phone Number, Username and Gender -->
                 <div class=" col-md-4 mb-4">
                     <form action="owner-shop-profile-edit-backend.php" method="POST">
+                        <input type="hidden" name="shop_id" id="shop_id" value="<?php echo $shopData['shop_id'];?>">
                         <input type="hidden" name="user_id" id="user_id" value="<?php echo $userData['user_id'];?>">
                         <div class="form-group mb-3 text-dark">
                         <label for="shop_name">Shop/Business Name:</label>
@@ -494,7 +495,7 @@ mysqli_close($connection);
                 <div class="col-xl-4 mb-4 mb-xl-4">
                     <h2 class="text-dark mt-3">Business Permit</h2>
                     <div class="card">
-                    <form action="upload-permit-backend.php" method="POST" enctype="multipart/form-data">
+                    <form action="owner-shop-permit-upload.php" method="POST" enctype="multipart/form-data">
                         <input type="hidden" name="shop_id" id="shop_id" value="<?php echo $shopData['shop_id'];?>">
                         <center>
                         <div class="v-1 card-header text-light"><?php echo isset($shopData['shop_name']) ? htmlspecialchars($shopData['shop_name']) : ''; ?>'s permit</div>

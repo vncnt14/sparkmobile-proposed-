@@ -2,7 +2,7 @@
     include('config.php');
     include('session.php');
     
-    $shop_id = $_SESSION['shop_id']; // Assuming you have 'user_id' in your session
+    $shop_id = $_POST['shop_id']; // Assuming you have 'user_id' in your session
 
     if (isset($_FILES['permit']['tmp_name'])) {
         $file = $_FILES['permit']['tmp_name'];
@@ -16,7 +16,7 @@
             move_uploaded_file($_FILES['permit']['tmp_name'], "uploads/" . $_FILES['permit']['name']);
             $permit = "uploads/" . $_FILES['permit']['name'];
 
-            if (!$update = mysqli_query($connection, "UPDATE shops SET permit = '$permit' WHERE user_id='$user_id'")) {
+            if (!$update = mysqli_query($connection, "UPDATE shops SET permit = '$permit' WHERE shop_id='$shop_id'")) {
                 echo mysqli_error($connection);
             } else {
                 header("location: owner-shop-profile-edit.php?shop_id=" . $shop_id);
