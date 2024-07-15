@@ -192,11 +192,27 @@ $shop_result = mysqli_query($connection, $shop_query);
         object-fit: cover;
         border-radius: 50%;
     }
+
     .card:hover {
-            transform: scale(1.05);
-            transition: transform 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
+        transform: scale(1.05);
+        transition: transform 0.3s ease;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .textorange {
+        color: orangered;
+    }
+
+    ;
+
+    .loading-spinner {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1050;
+    }
 </style>
 
 <body>
@@ -359,16 +375,31 @@ $shop_result = mysqli_query($connection, $shop_query);
                         <span>REWARDS</span>
                     </a>
                 </li>
-                <li>
-                    <a href="logout.php" class="nav-link px-3">
-                        <span class="me-2"><i class="fas fa-sign-out-alt"></i>
-                            </i></span>
-                        <span>LOG OUT</span>
-                    </a>
+                <li class="nav-link px-3" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                    <span class="me-2"><i class="fas fa-sign-out-alt"></i>
+                        </i></span>
+                    <span>LOG OUT</span>
                 </li>
 
             </ul>
         </nav>
+    </div>
+    <div class="modal fade text-dark" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title textorange" id="logoutModalLabel">Logout</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body textorange">
+                    <h4>Are you sure you want to Logout?</h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="confirmLogout">Logout</button>
+                </div>
+            </div>
+        </div>
     </div>
     </div>
     <!-- main content -->
@@ -385,12 +416,12 @@ $shop_result = mysqli_query($connection, $shop_query);
                 </div>
             </form>
         </div>
-        
+
         <div class="container mt-3">
             <?php
             if (isset($_GET['query'])) {
                 // Include the config.php file to connect to the database
-                
+
 
                 // Get the search query
                 $query = $connection->real_escape_string($_GET['query']);
@@ -401,7 +432,7 @@ $shop_result = mysqli_query($connection, $shop_query);
                 echo '<h3 class="text-dark">Search Results for "' . htmlspecialchars($query) . '"</h3>';
                 if ($result->num_rows > 0) {
                     echo '<ul class="list-group">';
-                    while($row = $result->fetch_assoc()) {
+                    while ($row = $result->fetch_assoc()) {
                         echo '<div class="list-group-item">';
                         echo '<h5>' . htmlspecialchars($row["shop_name"]) . '</h5>';
                         echo '<p>' . htmlspecialchars($row["barangay"]) . '</p>';
@@ -416,17 +447,20 @@ $shop_result = mysqli_query($connection, $shop_query);
             }
             ?>
         </div>
+        
 
 
         <div>
             <h2 class="ms-3 text-dark text-center mt-3">Shops Near You</h2>
         </div>
         <div class="container mt-3 text-dark">
+
             <div class="row">
                 <?php if ($shop_result && mysqli_num_rows($shop_result) > 0) : ?>
                     <?php while ($shopData = mysqli_fetch_assoc($shop_result)) : ?>
                         <div class="col-md-4 mb-3">
                             <div class="card">
+
                                 <img src="<?php echo htmlspecialchars($shopData['profile']); ?>" class="card-img-top" alt="<?php echo htmlspecialchars($shopData['shop_name']); ?> Profile Image">
                                 <h5 class="card-title text-center"><?php echo htmlspecialchars($shopData['shop_name']); ?></h5>
                                 <div class="card-body">
@@ -436,12 +470,37 @@ $shop_result = mysqli_query($connection, $shop_query);
                         </div>
                     <?php endwhile; ?>
                 <?php else : ?>
+
                     <p class="text-center">No shops available.</p>
                 <?php endif; ?>
+
             </div>
         </div>
 
+        </div>
+
+
     </main>
+
+    <script src="./js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
+    <script src="./js/jquery-3.5.1.js"></script>
+    <script src="./js/jquery.dataTables.min.js"></script>
+    <script src="./js/dataTables.bootstrap5.min.js"></script>
+    <script src="./js/script.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            $('#confirmLogout').on('click', function() {
+                // Replace with your actual logout URL or logic
+                window.location.href = 'logout.php';
+            });
+        });
+    </script>
 
 
     <script>
@@ -468,13 +527,6 @@ $shop_result = mysqli_query($connection, $shop_query);
 
 
 
-
-    <script src="./js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
-    <script src="./js/jquery-3.5.1.js"></script>
-    <script src="./js/jquery.dataTables.min.js"></script>
-    <script src="./js/dataTables.bootstrap5.min.js"></script>
-    <script src="./js/script.js"></script>
 </body>
 
 </html>
