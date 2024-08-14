@@ -229,13 +229,19 @@ mysqli_close($connection);
 
 
         <div class=" welcome fw-bold px-3 mb-3">
-          <h5 class="text-center">Welcome back <?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>!</h5>
+          <h5 class="text-center">Welcome back <?php echo isset($_SESSION['firstname']) ? $_SESSION['firstname'] : ''; ?>!</h5>
         </div>
         <div class="ms-3" id="dateTime"></div>
         </li>
         <li>
         <li>
-          <a href="profile.php" class="nav-link px-3">
+          <a href="user-dashboard.php" class="nav-link px-3">
+            <span class="me-2"><i class="fas fa-user"></i></i></span>
+            <span class="start">DASHBOARD</span>
+          </a>
+        </li>
+        <li>
+          <a href="user-profile.php" class="nav-link px-3">
             <span class="me-2"><i class="fas fa-user"></i></i></span>
             <span class="start">PROFILE</span>
           </a>
@@ -252,7 +258,7 @@ mysqli_close($connection);
           <span>BOOKINGS</span>
           <span class="ms-auto">
             <span class="right-icon">
-              <i class="bi bi-chevron-down"></i>
+              <i class="bi bi-chevron-down"></i>  
             </span>
           </span>
         </a>
@@ -377,7 +383,7 @@ mysqli_close($connection);
                       <input type="hidden" name="vehicle_id" id="vehicle_id" value="<?php echo $vehicleData['vehicle_id']; ?>">
                       <input type="file" class="form-control" id="profile" name="profile" accept="image/*">
                     </div>
-                    <button type="submit" class="btn-primary btn col-mb-4">Submit Profile</button>
+                    
                   </div>
                 </div>
           </form>

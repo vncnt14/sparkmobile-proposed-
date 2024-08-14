@@ -46,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo '<script>alert("Car registration successful!");</script>';
         echo "<script>
                     setTimeout(function() {
-                        window.location.href = 'cscars1.php';
+                        window.location.href = 'cars-profile.php';
                     }, 100); // Redirect after 1 second
                   </script>";
         exit;

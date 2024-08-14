@@ -261,13 +261,19 @@ li :hover{
             
             
               <div class=" welcome fw-bold px-3 mb-3">
-              <h5 class="text-center">Welcome back <?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>!</h5>
+              <h5 class="text-center">Welcome back <?php echo isset($_SESSION['firstname']) ? $_SESSION['firstname'] : ''; ?>!</h5>
               </div>
               <div class="ms-3"id="dateTime"></div>
             </li>
+            <li class="">
+              <a href="user-dashboard.php" class="nav-link px-3">
+                <span class="me-2"><i class="fas fa-home"></i></i></span>
+                <span>DASHBOARD</span>
+              </a>
+            </li>
             <li>
                 <li class="">
-                    <a href="profile.php" class="nav-link px-3">
+                    <a href="user-profile.php" class="nav-link px-3">
                       <span class="me-2"><i class="fas fa-user"></i></i></span>
                       <span class="start">PROFILE</span>
                     </a>
@@ -424,7 +430,7 @@ li :hover{
                       echo '<h5 class="card-title">' . (isset($row['label']) ? $row['label'] : 'label') . '</h5>';
                       echo '</div>';
                       echo '<div class="card-body container-fluid">';
-                      echo '<img src="' . (isset($row['profile']) ? $row['profile'] : 'N/A') . '" alt="Profile Picture" class="card-img-top profile-picture container-fluid">';
+                      echo '<img src="' . (isset($row['profile']) ? $row['profile'] : 'N/A') . '"">';
                       echo '<p class="card-text mt-3"><strong>Plate Number:</strong> ' . (isset($row['platenumber']) ? $row['platenumber'] : 'N/A') . '</p>';
                       echo '<p class="card-text"><strong>Brand:</strong> ' . (isset($row['brand']) ? $row['brand'] : 'N/A') . '</p>';
                       echo '<p class="card-text"><strong>Model:</strong> ' . (isset($row['model']) ? $row['model'] : 'N/A') . '</p>';

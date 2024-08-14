@@ -203,17 +203,37 @@ $shop_result = mysqli_query($connection, $shop_query);
         color: orangered;
     }
 
-    ;
 
-    .loading-spinner {
-        display: none;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 1050;
+    .card {
+      max-width: 400px;
+      margin: 20px auto;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    #login-card {
+      position: fixed;
+      top: 50%;
+      left: 58%;
+      transform: translate(-50%, -50%);
+      z-index: 1050; /* Higher than other elements */
+      background-color: white;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      border-radius: 10px;
+    }
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1040; /* Just below the card */
+      display: none;
     }
 </style>
+
 
 <body>
     <!-- top navigation bar -->
@@ -447,11 +467,20 @@ $shop_result = mysqli_query($connection, $shop_query);
             }
             ?>
         </div>
-        
+
 
 
         <div>
             <h2 class="ms-3 text-dark text-center mt-3">Shops Near You</h2>
+        </div>
+        <div id="overlay" class="overlay"></div>
+            <div id="login-card" class="card text-dark">
+            <div class="card-body">
+                <img src="checkmark.png" class="mb-3" alt="">
+                <h5 class="card-title">Login Successfully!</h5>
+                <p class="card-text">You are now logged in to your account.</p>
+                <button class="btn btn-primary" onclick="hideLoginCard()">Continue</button>
+            </div>
         </div>
         <div class="container mt-3 text-dark">
 
@@ -481,6 +510,7 @@ $shop_result = mysqli_query($connection, $shop_query);
 
 
     </main>
+    
 
     <script src="./js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
@@ -492,6 +522,17 @@ $shop_result = mysqli_query($connection, $shop_query);
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
 
+
+    <script>
+    function hideLoginCard() {
+      document.getElementById('login-card').style.display = 'none';
+      document.getElementById('overlay').style.display = 'none';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('overlay').style.display = 'block';
+    });
+  </script>
 
     <script>
         $(document).ready(function() {

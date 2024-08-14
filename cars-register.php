@@ -224,7 +224,13 @@ $userData = mysqli_fetch_assoc($result);
         </li>
         <li>
         <li>
-          <a href="csdashboard.php" class="nav-link px-3">
+          <a href="user-dashboard.php" class="nav-link px-3">
+            <span class="me-2"><i class="fas fa-user"></i></i></span>
+            <span class="start">DASHBOARD</span>
+          </a>
+        </li>
+        <li>
+          <a href="user-profile.php" class="nav-link px-3">
             <span class="me-2"><i class="fas fa-user"></i></i></span>
             <span class="start">PROFILE</span>
           </a>
