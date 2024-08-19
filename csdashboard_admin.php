@@ -17,7 +17,7 @@ $role = $_SESSION['role'];
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
-$query = "SELECT * FROM carowners WHERE user_id = '$userID' AND role='$role'";
+$query = "SELECT * FROM users WHERE user_id = '$userID' AND role='$role'";
 // Execute the query and fetch the user data
 $result = mysqli_query($connection, $query);
 $shopownerData = mysqli_fetch_assoc($result);
