@@ -184,6 +184,10 @@ li :hover{
   object-fit: cover;
   border-radius: 10%;
 }
+.profile-pic{
+  width: 300px; /* Adjust the size as needed */
+  height: 150px;
+}
 
 </style>
   <body>
@@ -430,7 +434,7 @@ li :hover{
                       echo '<h5 class="card-title">' . (isset($row['label']) ? $row['label'] : 'label') . '</h5>';
                       echo '</div>';
                       echo '<div class="card-body container-fluid">';
-                      echo '<img src="' . (isset($row['profile']) ? $row['profile'] : 'N/A') . '"">';
+                      echo '<img class="profile-pic" src="' . (isset($row['profile']) ? $row['profile'] : 'N/A') . '" />';
                       echo '<p class="card-text mt-3"><strong>Plate Number:</strong> ' . (isset($row['platenumber']) ? $row['platenumber'] : 'N/A') . '</p>';
                       echo '<p class="card-text"><strong>Brand:</strong> ' . (isset($row['brand']) ? $row['brand'] : 'N/A') . '</p>';
                       echo '<p class="card-text"><strong>Model:</strong> ' . (isset($row['model']) ? $row['model'] : 'N/A') . '</p>';
