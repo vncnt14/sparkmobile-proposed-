@@ -307,8 +307,8 @@
         <div class="modal-body">
           <form action="cslogin.php" method="POST">
             <div class="mb-3">
-              <label for="username" class="form-label">Username</label>
-              <input type="username" class="form-control" id="username" name="username" required>
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="email" name="email" required>
             </div>
             <div class="mb-3">
               <label for="password" class="form-label">Password</label>
@@ -334,7 +334,7 @@
         </div>
         <div class="modal-body">
           <form action="csregister.php" method="POST">
-            <input type="hidden" id="role" name="role" value="user">
+            <input type="hidden" id="role" name="role" value="User">
             <div class="mb-3">
               <label for="firstname" class="form-label">First Name</label>
               <input type="text" class="form-control" id="firstname" name="firstname" required>

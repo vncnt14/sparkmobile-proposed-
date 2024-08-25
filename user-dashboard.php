@@ -408,15 +408,16 @@ $shop_result = mysqli_query($connection, $shop_query);
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title textorange" id="logoutModalLabel">Logout</h4>
+                    <h4 class="modal-title" id="logoutModalLabel">Logout</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body textorange">
+                <div class="modal-body">
                     <h4>Are you sure you want to Logout?</h4>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="confirmLogout">Logout</button>
+                    <a href=""><button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button></a>
+                    <a href="logout.php"><button type="button" class="btn btn-primary" id="confirmLogout">Logout</button></a>
+                </div>
                 </div>
             </div>
         </div>

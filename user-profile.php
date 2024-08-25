@@ -355,18 +355,36 @@ margin-left: 43.5%;
             <span>REWARDS</span>
           </a>
         </li>
-        <li>
-          <a href="logout.php" class="nav-link px-3">
-            <span class="me-2"><i class="fas fa-sign-out-alt"></i>
-              </i></span>
-            <span>LOG OUT</span>
-          </a>
-        </li>
+        <li class="nav-link px-3" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                    <span class="me-2"><i class="fas fa-sign-out-alt"></i>
+                        </i></span>
+                    <span>LOG OUT</span>
+                </li>
+
 
       </ul>
     </nav>
   </div>
   </div>
+
+  <div class="modal fade text-dark" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title textorange" id="logoutModalLabel">Logout</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body textorange">
+                    <h4>Are you sure you want to Logout?</h4>
+                </div>
+                <div class="modal-footer">
+                    <a href=""><button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button></a>
+                    <a href="logout.php"><button type="button" class="btn btn-primary" id="confirmLogout">Logout</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+      
   <!-- main content -->
   <main>
     <form action="" method="POST">
@@ -470,6 +488,7 @@ margin-left: 43.5%;
           </div>
         </div>
       </div>
+
 
       <script>
         function updateDateTime() {
