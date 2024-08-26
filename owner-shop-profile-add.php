@@ -398,7 +398,7 @@ mysqli_close($connection);
               <!-- Profile picture card -->
               <div class="col-xl-4 mb-4 mb-xl-4">
                     <div class="card">
-                    <form action="upload-permit-backend.php" method="POST" enctype="multipart/form-data">
+                    <form action="owner-shop-profile-add-backend.php" method="POST" enctype="multipart/form-data">
                         <input type="hidden" name="shop_id" id="shop_id" value="<?php echo $shopData['shop_id'];?>">
                         <center>
                         <div class="v-1 card-header text-light"><?php echo isset($shopData['shop_name']) ? htmlspecialchars($shopData['shop_name']) : ''; ?>'s permit</div>
@@ -432,8 +432,8 @@ mysqli_close($connection);
                         </div>
 
                         <div class="form-group mb-3 text-dark">
-                        <label for="operating_hours">Operating Hours:</label>
-                        <input type="text" class="form-control" id="operating_hours" name="operating_hours" placeholder="Edit Operating Hours " value="<?php echo isset($shopData['operating_hours']) ? htmlspecialchars($shopData['operating_hours']) : ''; ?>" required>
+                        <label for="operating">Operating Hours:</label>
+                        <input type="text" class="form-control" id="operating" name="operating" placeholder="Edit Operating Hours " value="<?php echo isset($shopData['operating_hours']) ? htmlspecialchars($shopData['operating_hours']) : ''; ?>" required>
                         </div>
 
                         </div>
@@ -445,8 +445,8 @@ mysqli_close($connection);
                         </div>
 
                         <div class="form-group mb-3 text-dark">
-                        <label for="website_link">Website link (Optional):</label>
-                        <input type="text" class="form-control" id="website_link" name="website_link" placeholder="Edit Shop Website Link" value="<?php echo isset($shopData['website_link']) ? htmlspecialchars($shopData['website_link']) : ''; ?>">
+                        <label for="website">Website link (Optional):</label>
+                        <input type="text" class="form-control" id="website" name="website" placeholder="Edit Shop Website Link" value="<?php echo isset($shopData['website_link']) ? htmlspecialchars($shopData['website_link']) : ''; ?>">
                         </div>
 
                         <div class="form-group mb-3 text-dark">
@@ -493,7 +493,7 @@ mysqli_close($connection);
                 <div class="col-xl-4 mb-4 mb-xl-4">
                     <h2 class="text-dark mt-3">Business Permit</h2>
                     <div class="card">
-                    <form action="upload-permit-backend.php" method="POST" enctype="multipart/form-data">
+                    <form action="owner-shop-profile-add-backend.php" method="POST" enctype="multipart/form-data">
                         <input type="hidden" name="shop_id" id="shop_id" value="<?php echo $shopData['shop_id'];?>">
                         <center>
                         <div class="v-1 card-header text-light"><?php echo isset($shopData['shop_name']) ? htmlspecialchars($shopData['shop_name']) : ''; ?>'s permit</div>

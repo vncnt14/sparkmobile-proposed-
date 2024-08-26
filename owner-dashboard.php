@@ -244,7 +244,7 @@ mysqli_close($connection);
                 </li>
                 <li>
                 <li class="v-1">
-                    <a href="dashboard-owner.php" class="nav-link px-3">
+                    <a href="owner-dashboard.php" class="nav-link px-3">
                         <span class="me-2"><i class="fas fa-home"></i></i></span>
                         <span class="start">DASHBOARD</span>
                     </a>
@@ -258,9 +258,9 @@ mysqli_close($connection);
                 <li>
 
                 <li class="">
-                    <a href="cars-profile.php" class="nav-link px-3">
+                    <a href="owner-shop-profile1.php" class="nav-link px-3">
                         <span class="me-2"><i class="fas fa-money-bill"></i></i></span>
-                        <span>MY SALES</span>
+                        <span>MY SHOPS</span>
                     </a>
                 </li>
                 <li><a class="nav-link px-3 sidebar-link" data-bs-toggle="collapse" href="#layouts">

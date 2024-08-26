@@ -430,7 +430,7 @@ mysqli_close($connection);
                     <div class="form-group mb-3 text-dark">
                     <label for="gender">Gender:</label>
                     <select class="form-select" id="gender" name="gender">>
-                      <option value="customer"></option>
+                      <option value="customer">Choose</option>
                       <option value="Male" <?php if ($userData['gender'] == 'Male') echo 'selected'; ?>>Male</option>
                       <option value="Female" <?php if ($userData['gender'] == 'Female') echo 'selected'; ?>>Female</option>
                       <option value="Prefer not to say" <?php if ($userData['gender'] == 'Prefer not to say') echo 'selected'; ?>>Prefer Not to Say</option>

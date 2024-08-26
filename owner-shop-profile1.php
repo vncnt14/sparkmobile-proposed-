@@ -270,6 +270,12 @@ li :hover{
               </div>
               <div class="ms-3"id="dateTime"></div>
             </li>
+            <li class="">
+              <a href="owner-dashboard.php" class="nav-link px-3">
+                <span class="me-2"><i class="fas fa-home"></i></i></span>
+                <span>DASHBOARD</span>
+              </a>
+            </li>
             <li>
                 <li class="">
                     <a href="owner-profile.php" class="nav-link px-3">
@@ -281,7 +287,7 @@ li :hover{
             <li class="v-1">
               <a href="cars-profile.php" class="nav-link px-3">
                 <span class="me-2"><i class="fas fa-car"></i></i></span>
-                <span>MY CARS</span>
+                <span>MY SHOP</span>
               </a>
             </li>
             <li class="">
@@ -408,7 +414,9 @@ li :hover{
     <div class="container mt-3">
         <div class="d-flex align-items-center">
             <h4 class="mb-0">MY SHOP</h4>
-            <a href="cars-register.php" class="btn btn-primary ml-auto"><i class="me-3 fas fa-plus"></i>Add Shop </a>
+            <a href="owner-shop-profile-add.php?user_id=<?php echo $user_id; ?>" class="btn btn-primary ml-auto">
+    <i class="me-3 fas fa-plus"></i>Add Shop
+</a>
         </div>
     </div>
     <div class="v-2 card-header mt-2">
@@ -440,7 +448,7 @@ li :hover{
             echo '</div>';
         }
     } else {
-        echo '<p class="text-danger">No shops found.</p>';
+        echo '<p class="text-light">No shops found.</p>';
     }
     ?>
 </div>
