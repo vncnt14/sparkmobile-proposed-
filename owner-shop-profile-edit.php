@@ -13,7 +13,7 @@ if (!isset($_SESSION['username'])) {
 // Fetch user information based on ID
 $userID = $_SESSION['user_id'];
 //$vehicle_id = $_SESSION['vehicle_id'];
-//$shop_id = $_GET['shop_id'];
+$shop_id = $_GET['shop_id'];
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
@@ -21,6 +21,10 @@ $query = "SELECT * FROM users WHERE user_id = '$userID'";
 // Execute the query and fetch the user data
 $result = mysqli_query($connection, $query);
 $userData = mysqli_fetch_assoc($result);
+
+$query = "SELECT *FROM shops WHERE shop_id = '$shop_id'";
+$result = mysqli_query($connection, $query);
+$shopData = mysqli_fetch_assoc($result);
 
 //$shop_query = "SELECT *FROM shops WHERE shop_id = '$shop_id'";
 //$shop_result = mysqli_query($connection, $shop_query);
@@ -422,7 +426,6 @@ mysqli_close($connection);
                 <div class=" col-md-4 mb-4">
                     <form action="owner-shop-profile-edit-backend.php" method="POST">
                         <input type="hidden" name="shop_id" id="shop_id" value="<?php echo $shopData['shop_id'];?>">
-                        <input type="hidden" name="user_id" id="user_id" value="<?php echo $userData['user_id'];?>">
                         <div class="form-group mb-3 text-dark">
                         <label for="shop_name">Shop/Business Name:</label>
                         <input type="text" class="form-control" id="shop_name" name="shop_name" placeholder="Edit Shop Name" value="<?php echo isset($shopData['shop_name']) ? htmlspecialchars($shopData['shop_name']) : ''; ?>" required>
@@ -434,8 +437,8 @@ mysqli_close($connection);
                         </div>
 
                         <div class="form-group mb-3 text-dark">
-                        <label for="operating_hours">Operating Hours:</label>
-                        <input type="text" class="form-control" id="operating_hours" name="operating_hours" placeholder="Edit Operating Hours " value="<?php echo isset($shopData['operating_hours']) ? htmlspecialchars($shopData['operating_hours']) : ''; ?>" required>
+                        <label for="operating">Operating Hours:</label>
+                        <input type="time" class="form-control" id="operating" name="operating" placeholder="Edit Operating Hours " value="<?php echo isset($shopData['operating']) ? htmlspecialchars($shopData['operating']) : ''; ?>" required>
                         </div>
 
                         </div>
@@ -447,8 +450,8 @@ mysqli_close($connection);
                         </div>
 
                         <div class="form-group mb-3 text-dark">
-                        <label for="website_link">Website link (Optional):</label>
-                        <input type="text" class="form-control" id="website_link" name="website_link" placeholder="Edit Shop Website Link" value="<?php echo isset($shopData['website_link']) ? htmlspecialchars($shopData['website_link']) : ''; ?>">
+                        <label for="website">Website link (Optional):</label>
+                        <input type="text" class="form-control" id="website" name="website" placeholder="Edit Shop Website Link" value="<?php echo isset($shopData['website']) ? htmlspecialchars($shopData['website']) : ''; ?>">
                         </div>
 
                         <div class="form-group mb-3 text-dark">

@@ -196,6 +196,13 @@ mysqli_close($connection);
     border-radius: 50%;
   }
 
+  .img-account-permit {
+    width: 200px;
+    /* Adjust the size as needed */
+    height: 200px;
+    object-fit: cover;
+  }
+
   .profile-btn {
 
     margin-left: 50%;
@@ -423,8 +430,8 @@ mysqli_close($connection);
                 </div>
 
                 <div class="form-group mb-3 text-dark">
-                  <label for="operating_hours">Operating Hours:</label>
-                  <input type="text" class="form-control" id="operating_hours" name="operating_hours" placeholder="Edit Operating Hours " value="<?php echo isset($shopData['operating_hours']) ? htmlspecialchars($shopData['operating_hours']) : ''; ?>" readonly>
+                  <label for="operating">Operating Hours:</label>
+                  <input type="text" class="form-control" id="operating" name="operating" placeholder="Edit Operating Hours " value="<?php echo isset($shopData['operating']) ? htmlspecialchars($shopData['operating']) : ''; ?>" readonly>
                 </div>
 
               </div>
@@ -436,8 +443,8 @@ mysqli_close($connection);
                 </div>
 
                 <div class="form-group mb-3 text-dark">
-                  <label for="website_link">Website link (Optional):</label>
-                  <input type="email" class="form-control" id="website_link" name="website_link" placeholder="Edit Shop Website Link" value="<?php echo isset($shopData['website_link']) ? htmlspecialchars($shopData['website_link']) : ''; ?>" readonly>
+                  <label for="website">Website link (Optional):</label>
+                  <input type="email" class="form-control" id="website" name="website" placeholder="Edit Shop Website Link" value="<?php echo isset($shopData['website']) ? htmlspecialchars($shopData['website']) : ''; ?>" readonly>
                 </div>
 
                 <div class="form-group mb-3 text-dark">
@@ -490,7 +497,7 @@ mysqli_close($connection);
                       <div class="v-1 card-header text-light"><?php echo isset($shopData['shop_name']) ? htmlspecialchars($shopData['shop_name']) : ''; ?>'s permit</div>
                     </center>
                     <div class="card-body text-center">
-                      <img class="img-account-profile mb-3" src="<?php echo $shopData['profile']; ?>" alt="">
+                      <img class="img-account-permit mb-3" src="<?php echo $shopData['permit']; ?>" alt="">
                       <label for="profile"></label>
                       <div class="input-group">
               

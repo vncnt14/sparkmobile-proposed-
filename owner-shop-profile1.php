@@ -11,7 +11,7 @@ if (!isset($_SESSION['username'])) {
 }
 
 // Fetch user information based on ID
-$user_id = $_GET['user_id'];
+$user_id = $_SESSION['user_id'];
 
 // Fetch user information from the database based on the user's ID
 $query = "SELECT * FROM shops WHERE user_id = '$user_id'";
@@ -287,7 +287,7 @@ li :hover{
             <li class="v-1">
               <a href="cars-profile.php" class="nav-link px-3">
                 <span class="me-2"><i class="fas fa-car"></i></i></span>
-                <span>MY SHOP</span>
+                <span>MY SHOPS</span>
               </a>
             </li>
             <li class="">

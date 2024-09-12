@@ -19,7 +19,7 @@
             if (!$update = mysqli_query($connection, "UPDATE shops SET profile = '$profile' WHERE shop_id='$shop_id'")) {
                 echo mysqli_error($connection);
             } else {
-                header("location:  owner-shop-profile-edit.php?shop_id=" . $shop_id);
+                header("location:owner-shop-profile-edit.php?shop_id=" . $shop_id);
                 exit();
             }
         }
