@@ -216,6 +216,12 @@ $shop_result = mysqli_query($connection, $shop_query);
         background-color: orangered;
         delay: 
     }
+    .asterisk{
+        color: red;
+    }
+    label{
+        font-size: 12px;
+    }
 </style>
 
 
@@ -409,85 +415,98 @@ $shop_result = mysqli_query($connection, $shop_query);
     </div>
     </div>
     <!-- main content -->
-    <main>
-        <div class="container mt-3">
-            <form action="" method="GET" id="search-form">
-                <div class="input-group input-group-sm">
-                    <input type="text" name="query" class="form-control form-control-sm" placeholder="Search Car Wash Shop">
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-secondary btn-lg ms-4" type="submit">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
+    <main class="container">
+        <div class="mb-3 text-dark">
+            <h2 class="text-center">Application Form</h2>
+            <p class="text-center mb-3">Fill out the important information below.</p>
+            <hr>
 
-        <div class="container mt-3">
-            <?php
-            if (isset($_GET['query'])) {
-                // Include the config.php file to connect to the database
-
-
-                // Get the search query
-                $query = $connection->real_escape_string($_GET['query']);
-
-                $sql = "SELECT * FROM shops WHERE shop_name LIKE '%$query%' OR barangay LIKE '%$query%'";
-                $result = $connection->query($sql);
-
-                echo '<h3 class="text-dark">Search Results for "' . htmlspecialchars($query) . '"</h3>';
-                if ($result->num_rows > 0) {
-                    echo '<ul class="list-group">';
-                    while ($row = $result->fetch_assoc()) {
-                        echo '<div class="list-group-item">';
-                        echo '<h5>' . htmlspecialchars($row["shop_name"]) . '</h5>';
-                        echo '<p>' . htmlspecialchars($row["barangay"]) . '</p>';
-                        echo '</div>';
-                    }
-                    echo '</ul>';
-                } else {
-                    echo '<p class="text-dark">No results found.</p>';
-                }
-
-                mysqli_close($connection);
-            }
-            ?>
-        </div>
-
-
-
-        <div>
-            <h2 class="ms-3 text-dark text-center mt-3">Shops Near You</h2>
-        </div>
-        
-        <div class="container mt-3 text-dark">
-
-            <div class="row">
-                <?php if ($shop_result && mysqli_num_rows($shop_result) > 0) : ?>
-                    <?php while ($shopData = mysqli_fetch_assoc($shop_result)) : ?>
-                        <div class="col-md-4 mb-3">
-                            <div class="card">
-
-                                <img src="<?php echo htmlspecialchars($shopData['profile']); ?>" class="card-img-top" alt="<?php echo htmlspecialchars($shopData['shop_name']); ?> Profile Image">
-                                <h5 class="card-title text-center"><?php echo htmlspecialchars($shopData['shop_name']); ?></h5>
-                                <div class="card-body">
-                                    <center><button type="button" class="btn btn-primary">View Shop</button></center>
-                                </div>
+            <form action="" method="POST">
+                <div class="row justify-content-center">
+                    <!-- First Name and Last Name side by side -->
+                    <div class="col-md-8 text-dark">
+                        <h5>Name <span class="asterisk">*</span></h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="text" id="firstname" name="firstname" class="form-control" value="<?php echo $userData['firstname'];?>" disabled>
+                                <label for="firstname">First Name</label>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" id="lastname" name="lastname" class="form-control" value="<?php echo $userData['lastname'];?>" disabled>
+                                <label for="lastname">Last Name</label>
                             </div>
                         </div>
-                    <?php endwhile; ?>
-                <?php else : ?>
+                    </div>  
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-md-8 text-dark mt-5">
+                        <div class="row">
+                            <!-- Email Section -->
+                            <div class="col-md-6">
+                                <h5>E-mail <span class="asterisk">*</span></h5>
+                                <input type="email" id="email" name="email" class="form-control" value="<?php echo $userData['email'];?>" disabled> 
+                                <label for="email">example@gmail.com</label>
+                            </div>
+                            <!-- Phone Number Section -->
+                            <div class="col-md-6">
+                                <h5>Phone Number <span class="asterisk">*</span></h5>
+                                <input type="contact" id="contact" name="contact" class="form-control" value="<?php echo $userData['contact'];?>" disabled>
+                                <label for="contact"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <!-- Applied Position Section -->
+                    <div class="col-md-4 text-dark mt-5">
+                        <h5>Applied Position <span class="asterisk">*</span></h5>
+                        <select class="form-control" id="applied-position">
+                            <option value="Choose">Choose...</option>
+                            <option value="Car Wash Staff">Car Wash Staff</option>
+                            <option value="Manager">Manager</option>
+                            <option value="Cashier">Cashier</option>
+                        </select>
+                    </div>
+                    <!-- Phone Number Section -->
+                    <div class="col-md-4 text-dark mt-5">
+                        <h5>Preferred Interview Date<span class="asterisk">*</span></h5>
+                        <input type="date" id="date" name="date" class="form-control">
+                        <label for="date"></label>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <h5>Cover Letter <span class="asterisk">*</span></h5>
+                        <label for="coverletter"></label>
+                        <textarea name="coverletter" id="coverletter" cols="100" rows="10"></textarea>
+                    </div>
+                </div>
 
-                    <p class="text-center">No shops available.</p>
-                <?php endif; ?>
+                <div class="row justify-content-center">
+                    <div class="col-md-8 mt-5">
+                        <h5>Upload Resume <span class="asterisk">*</span></h5>
+                        <label for="resume"></label>
+                        <input type="file" name="resume" id="resume" class="form-control">
+                    </div>
+                </div>
 
-            </div>
+                <div class="row justify-content-center">
+                    <div class="col-md-8 mt-5">
+                        <h5>Any Other Documents to Upload</h5>
+                        <input type="file" name="resume" id="resume" class="form-control">
+                        <label for="otherdocuments">You can share certificates, diplomas etc.</label>
+                    </div>
+                </div>
+                
+                <div class="row justify-content-center mt-5">
+                    <center> <label for="">by clicking apply, you are agree on the terms and condition.</label></center>
+                    <center><button type="submit" class="btn btn-primary btn-lg">Apply</button></center>
+                </div>
+
+            </form>
         </div>
-
-        </div>
-
-
     </main>
+
     
 
     <script src="./js/bootstrap.bundle.min.js"></script>
