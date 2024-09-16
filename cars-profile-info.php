@@ -384,6 +384,7 @@ mysqli_close($connection);
                       <input type="file" class="form-control" id="profile" name="profile" accept="image/*">
                     </div>
                     
+                    <button type="submit" class="btn btn-primary">Submit</button>
                   </div>
                 </div>
           </form>
