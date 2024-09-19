@@ -418,21 +418,22 @@ $shop_result = mysqli_query($connection, $shop_query);
     <main class="container">
         <div class="mb-3 text-dark">
             <h2 class="text-center">Application Form</h2>
-            <p class="text-center mb-3">Fill out the important information below.</p>
+            <p class="text-center mb-3">Fill out the neccessary information below.</p>
             <hr>
 
-            <form action="" method="POST">
+            <form action="user-apply-staff-backend.php" method="POST" enctype="multipart/form-data">
                 <div class="row justify-content-center">
                     <!-- First Name and Last Name side by side -->
                     <div class="col-md-8 text-dark">
                         <h5>Name <span class="asterisk">*</span></h5>
                         <div class="row">
                             <div class="col-md-6">
-                                <input type="text" id="firstname" name="firstname" class="form-control" value="<?php echo $userData['firstname'];?>" disabled>
+                                <input type="hidden" id="user_id" name="user_id" value="<?php echo $userData['user_id'];?>">
+                                <input type="text" id="firstname" name="firstname" class="form-control" value="<?php echo $userData['firstname'];?>" readonly>
                                 <label for="firstname">First Name</label>
                             </div>
                             <div class="col-md-6">
-                                <input type="text" id="lastname" name="lastname" class="form-control" value="<?php echo $userData['lastname'];?>" disabled>
+                                <input type="text" id="lastname" name="lastname" class="form-control" value="<?php echo $userData['lastname'];?>" readonly>
                                 <label for="lastname">Last Name</label>
                             </div>
                         </div>
@@ -444,13 +445,13 @@ $shop_result = mysqli_query($connection, $shop_query);
                             <!-- Email Section -->
                             <div class="col-md-6">
                                 <h5>E-mail <span class="asterisk">*</span></h5>
-                                <input type="email" id="email" name="email" class="form-control" value="<?php echo $userData['email'];?>" disabled> 
+                                <input type="email" id="email" name="email" class="form-control" value="<?php echo $userData['email'];?>" readonly> 
                                 <label for="email">example@gmail.com</label>
                             </div>
                             <!-- Phone Number Section -->
                             <div class="col-md-6">
                                 <h5>Phone Number <span class="asterisk">*</span></h5>
-                                <input type="contact" id="contact" name="contact" class="form-control" value="<?php echo $userData['contact'];?>" disabled>
+                                <input type="contact" id="contact" name="contact" class="form-control" value="<?php echo $userData['contact'];?>" readonly>
                                 <label for="contact"></label>
                             </div>
                         </div>
@@ -460,7 +461,7 @@ $shop_result = mysqli_query($connection, $shop_query);
                     <!-- Applied Position Section -->
                     <div class="col-md-4 text-dark mt-5">
                         <h5>Applied Position <span class="asterisk">*</span></h5>
-                        <select class="form-control" id="applied-position">
+                        <select class="form-control" id="position" name="position">
                             <option value="Choose">Choose...</option>
                             <option value="Car Wash Staff">Car Wash Staff</option>
                             <option value="Manager">Manager</option>
@@ -470,15 +471,15 @@ $shop_result = mysqli_query($connection, $shop_query);
                     <!-- Phone Number Section -->
                     <div class="col-md-4 text-dark mt-5">
                         <h5>Preferred Interview Date<span class="asterisk">*</span></h5>
-                        <input type="date" id="date" name="date" class="form-control">
-                        <label for="date"></label>
+                        <input type="date" id="interviewdate" name="interviewdate" class="form-control">
+                        <label for="interviewdate"></label>
                     </div>
                 </div>
                 <div class="row justify-content-center">
                     <div class="col-md-8">
-                        <h5>Cover Letter <span class="asterisk">*</span></h5>
-                        <label for="coverletter"></label>
-                        <textarea name="coverletter" id="coverletter" cols="100" rows="10"></textarea>
+                        <h5>Upload Cover Letter <span class="asterisk">*</span></h5>
+                        <input type="file" name="coverletter" id="coverletter" class="form-control">
+                        <label for="coverletter">You can scan the cover letter and upload it here only if it's written</label>
                     </div>
                 </div>
 
@@ -493,8 +494,8 @@ $shop_result = mysqli_query($connection, $shop_query);
                 <div class="row justify-content-center">
                     <div class="col-md-8 mt-5">
                         <h5>Any Other Documents to Upload</h5>
-                        <input type="file" name="resume" id="resume" class="form-control">
-                        <label for="otherdocuments">You can share certificates, diplomas etc.</label>
+                        <input type="file" name="otherdocuments" id="otherdocuments" class="form-control">
+                        <label for="otherdocuments">You can share certificates, diplomas etc (optional).</label>
                     </div>
                 </div>
                 
