@@ -424,66 +424,40 @@ $shop_result = mysqli_query($connection, $shop_query);
             <p class="text-center mb-3">Fill out the neccessary information below.</p>
             <hr>
 
-            <form action="user-apply-staff-backend.php" method="POST" enctype="multipart/form-data">
-                <div class="row justify-content-center">
-                    <!-- First Name and Last Name side by side -->
-                    <div class="col-md-8 text-dark">
-                        <h5>Name <span class="asterisk">*</span></h5>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <input type="hidden" id="user_id" name="user_id" value="<?php echo $userData['user_id'];?>">
-                                <input type="text" id="firstname" name="firstname" class="form-control" value="<?php echo $userData['firstname'];?>" readonly>
-                                <label for="firstname">First Name</label>
-                            </div>
-                            <div class="col-md-6">
-                                <input type="text" id="lastname" name="lastname" class="form-control" value="<?php echo $userData['lastname'];?>" readonly>
-                                <label for="lastname">Last Name</label>
-                            </div>
-                        </div>
-                    </div>  
-                </div>
-                <div class="row justify-content-center">
-                    <div class="col-md-8 text-dark mt-5">
-                        <div class="row">
-                            <!-- Email Section -->
-                            <div class="col-md-6">
-                                <h5>E-mail <span class="asterisk">*</span></h5>
-                                <input type="email" id="email" name="email" class="form-control" value="<?php echo $userData['email'];?>" readonly> 
-                                <label for="email">example@gmail.com</label>
-                            </div>
-                            <!-- Phone Number Section -->
-                            <div class="col-md-6">
-                                <h5>Phone Number <span class="asterisk">*</span></h5>
-                                <input type="contact" id="contact" name="contact" class="form-control" value="<?php echo $userData['contact'];?>" readonly>
-                                <label for="contact"></label>
-                            </div>
-                        </div>
+            <form action="user-apply-staff-backend-files.php" method="POST" enctype="multipart/form-data">
+               
+                
+                <div class="row justify-content-center mt-2">
+                    <div class="col-md-8 mt-5">
+                        <a href="user-apply-staff.php"><button type="button" class="btn btn-primary mb-5">Back</button></a>
+                        <input type="hidden" name="user_id" id="user_id" value="<?php echo $userData['user_id'];?>">
+                        <h5>Upload Cover Letter <span class="asterisk">*</span></h5>
+                        <input type="file" name="coverletter" id="coverletter" class="form-control">
+                        <label for="coverletter">You can scan the cover letter and upload it here only if it's written</label>
                     </div>
                 </div>
-                <div class="row justify-content-center">
-                    <!-- Applied Position Section -->
-                    <div class="col-md-4 text-dark mt-5">
-                        <h5>Applied Position <span class="asterisk">*</span></h5>
-                        <select class="form-control" id="position" name="position">
-                            <option value="Choose">Choose...</option>
-                            <option value="Car Wash Staff">Car Wash Staff</option>
-                            <option value="Manager">Manager</option>
-                            <option value="Cashier">Cashier</option>
-                        </select>
-                    </div>
-                    <!-- Phone Number Section -->
-                    <div class="col-md-4 text-dark mt-5">
-                        <h5>Preferred Interview Date<span class="asterisk">*</span></h5>
-                        <input type="date" id="interviewdate" name="interviewdate" class="form-control">
-                        <label for="interviewdate"></label>
-                    </div>
 
-                    
+                <div class="row justify-content-center">
+                    <div class="col-md-8 mt-5">
+                        <h5>Upload Resume <span class="asterisk">*</span></h5>
+                        <label for="resume"></label>
+                        <input type="file" name="resume" id="resume" class="form-control">
+                    </div>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col-md-8 mt-5">
+                        <h5>Any Other Documents to Upload</h5>
+                        <input type="file" name="otherdocuments" id="otherdocuments" class="form-control">
+                        <label for="otherdocuments">You can share certificates, diplomas etc (optional).</label>
+                    </div>
                 </div>
                 
-                <div class="row justify-contecnt-center">
-                    <center><button type="submit" class="btn btn-primary">Next</button></center>
-                </div>
+                <div class="row justify-content-center mt-5">
+                    <center> <label for="">by clicking apply, you are agree on the terms and condition.</label></center>
+                    <center><button type="submit" class="btn btn-primary">Apply</button></center>
+                </div>               
+
             </form>
         </div>
     </main>
