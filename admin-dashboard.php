@@ -14,7 +14,7 @@ if (!isset($_SESSION['username'])) {
 $user_id = $_SESSION['user_id'];
 
 // Fetch user information from the database based on the user's ID
-$query = "SELECT * FROM shops WHERE user_id = '$user_id'";
+$query = "SELECT * FROM shops";
 $result = mysqli_query($connection, $query);
 
 if (!$result) {
@@ -295,11 +295,11 @@ mysqli_close($connection);
 
 
         <div class=" welcome fw-bold px-3 mb-3">
-          <h5 class="text-center">Welcome back <?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>!</h5>
+          <h5 class="text-center">Welcome back <?php echo isset($_SESSION['firstname']) ? $_SESSION['firstname'] : ''; ?>!</h5>
         </div>
         <div class="ms-3" id="dateTime"></div>
         </li>
-        <li class="">
+        <li class="v-1">
           <a href="owner-dashboard.php" class="nav-link px-3">
             <span class="me-2"><i class="fas fa-home"></i></i></span>
             <span>DASHBOARD</span>
@@ -313,10 +313,10 @@ mysqli_close($connection);
           </a>
         </li>
 
-        <li class="v-1">
+        <li class="">
           <a href="cars-profile.php" class="nav-link px-3">
             <span class="me-2"><i class="fas fa-car"></i></i></span>
-            <span>MY SHOPS</span>
+            <span>SHOPS</span>
           </a>
         </li>
         <li class="">
@@ -430,48 +430,7 @@ mysqli_close($connection);
   <!-- main content -->
   <main>
     <div class="container-vinfo text-dark me-4">
-      <div class="container mt-3">
-        <div class="d-flex align-items-center">
-          <h4 class="mb-0">MY SHOP</h4>
-          <a href="owner-shop-profile-add.php?user_id=<?php echo $user_id; ?>" class="btn btn-primary ml-auto">
-            <i class="me-3 fas fa-plus"></i>Add Shop</a>
-        </div>
-      </div>
-      <div class="v-2 card-header mt-2">
-        <div class="row row-cols-1 row-cols-md-1 g-4">
-          <?php
-          // Check if there are any shops
-          if (!empty($shops)) {
-            $count = count($shops);
-            $colClass = $count > 1 ? 'col-md-6' : 'offset-md-3 col-md-6'; // Determine column class based on the number of shops
 
-            foreach ($shops as $row) {
-              echo '<div class="' . $colClass . '">'; // Apply column class
-              echo '<div class="card mb-2">';
-
-              // Profile picture section
-
-              echo '<div class="card-header v-1 text-light">';
-              echo '<h5 class="card-title">' . htmlspecialchars($row['shop_name']) . '</h5>';
-              echo '</div>';
-              echo '<div class="card-body container-fluid">';
-              echo '<img src="' . htmlspecialchars($row['profile']) . '" alt="Profile Picture" class="card-img-top profile-picture container-fluid">';
-              echo '<p class="card-text mt-3"><strong>Street Address:</strong> ' . htmlspecialchars($row['street_address']) . '</p>';
-              echo '<p class="card-text"><strong>Barangay:</strong> ' . htmlspecialchars($row['barangay']) . '</p>';
-              echo '<p class="card-text"><strong>City:</strong> ' . htmlspecialchars($row['city']) . '</p>';
-              echo '<p class="card-text"><strong>Postal Code:</strong> ' . htmlspecialchars($row['postal']) . '</p>';
-              echo '<a href="owner-shop-profile2.php?shop_id=' . htmlspecialchars($row['shop_id']) . '" class="btn btn-primary">Edit Shop</a>';
-              echo '</div>';
-              echo '</div>';
-              echo '</div>';
-            }
-          } else {
-            echo '<p class="text-light">No shops found.</p>';
-          }
-          ?>
-        </div>
-
-      </div>
     </div>
 
 

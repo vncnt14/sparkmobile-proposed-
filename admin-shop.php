@@ -14,7 +14,7 @@ if (!isset($_SESSION['username'])) {
 $user_id = $_SESSION['user_id'];
 
 // Fetch user information from the database based on the user's ID
-$query = "SELECT * FROM shops WHERE user_id = '$user_id'";
+$query = "SELECT * FROM shops";
 $result = mysqli_query($connection, $query);
 
 if (!$result) {
@@ -295,7 +295,7 @@ mysqli_close($connection);
 
 
         <div class=" welcome fw-bold px-3 mb-3">
-          <h5 class="text-center">Welcome back <?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>!</h5>
+          <h5 class="text-center">Welcome back <?php echo isset($_SESSION['firstname']) ? $_SESSION['firstname'] : ''; ?>!</h5>
         </div>
         <div class="ms-3" id="dateTime"></div>
         </li>
@@ -316,7 +316,7 @@ mysqli_close($connection);
         <li class="v-1">
           <a href="cars-profile.php" class="nav-link px-3">
             <span class="me-2"><i class="fas fa-car"></i></i></span>
-            <span>MY SHOPS</span>
+            <span>SHOPS</span>
           </a>
         </li>
         <li class="">
@@ -432,7 +432,7 @@ mysqli_close($connection);
     <div class="container-vinfo text-dark me-4">
       <div class="container mt-3">
         <div class="d-flex align-items-center">
-          <h4 class="mb-0">MY SHOP</h4>
+          <h4 class="mb-0">SHOPS</h4>
           <a href="owner-shop-profile-add.php?user_id=<?php echo $user_id; ?>" class="btn btn-primary ml-auto">
             <i class="me-3 fas fa-plus"></i>Add Shop</a>
         </div>
@@ -466,7 +466,7 @@ mysqli_close($connection);
               echo '</div>';
             }
           } else {
-            echo '<p class="text-light">No shops found.</p>';
+            echo '<p class="text-light">No applicants yet.</p>';
           }
           ?>
         </div>
