@@ -213,8 +213,7 @@ $shop_result = mysqli_query($connection, $shop_query);
     }
     
     .apply-staff:hover{
-        background-color: orangered;
-        delay: 
+        background-color: orangered; 
     }
 </style>
 
@@ -234,7 +233,7 @@ $shop_result = mysqli_query($connection, $shop_query);
                 <form class="d-flex ms-auto my-3 my-lg-0">
                     </form>
                     <ul class="navbar-nav">
-                        <a class="apply-staff navbar-brand me-5 ms-lg-0 text-uppercase fw-bold" href="user-apply-staff.php">Apply as Staff</a>
+                        <a class="apply-staff navbar-brand me-5 ms-lg-0 text-uppercase fw-bold" href="user-apply.php">Apply as Staff</a>
                         <li class="nav-item dropdown">
                             <li class="">
                                 <a href="csnotification.php" class="nav-link px-3">

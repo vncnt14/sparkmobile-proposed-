@@ -13,8 +13,17 @@ if (!isset($_SESSION['username'])) {
 // Fetch user information based on ID
 $user_id = $_SESSION['user_id'];
 
+
 // Fetch user information from the database based on the user's ID
-$query = "SELECT * FROM application";
+$query = "SELECT application.user_id, 
+                application.application_id,
+                users.profile, 
+                users.firstname, 
+                users.lastname, 
+                application.position, 
+                application.email, 
+                application.contact 
+FROM application INNER JOIN users ON application.user_id = users.user_id";
 $result = mysqli_query($connection, $query);
 
 
@@ -23,9 +32,9 @@ if (!$result) {
   exit;
 }
 
-$shops = [];
+$applicationData = [];
 while ($row = mysqli_fetch_assoc($result)) {
-  $shops[] = $row;
+  $applicationData[] = $row;
 }
 
 // Close the database connection
@@ -296,7 +305,7 @@ mysqli_close($connection);
 
 
         <div class=" welcome fw-bold px-3 mb-3">
-          <h5 class="text-center">Welcome back <?php echo isset($_SESSION['firstname']) ? $_SESSION['firstname'] : ''; ?>!</h5>
+          <h5 class="text-center">Welcome back Owner <?php echo isset($_SESSION['firstname']) ? $_SESSION['firstname'] : ''; ?>!</h5>
         </div>
         <div class="ms-3" id="dateTime"></div>
         </li>
@@ -314,10 +323,10 @@ mysqli_close($connection);
           </a>
         </li>
 
-        <li class="v-1">
+        <li>
           <a href="cars-profile.php" class="nav-link px-3">
-            <span class="me-2"><i class="fas fa-car"></i></i></span>
-            <span>SHOPS</span>
+            <span class="me-2"><i class="fas fa-money-bill"></i></i></span>
+            <span>MY SHOPS</span>
           </a>
         </li>
         <li class="">
@@ -326,7 +335,7 @@ mysqli_close($connection);
             data-bs-toggle="collapse"
             href="#layouts">
             <span class="me-2"><i class="fas fa-calendar"></i></i></span>
-            <span>BOOKINGS</span>
+            <span>INVENTORY</span>
             <span class="ms-auto">
               <span class="right-icon">
                 <i class="bi bi-chevron-down"></i>
@@ -338,32 +347,32 @@ mysqli_close($connection);
           <ul class="navbar-nav ps-3">
             <li class="v-1">
               <a href="setappoinment.php" class="nav-link px-3">
-                <span class="me-2">Set Appointment</span>
+                <span class="me-2">Cleaning Products</span>
               </a>
             </li>
             <li class="v-1">
               <a href="checkingcar.php" class="nav-link px-3">
-                <span class="me-2">Checking car condition</span>
+                <span class="me-2">Equipments</span>
               </a>
             </li>
             <li class="v-1">
               <a href="csrequest_slot.php" class="nav-link px-3">
-                <span class="me-2">Request Slot</span>
+                <span class="me-2"></span>
               </a>
             </li>
             <li class="v-1">
               <a href="csprocess3.php" class="nav-link px-3">
-                <span class="me-2">Select Service</span>
+                <span class="me-2"></span>
               </a>
             </li>
             <li class="v-1">
               <a href="#" class="nav-link px-3">
-                <span class="me-2">Register your car</span>
+                <span class="me-2"></span>
               </a>
             </li>
             <li class="v-1">
               <a href="#" class="nav-link px-3">
-                <span class="me-2">Booking Summary</span>
+                <span class="me-2"></span>
               </a>
             </li>
             <li class="v-1">
@@ -379,9 +388,9 @@ mysqli_close($connection);
             class="nav-link px-3 sidebar-link"
             data-bs-toggle="collapse"
             href="#layouts2">
-            <span class="me-2"><i class="fas fa-money-bill"></i>
+            <span class="me-2"><i class="fas fa-user"></i>
               </i></i></span>
-            <span>PAYMENTS</span>
+            <span>EMPLOYEES</span>
             <span class="ms-auto">
               <span class="right-icon">
                 <i class="bi bi-chevron-down"></i>
@@ -409,11 +418,11 @@ mysqli_close($connection);
           </div>
         </li>
         <li>
-        <li>
-          <a href="csreward.html" class="nav-link px-3">
+        <li class="v-1">
+          <a href="owner-application.php" class="nav-link px-3">
             <span class="me-2"><i class="fas fa-medal"></i>
               </i></span>
-            <span>REWARDS</span>
+            <span>APPLICATION</span>
           </a>
         </li>
         <li>
@@ -442,26 +451,25 @@ mysqli_close($connection);
         <div class="row row-cols-1 row-cols-md-1 g-4">
           <?php
           // Check if there are any shops
-          if (!empty($shops)) {
-            $count = count($shops);
+          if (!empty($applicationData)) {
+            $count = count($applicationData);
             $colClass = $count > 1 ? 'col-md-6' : 'offset-md-3 col-md-6'; // Determine column class based on the number of shops
 
-            foreach ($shops as $row) {
+            foreach ($applicationData as $row) {
               echo '<div class="' . $colClass . '">'; // Apply column class
               echo '<div class="card mb-2">';
 
               // Profile picture section
 
               echo '<div class="card-header v-1 text-light">';
-              echo '<h5 class="card-title">' . htmlspecialchars($row['shop_name']) . '</h5>';
+              echo '<h5 class="card-title">' . htmlspecialchars($row['position']) . '</h5>';
               echo '</div>';
               echo '<div class="card-body container-fluid">';
               echo '<img src="' . htmlspecialchars($row['profile']) . '" alt="Profile Picture" class="card-img-top profile-picture container-fluid">';
-              echo '<p class="card-text mt-3"><strong>Street Address:</strong> ' . htmlspecialchars($row['street_address']) . '</p>';
-              echo '<p class="card-text"><strong>Barangay:</strong> ' . htmlspecialchars($row['barangay']) . '</p>';
-              echo '<p class="card-text"><strong>City:</strong> ' . htmlspecialchars($row['city']) . '</p>';
-              echo '<p class="card-text"><strong>Postal Code:</strong> ' . htmlspecialchars($row['postal']) . '</p>';
-              echo '<a href="owner-shop-profile2.php?shop_id=' . htmlspecialchars($row['shop_id']) . '" class="btn btn-primary">Edit Shop</a>';
+              echo '<p class="card-text mt-3"><strong>Name:</strong> ' . htmlspecialchars($row['firstname']) .  " " .htmlspecialchars($row['lastname']) . '</p>';
+              echo '<p class="card-text"><strong>Contact:</strong> ' . htmlspecialchars($row['contact']) . '</p>';
+              echo '<p class="card-text"><strong>Email:</strong> ' . htmlspecialchars($row['email']) . '</p>';
+              echo '<a href="owner-shop-profile2.php?application_id=' . htmlspecialchars($row['application_id']) . '" class="btn btn-primary">View More Details</a>';
               echo '</div>';
               echo '</div>';
               echo '</div>';

@@ -23,7 +23,7 @@ $userData = mysqli_fetch_assoc($result);
 
 $shop_query = "SELECT * FROM shops";
 $shop_result = mysqli_query($connection, $shop_query);
-$shopData = mysqli_fetch_assoc($shop_result);
+$shopData = mysqli_fetch_assoc($result);
 
 
 
@@ -213,17 +213,8 @@ $shopData = mysqli_fetch_assoc($shop_result);
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
     
-    .apply-staff:hover {
+    .apply-staff:hover{
         background-color: orangered;
-    }
-    .asterisk {
-        color: red;
-    }
-    label {
-        font-size: 12px;
-    }
-    .hr {
-        position: center;
     }
 </style>
 
@@ -418,77 +409,85 @@ $shopData = mysqli_fetch_assoc($shop_result);
     </div>
     </div>
     <!-- main content -->
-    <main class="container">
-        <div class="mb-3 text-dark">
-            <h2 class="text-center">Application Form</h2>
-            <p class="text-center mb-3">Fill out the neccessary information below.</p>
-            <hr>
-
-            <form action="user-apply-staff-backend.php" method="POST" enctype="multipart/form-data">
-                <div class="row justify-content-center">
-                    <!-- First Name and Last Name side by side -->
-                    <div class="col-md-8 text-dark">
-                        <h5>Name <span class="asterisk">*</span></h5>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <input type="hidden" id="user_id" name="user_id" value="<?php echo $userData['user_id'];?>">
-                                <input type="hidden" id="shop_id" name="shop_id" value="<?php echo $shopData['shop_id'];?>">
-                                <input type="text" id="firstname" name="firstname" class="form-control" value="<?php echo $userData['firstname'];?>" readonly>
-                                <label for="firstname">First Name</label>
-                            </div>
-                            <div class="col-md-6">
-                                <input type="text" id="lastname" name="lastname" class="form-control" value="<?php echo $userData['lastname'];?>" readonly>
-                                <label for="lastname">Last Name</label>
-                            </div>
-                        </div>
-                    </div>  
-                </div>
-                <div class="row justify-content-center">
-                    <div class="col-md-8 text-dark mt-5">
-                        <div class="row">
-                            <!-- Email Section -->
-                            <div class="col-md-6">
-                                <h5>E-mail <span class="asterisk">*</span></h5>
-                                <input type="email" id="email" name="email" class="form-control" value="<?php echo $userData['email'];?>" readonly> 
-                                <label for="email">example@gmail.com</label>
-                            </div>
-                            <!-- Phone Number Section -->
-                            <div class="col-md-6">
-                                <h5>Phone Number <span class="asterisk">*</span></h5>
-                                <input type="contact" id="contact" name="contact" class="form-control" value="<?php echo $userData['contact'];?>" readonly>
-                                <label for="contact"></label>
-                            </div>
-                        </div>
+    <main>
+        <div class="container mt-3">
+            <form action="" method="GET" id="search-form">
+                <div class="input-group input-group-sm">
+                    <input type="text" name="query" class="form-control form-control-sm" placeholder="Search Car Wash Shop">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary btn-lg ms-4" type="submit">
+                            <i class="fa fa-search"></i>
+                        </button>
                     </div>
-                </div>
-                <div class="row justify-content-center">
-                    <!-- Applied Position Section -->
-                    <div class="col-md-4 text-dark mt-5">
-                        <h5>Applied Position <span class="asterisk">*</span></h5>
-                        <select class="form-control" id="position" name="position">
-                            <option value="Choose">Choose...</option>
-                            <option value="Car Wash Staff">Car Wash Staff</option>
-                            <option value="Manager">Manager</option>
-                            <option value="Cashier">Cashier</option>
-                        </select>
-                    </div>
-                    <!-- Phone Number Section -->
-                    <div class="col-md-4 text-dark mt-5">
-                        <h5>Preferred Interview Date<span class="asterisk">*</span></h5>
-                        <input type="date" id="interviewdate" name="interviewdate" class="form-control">
-                        <label for="interviewdate"></label>
-                    </div>
-
-                    
-                </div>
-                
-                <div class="row justify-contecnt-center">
-                    <center><button type="submit" class="btn btn-primary">Next</button></center>
                 </div>
             </form>
         </div>
-    </main>
 
+        <div class="container mt-3">
+            <?php
+            if (isset($_GET['query'])) {
+                // Include the config.php file to connect to the database
+
+
+                // Get the search query
+                $query = $connection->real_escape_string($_GET['query']);
+
+                $sql = "SELECT * FROM shops WHERE shop_name LIKE '%$query%' OR barangay LIKE '%$query%'";
+                $result = $connection->query($sql);
+
+                echo '<h3 class="text-dark">Search Results for "' . htmlspecialchars($query) . '"</h3>';
+                if ($result->num_rows > 0) {
+                    echo '<ul class="list-group">';
+                    while ($row = $result->fetch_assoc()) {
+                        echo '<div class="list-group-item">';
+                        echo '<h5>' . htmlspecialchars($row["shop_name"]) . '</h5>';
+                        echo '<p>' . htmlspecialchars($row["barangay"]) . '</p>';
+                        echo '</div>';
+                    }
+                    echo '</ul>';
+                } else {
+                    echo '<p class="text-dark">No results found.</p>';
+                }
+
+                mysqli_close($connection);
+            }
+            ?>
+        </div>
+
+
+
+        <div>
+            <h2 class="ms-3 text-dark text-center mt-3">Choose Shops you want to apply</h2>
+        </div>
+        
+        <div class="container mt-3 text-dark">
+
+            <div class="row">
+                <?php if ($shop_result && mysqli_num_rows($shop_result) > 0) : ?>
+                    <?php while ($shopData = mysqli_fetch_assoc($shop_result)) : ?>
+                        <div class="col-md-4 mb-3">
+                            <div class="card">
+
+                                <img src="<?php echo htmlspecialchars($shopData['profile']); ?>" class="card-img-top" alt="<?php echo htmlspecialchars($shopData['shop_name']); ?> Profile Image">
+                                <h5 class="card-title text-center"><?php echo htmlspecialchars($shopData['shop_name']); ?></h5>
+                                <div class="card-body">
+                                    <center><a href="user-apply-staff.php?shop_id=<?php echo $shopData['shop_id'];?>"><button type="button" class="btn btn-primary">Apply Shop</button></a></center>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endwhile; ?>
+                <?php else : ?>
+
+                    <p class="text-center">No shops available.</p>
+                <?php endif; ?>
+
+            </div>
+        </div>
+
+        </div>
+
+
+    </main>
     
 
     <script src="./js/bootstrap.bundle.min.js"></script>

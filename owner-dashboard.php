@@ -345,10 +345,10 @@ mysqli_close($connection);
                     </div>
                 </li>
                 <li>
-                    <a href="#" class="nav-link px-3">
+                    <a href="owner-application.php" class="nav-link px-3">
                         <span class="me-2"><i class="fas fa-medal"></i>
                             </i></span>
-                        <span>REWARDS</span>
+                        <span>APPLICATION</span>
                     </a>
                 </li>
                 <li>
