@@ -356,24 +356,16 @@ mysqli_close($connection);
               </a>
             </li>
             <li class="v-1">
-              <a href="csrequest_slot.php" class="nav-link px-3">
-                <span class="me-2"></span>
-              </a>
+              
             </li>
             <li class="v-1">
-              <a href="csprocess3.php" class="nav-link px-3">
-                <span class="me-2"></span>
-              </a>
+              
             </li>
             <li class="v-1">
-              <a href="#" class="nav-link px-3">
-                <span class="me-2"></span>
-              </a>
+             
             </li>
             <li class="v-1">
-              <a href="#" class="nav-link px-3">
-                <span class="me-2"></span>
-              </a>
+              
             </li>
             <li class="v-1">
               <a href="#" class="nav-link px-3">
@@ -442,9 +434,9 @@ mysqli_close($connection);
     <div class="container-vinfo text-dark me-4">
       <div class="container mt-3">
         <div class="d-flex align-items-center">
-          <h4 class="mb-0">SHOPS</h4>
-          <a href="owner-shop-profile-add.php?user_id=<?php echo $user_id; ?>" class="btn btn-primary ml-auto">
-            <i class="me-3 fas fa-plus"></i>Add Shop</a>
+          <h4 class="mb-0">APPLICANTS</h4>
+          <!--<a href="owner-shop-profile-add.php?user_id=<?php echo $user_id; ?>" class="btn btn-primary ml-auto">
+           <i class="me-3 fas fa-plus"></i>  </a> -->
         </div>
       </div>
       <div class="v-2 card-header mt-2">
@@ -469,7 +461,7 @@ mysqli_close($connection);
               echo '<p class="card-text mt-3"><strong>Name:</strong> ' . htmlspecialchars($row['firstname']) .  " " .htmlspecialchars($row['lastname']) . '</p>';
               echo '<p class="card-text"><strong>Contact:</strong> ' . htmlspecialchars($row['contact']) . '</p>';
               echo '<p class="card-text"><strong>Email:</strong> ' . htmlspecialchars($row['email']) . '</p>';
-              echo '<a href="owner-shop-profile2.php?application_id=' . htmlspecialchars($row['application_id']) . '" class="btn btn-primary">View More Details</a>';
+              echo '<a href="owner-application-profile.php?application_id=' . htmlspecialchars($row['application_id']) . '" class="btn btn-primary">View More Details</a>';
               echo '</div>';
               echo '</div>';
               echo '</div>';
