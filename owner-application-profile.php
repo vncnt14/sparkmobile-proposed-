@@ -23,6 +23,8 @@ $result = mysqli_query($connection, $query);
 $userData = mysqli_fetch_assoc($result);
 
 $application_query = "SELECT application.user_id,
+users.user_id,
+users.role,
 application.application_id, 
 application.firstname,
 application.lastname,
@@ -208,6 +210,21 @@ mysqli_close($connection);
         border-radius: 50%;
     }
 
+    .img-account-file {
+        width: 200px;
+        /* Adjust the size as needed */
+        height: 200px;
+        object-fit: cover;
+        border-radius: 2px;
+    }
+
+    .img-fluid {
+        width: 700px;
+        height: 700px;
+        object-fit: cover;
+        border-radius: 3px;
+    }
+
     .img-account-permit {
         width: 200px;
         /* Adjust the size as needed */
@@ -222,6 +239,10 @@ mysqli_close($connection);
 
     .owner-btn {
         margin-left: 51%
+    }
+
+    .accept-btn {
+        margin-left: 50%;
     }
 </style>
 
@@ -421,19 +442,23 @@ mysqli_close($connection);
 
                         <!-- First Name, Phone Number, Username and Gender -->
                         <div class=" col-md-4 mb-4">
-                            <div class="form-group mb-3 text-dark">
-                                <label for="shop_name">First Name:</label>
-                                <input type="text" class="form-control" id="shop_name" name="shop_name" placeholder="Edit Shop Name" value=" <?php echo isset($applicationData['firstname']) ? htmlspecialchars($applicationData['firstname']) : ''; ?>" readonly>
-                            </div>
+                            <form action="owner-application-profile-backend.php" method="POST">
+                                <div class="form-group mb-3 text-dark">
+                                    <input type="hidden" name="user_id" id="user_id" value="<?php echo $applicationData['user_id']; ?>">
+                                    <input type="hidden" name="application_id" id="application_id" value="<?php echo $applicationData['application_id'];?>">
+                                    <input type="hidden" name="position" id="position" value="<?php echo $applicationData['role']; ?>">
+                                    <label for="shop_name">First Name:</label>
+                                    <input type="text" class="form-control" id="shop_name" name="shop_name" placeholder="Edit Shop Name" value=" <?php echo isset($applicationData['firstname']) ? htmlspecialchars($applicationData['firstname']) : ''; ?>" readonly>
+                                </div>
 
-                            <div class="form-group mb-3 text-dark">
-                                <label for="shop_contact">Contact Number:</label>
-                                <input type="text" class="form-control" id="shop_contact" name="shop_contact" placeholder="Edit Shop Contact Number" value="<?php echo isset($applicationData['contact']) ? htmlspecialchars($applicationData['contact']) : ''; ?>" readonly>
-                            </div>
-                            <div class="form-group mb-3 text-dark">
-                                <label for="description">Interview Date:</label>
-                                <input class="form-control" id="description" name="description" placeholder="Edit Shop Description" value="<?php echo isset($applicationData['interviewdate']) ? htmlspecialchars($applicationData['interviewdate']) : ''; ?>" readonly></input>
-                            </div>
+                                <div class="form-group mb-3 text-dark">
+                                    <label for="shop_contact">Contact Number:</label>
+                                    <input type="text" class="form-control" id="shop_contact" name="shop_contact" placeholder="Edit Shop Contact Number" value="<?php echo isset($applicationData['contact']) ? htmlspecialchars($applicationData['contact']) : ''; ?>" readonly>
+                                </div>
+                                <div class="form-group mb-3 text-dark">
+                                    <label for="description">Interview Date:</label>
+                                    <input class="form-control" id="description" name="description" placeholder="Edit Shop Description" value="<?php echo isset($applicationData['interviewdate']) ? htmlspecialchars($applicationData['interviewdate']) : ''; ?>" readonly></input>
+                                </div>
 
                         </div>
                         <!-- Last Name, Email, Password, User Type and User Type -->
@@ -444,7 +469,7 @@ mysqli_close($connection);
                             </div>
 
                             <div class="form-group mb-3 text-dark">
-                                <label for="website">Position:</label>
+                                <label for="website">Desired Position:</label>
                                 <input type="email" class="form-control" id="website" name="website" placeholder="Edit Shop Website Link" value="<?php echo isset($applicationData['position']) ? htmlspecialchars($applicationData['position']) : ''; ?>" readonly>
                             </div>
 
@@ -453,31 +478,50 @@ mysqli_close($connection);
                         <div class="container mt-3">
                             <div class="d-flex">
                                 <h2 class="mb-0 text-dark">Other Information</h2>
-                                <a href="owner-shop-profile-edit.php?shop_id=<?php echo $shopData['shop_id']; ?>" class="profile-btn btn btn-primary">
+                                <button type="submit" class="accept-btn btn btn-primary">
                                     Accept Application
+                                </button>
 
-                                </a>
                             </div>
                         </div>
-                        <form action="owner-application-profile-coverletter-download.php" method="POST" enctype="multipart/form-data">
-                            <div class="form-group mb-3 text-dark">
-                                <input type="hidden" name="application_id" id="application_id" value="<?php echo $applicationData['application_id'];?>">
-                                <label for="street_address">Cover Letter:</label>
-                                <input type="text" class="form-control" id="coverletter" name="street_address" placeholder="Edit your Complete Address" value="<?php echo isset($applicationData['coverletter']) ? htmlspecialchars($applicationData['coverletter']) : ''; ?>" readonly>
-                                <button type="submit" class="btn btn-primary">Download</button>
-                            </div>
                         </form>
-                        <div class="form-group mb-3 text-dark">
-                            <label for="optional_address">Resume:</label>
-                            <input type="text" class="form-control" id="resume" name="resume" placeholder="(e.g., apartment, suite, unit, building, floor, block, lot)" value="<?php echo isset($applicationData['resume']) ? htmlspecialchars($applicationData['resume']) : ''; ?>" readonly>
-                            <button onclick="downloadFile('<?php echo $applicationData['resume']; ?>')" class="btn btn-primary">Download</button>
+
+                        <div class="form-group mt-5 text-dark">
+                            <input type="hidden" name="application_id" id="application_id" value="<?php echo $applicationData['application_id']; ?>">
+                            <label for="street_address">Cover Letter:</label>
+                            <img class="img-account-file mb-3" src="<?php echo $applicationData['coverletter']; ?>" alt="">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fileModal" onclick="viewFile('<?php echo $applicationData['coverletter']; ?>')">View Cover Letter</button>
                         </div>
-                        <div class="form-group mb-3 text-dark">
+
+                        <div class="form-group mt-5 text-dark">
+                            <label for="optional_address">Resume:</label>
+                            <img class="img-account-file mb-3" src="<?php echo $applicationData['resume']; ?>" alt="">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fileModal" onclick="viewFile('<?php echo $applicationData['resume']; ?>')">View Resume</button>
+                        </div>
+                        <div class="form-group mt-5 text-dark">
                             <label for="otherdocuments">Other Documents:</label>
-                            <input type="text" class="form-control" id="otherdocuments" name="otherdocuments" placeholder="Other Documents" value="<?php echo isset($applicationData['otherdocuments']) ? htmlspecialchars($applicationData['otherdocuments']) : ''; ?>" readonly>
+                            <img class="img-account-file mb-3" src="<?php echo $applicationData['otherdocuments']; ?>" alt="">
 
                             <!-- Download Button -->
-                            <button onclick="downloadFile('<?php echo $applicationData['otherdocuments']; ?>')" class="btn btn-primary">Download</button>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fileModal" onclick="viewFile('<?php echo $applicationData['otherdocuments']; ?>')">View Other Documents</button>
+                        </div>
+
+                        <div class="modal fade" id="fileModal" tabindex="-1" aria-labelledby="fileModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title text-dark" id="fileModalLabel">Document</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body text-center">
+                                        <!-- Image will be loaded here -->
+                                        <img id="filePreview" class="img-fluid" alt="File Preview">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                     </div>
@@ -486,9 +530,9 @@ mysqli_close($connection);
         </div>
 
         <script>
-            function downloadFile(userId, fileType) {
-                // Redirect to PHP script that handles the download
-                window.location.href = 'download.php?user_id=' + userId + '&file_type=' + fileType;
+            function viewFile(fileSrc) {
+                // Set the source of the image inside the modal
+                document.getElementById('filePreview').src = fileSrc;
             }
         </script>
 
@@ -523,6 +567,7 @@ mysqli_close($connection);
         <script src="./js/jquery.dataTables.min.js"></script>
         <script src="./js/dataTables.bootstrap5.min.js"></script>
         <script src="./js/script.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

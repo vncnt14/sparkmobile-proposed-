@@ -23,7 +23,7 @@ $query = "SELECT application.user_id,
                 application.position, 
                 application.email, 
                 application.contact 
-FROM application INNER JOIN users ON application.user_id = users.user_id";
+FROM application INNER JOIN users ON application.user_id = users.user_id WHERE application.position = 'Staff'";
 $result = mysqli_query($connection, $query);
 
 
