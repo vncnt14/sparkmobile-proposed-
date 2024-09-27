@@ -13,6 +13,7 @@ if (!isset($_SESSION['username'])) {
 // Fetch user information based on ID
 $userID = $_SESSION['user_id'];
 $vehicleID = $_SESSION['vehicle_id'];
+$shop_id = $_GET['shop_id'];
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
@@ -21,6 +22,10 @@ $query = "SELECT * FROM vehicles WHERE user_id = '$userID'";
 $result = mysqli_query($connection, $query);
 $userData = mysqli_fetch_assoc($result);
 // Close the database connection
+
+$shop_query = "SELECT * FROM shops WHERE shop_id = '$shop_id'";
+$shop_result = mysqli_query($connection, $shop_query);
+$shopData = mysqli_fetch_assoc($shop_result);
 
 mysqli_close($connection);
 
@@ -425,7 +430,7 @@ li :hover{
                       echo '<p class="card-text"><strong>Model:</strong> ' . (isset($row['model']) ? $row['model'] : 'N/A') . '</p>';
                       echo '<p class="card-text"><strong>Color:</strong> ' . (isset($row['color']) ? $row['color'] : 'N/A') . '</p>';
                       // Add other card details as needed
-                      echo '<a href="checkingcar2.php?vehicle_id=' . (isset($row['vehicle_id']) ? $row['vehicle_id'] : '') . '" class="btn btn-primary">Select Vehicle</a>';
+                      echo '<a href="checkingcar2.php?vehicle_id=' . (isset($row['vehicle_id']) ? $row['vehicle_id'] : '') . 'shop_id=' . (isset($shopData['shop_id']) ? $shopData['shop_id'] : '') . '" class="btn btn-primary">Select Vehicle</a>';
                       echo '</div>';
                       echo '</div>';
                       echo '</div>';

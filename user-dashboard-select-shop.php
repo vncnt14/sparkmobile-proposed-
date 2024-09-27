@@ -13,6 +13,7 @@ if (!isset($_SESSION['username'])) {
 // Fetch user information based on ID
 $userID = $_SESSION['user_id'];
 $vehicle_id = $_SESSION['vehicle_id'];
+$shop_id = $_GET['shop_id'];
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
@@ -21,9 +22,9 @@ $query = "SELECT * FROM users WHERE user_id = '$userID'";
 $result = mysqli_query($connection, $query);
 $userData = mysqli_fetch_assoc($result);
 
-$shop_query = "SELECT * FROM shops";
+$shop_query = "SELECT * FROM shops WHERE shop_id = '$shop_id'";
 $shop_result = mysqli_query($connection, $shop_query);
-
+$shopData = mysqli_fetch_assoc($shop_result);
 
 
 
@@ -220,6 +221,36 @@ $shop_result = mysqli_query($connection, $shop_query);
         color: orangered;
     }
 
+    .game-card {
+        display: flex;
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        height: 350px;
+        padding: 20px;
+        align-items: center;
+    }
+
+    .game-details {
+        flex-grow: 1;
+    }
+
+    .game-logo {
+        width: 500px;
+        height: 500px;
+        border-radius: 25px;
+        margin-left: 20px;
+        margin-top: -50px;
+    }
+
+    .game-name {
+        font-size: 1.8em;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #333;
+    }
+
     .ratings {
         display: flex;
         align-items: center;
@@ -236,6 +267,20 @@ $shop_result = mysqli_query($connection, $shop_query);
         font-size: 1.2em;
         margin-left: 12px;
         color: #666;
+    }
+
+    .description {
+        font-size: 1em;
+        color: #555;
+        margin-top: 15px;
+        line-height: 1.5;
+    }
+    .rating{
+        color: orangered;
+    }
+    .testimonial-img{
+        width: 50px;
+        height: 50px;
     }
 </style>
 
@@ -431,91 +476,78 @@ $shop_result = mysqli_query($connection, $shop_query);
     </div>
     <!-- main content -->
     <main>
-        <div class="container mt-3">
-            <form action="" method="GET" id="search-form">
-                <div class="input-group input-group-sm">
-                    <input type="text" name="query" class="form-control form-control-sm" placeholder="Search Car Wash Shop">
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-secondary btn-lg ms-4" type="submit">
-                            <i class="fa fa-search"></i>
-                        </button>
+        <div class="container text-dark">
+            <div class="game-card">
+                <div class="game-details">
+                    <a href="user-dashboard.php"><button class="btn btn-primary mb-4">Back</button></a>
+                    <div class="game-name"><?php echo $shopData['shop_name']; ?></div>
+                    <div class="ratings">
+                        <i class="bi-star-fill"></i>
+                        <i class="bi-star-fill"></i>
+                        <i class="bi-star-fill"></i>
+                        <i class="bi-star-fill"></i>
+                        <i class="bi-star-fill"></i>
+                        <span class="rating-value">5.0</span>
+                    </div>
+                    <div class="description">
+                        <?php echo $shopData['description']; ?>
+                    </div>
+                    <a href="user-select-car.php?shop_id=<?php echo $shopData['shop_id'];?>"><button type="button" class="btn btn-primary">Choose <?php echo $shopData['shop_name'];?></button></a>
+
+                </div>
+
+                <img src="<?php echo $shopData['profile']; ?>" alt="profile" class="game-logo">
+            </div>
+            <hr>
+
+        </div>
+        <div class="container py-5 text-dark">
+            <h2 class="text-center mb-5">What Our Users Say</h2>
+            <div class="row">
+                <!-- Testimonial 1 -->
+                <div class="col-md-4">
+                    <div class="testimonial-card text-center">
+                        <img src="toji.jpg" alt="User Image" class="testimonial-img mb-3">
+                        <h5>John Doe</h5>
+                        <div class="rating mb-2">
+                            &#9733;&#9733;&#9733;&#9733;&#9734;
+                        </div>
+                        <p>
+                            "This app has completely changed the way I handle my vehicle maintenance. It's fast, easy, and reliable!"
+                        </p>
                     </div>
                 </div>
-            </form>
-        </div>
 
-        <div class="container mt-3">
-            <?php
-            if (isset($_GET['query'])) {
-                // Include the config.php file to connect to the database
-
-
-                // Get the search query
-                $query = $connection->real_escape_string($_GET['query']);
-
-                $sql = "SELECT * FROM shops WHERE shop_name LIKE '%$query%' OR barangay LIKE '%$query%'";
-                $result = $connection->query($sql);
-
-                echo '<h3 class="text-dark">Search Results for "' . htmlspecialchars($query) . '"</h3>';
-                if ($result->num_rows > 0) {
-                    echo '<ul class="list-group">';
-                    while ($row = $result->fetch_assoc()) {
-                        echo '<div class="list-group-item">';
-                        echo '<h5>' . htmlspecialchars($row["shop_name"]) . '</h5>';
-                        echo '<p>' . htmlspecialchars($row["barangay"]) . '</p>';
-                        echo '</div>';
-                    }
-                    echo '</ul>';
-                } else {
-                    echo '<p class="text-dark">No results found.</p>';
-                }
-
-                mysqli_close($connection);
-            }
-            ?>
-        </div>
-
-
-
-        <div>
-            <h2 class="ms-3 text-dark text-center mt-3">Shops Near You</h2>
-        </div>
-
-        <div class="container mt-3 text-dark">
-
-            <div class="row">
-                <?php if ($shop_result && mysqli_num_rows($shop_result) > 0) : ?>
-                    <?php while ($shopData = mysqli_fetch_assoc($shop_result)) : ?>
-                        <div class="col-md-4 mb-3">
-                            <div class="card">
-
-                                <img src="<?php echo htmlspecialchars($shopData['profile']); ?>" class="card-img-top" alt="<?php echo htmlspecialchars($shopData['shop_name']); ?> Profile Image">
-                                <h5 class="card-title text-center mb-5"><?php echo htmlspecialchars($shopData['shop_name']); ?></h5>
-                                <div class="container">
-                                    <div class="ratings justify-content-center">
-                                        <i class="bi-star-fill"></i>
-                                        <i class="bi-star-fill"></i>
-                                        <i class="bi-star-fill"></i>
-                                        <i class="bi-star-fill"></i>
-                                        <i class="bi-star-fill"></i>
-                                        <span class="rating-value">5.0</span>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <center><a class="btn btn-primary" href="user-dashboard-select-shop.php?shop_id=<?php echo $shopData['shop_id']; ?>">View Shop</a></center>
-                                </div>
-                            </div>
+                <!-- Testimonial 2 -->
+                <div class="col-md-4">
+                    <div class="testimonial-card text-center">
+                        <img src="person1.jpg" alt="User Image" class="testimonial-img mb-3">
+                        <h5>Jane Smith</h5>
+                        <div class="rating mb-2">
+                            &#9733;&#9733;&#9733;&#9733;&#9733;
                         </div>
-                    <?php endwhile; ?>
-                <?php else : ?>
+                        <p>
+                            "Amazing experience! The app provides excellent customer service and helps me find solutions quickly."
+                        </p>
+                    </div>
+                </div>
 
-                    <p class="text-center">No shops available.</p>
-                <?php endif; ?>
-
+                <!-- Testimonial 3 -->
+                <div class="col-md-4">
+                    <div class="testimonial-card text-center">
+                        <img src="person2.0.webp" alt="User Image" class="testimonial-img mb-3">
+                        <h5>Michael Johnson</h5>
+                        <div class="rating mb-2">
+                            &#9733;&#9733;&#9733;&#9733;&#9733;
+                        </div>
+                        <p>
+                            "Absolutely love it! It's user-friendly and has all the features I need to keep my car in perfect condition."
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
 
-        </div>
 
 
     </main>
