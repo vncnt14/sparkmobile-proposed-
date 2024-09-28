@@ -17,13 +17,14 @@ $user_id = $_SESSION['user_id'];
 // Fetch user information from the database based on the user's ID
 $query = "SELECT application.user_id, 
                 application.application_id,
-                users.profile, 
+                users.profile,
+                users.role, 
                 users.firstname, 
                 users.lastname, 
                 application.position, 
                 application.email, 
                 application.contact 
-FROM application INNER JOIN users ON application.user_id = users.user_id WHERE application.position = 'Staff'";
+FROM application INNER JOIN users ON application.user_id = users.user_id WHERE users.role ='User'";
 $result = mysqli_query($connection, $query);
 
 

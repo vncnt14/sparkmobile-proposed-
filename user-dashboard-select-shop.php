@@ -508,7 +508,7 @@ $shopData = mysqli_fetch_assoc($shop_result);
                 <div class="col-md-4">
                     <div class="testimonial-card text-center">
                         <img src="toji.jpg" alt="User Image" class="testimonial-img mb-3">
-                        <h5>John Doe</h5>
+                        <h5>Toji</h5>
                         <div class="rating mb-2">
                             &#9733;&#9733;&#9733;&#9733;&#9734;
                         </div>
@@ -522,7 +522,7 @@ $shopData = mysqli_fetch_assoc($shop_result);
                 <div class="col-md-4">
                     <div class="testimonial-card text-center">
                         <img src="person1.jpg" alt="User Image" class="testimonial-img mb-3">
-                        <h5>Jane Smith</h5>
+                        <h5>JanJan Smith</h5>
                         <div class="rating mb-2">
                             &#9733;&#9733;&#9733;&#9733;&#9733;
                         </div>
@@ -536,7 +536,7 @@ $shopData = mysqli_fetch_assoc($shop_result);
                 <div class="col-md-4">
                     <div class="testimonial-card text-center">
                         <img src="person2.0.webp" alt="User Image" class="testimonial-img mb-3">
-                        <h5>Michael Johnson</h5>
+                        <h5>Michael02</h5>
                         <div class="rating mb-2">
                             &#9733;&#9733;&#9733;&#9733;&#9733;
                         </div>

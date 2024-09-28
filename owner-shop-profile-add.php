@@ -401,7 +401,7 @@ mysqli_close($connection);
                     <form action="owner-shop-profile-add-backend.php" method="POST" enctype="multipart/form-data">
                         <input type="hidden" name="shop_id" id="shop_id" value="<?php echo $shopData['shop_id'];?>">
                         <center>
-                        <div class="v-1 card-header text-light"><?php echo isset($shopData['shop_name']) ? htmlspecialchars($shopData['shop_name']) : ''; ?>'s permit</div>
+                        <div class="v-1 card-header text-light"><?php echo isset($shopData['shop_name']) ? htmlspecialchars($shopData['shop_name']) : ''; ?>'s profile</div>
                         </center>
                         <div class="card-body text-center">
                         <img class="img-account-profile mb-3" src="<?php echo $shopData['profile']; ?>" alt="">
@@ -410,7 +410,7 @@ mysqli_close($connection);
                         <input type="file" class="form-control" id="profile" name="profile" accept="image/*">
 
                         </div>
-                        <button type="submit" class="btn btn-primary">Submit Permit</button>
+                        <button type="submit" class="btn btn-primary">Submit Profile</button>
 
                         </div>
                     </form>
@@ -433,7 +433,7 @@ mysqli_close($connection);
 
                         <div class="form-group mb-3 text-dark">
                         <label for="operating">Operating Hours:</label>
-                        <input type="text" class="form-control" id="operating" name="operating" placeholder="Edit Operating Hours " value="<?php echo isset($shopData['operating_hours']) ? htmlspecialchars($shopData['operating_hours']) : ''; ?>" required>
+                        <input type="time" class="form-control" id="operating" name="operating" placeholder="Edit Operating Hours " value="<?php echo isset($shopData['operating_hours']) ? htmlspecialchars($shopData['operating_hours']) : ''; ?>" required>
                         </div>
 
                         </div>
