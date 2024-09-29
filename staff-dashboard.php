@@ -344,13 +344,9 @@ mysqli_close($connection);
                         <div class="col-lg-6 mb-4">
                             <div class="card border-gray shadow-sm">
                                 <div class="card-body">
-                                    <h5 class="card-title align-items-center">
+                                    <h5 class="card-title text-center">
                                         Slot Number: <?php echo isset($row['slotNumber']) ? $row['slotNumber'] : 'N/A'; ?>
                                     </h5>
-                                    <h6 class="card-subtitle mb-2">
-                                        <strong>Name:</strong><?php echo isset($row['firstname']) ? $row['firstname'] : 'N/A'; ?>
-                                        <?php echo isset($row['lastname']) ? $row['lastname'] : 'N/A'; ?>
-                                    </h6>
                                     <p class="card-text">
                                         <strong>Service Name:</strong> <?php echo isset($row['service_name']) ? $row['service_name'] : 'N/A'; ?><br>
                                         <strong>Services:</strong>
@@ -371,7 +367,7 @@ mysqli_close($connection);
                                     $isDisabled = $row['selected_id'] !== $minSelectedId;
                                     ?>
 
-                                    <a href="csservice_staffview1.php?selected_id=<?php echo isset($row['selected_id']) ? $row['selected_id'] : ''; ?>&servicename_id=<?php echo $row['servicename_id']; ?>"
+                                    <a href="staff-dashboard-view-details.php?selected_id=<?php echo isset($row['selected_id']) ? $row['selected_id'] : ''; ?>&servicename_id=<?php echo $row['servicename_id']; ?>&user_id=<?php echo $row['user_id'];?>"
                                         class="btn btn-primary w-100 <?php echo $isDisabled ? 'disabled' : ''; ?>"
                                         <?php echo $isDisabled ? 'onclick="return false;"' : ''; ?>>
                                         View Details

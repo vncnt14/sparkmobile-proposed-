@@ -17,7 +17,7 @@ $serviceID = $_SESSION['service_id'];
 $query = "SELECT ss.*, sn.service_name, co.firstname, co.lastname, v.vehicle_id
           FROM select_service ss
           INNER JOIN service_names sn ON ss.servicename_id = sn.servicename_id
-          INNER JOIN carowners co ON ss.user_id = co.user_id
+          INNER JOIN users co ON ss.user_id = co.user_id
           INNER JOIN vehicles v ON ss.vehicle_id = v.vehicle_id
           WHERE ss.is_deleted = '0'
           ORDER BY ss.selected_id ASC";

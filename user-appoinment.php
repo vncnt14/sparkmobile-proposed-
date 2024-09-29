@@ -15,7 +15,7 @@ sd.*, v.platenumber, v.brand, v.color, v.model, sn.service_name,co.firstname,co.
 FROM servicedone sd
 INNER JOIN vehicles v ON sd.vehicle_id = v.vehicle_id
 INNER JOIN service_names sn ON sd.servicename_id = sn.servicename_id
-INNER JOIN carowners co ON sd.user_id = co.user_id
+INNER JOIN users co ON sd.user_id = co.user_id
 WHERE sd.user_id = '$userID' AND v.status = 'Currently Washing'";
 
 $result = mysqli_query($connection, $query);

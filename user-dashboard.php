@@ -325,7 +325,7 @@ $shop_result = mysqli_query($connection, $shop_query);
                     <div class="collapse" id="layouts">
                         <ul class="navbar-nav ps-3">
                             <li class="v-1">
-                                <a href="setappoinment.php" class="nav-link px-3">
+                                <a href="user-appoinment.php" class="nav-link px-3">
                                     <span class="me-2">Appointments</span>
                                 </a>
                             </li>

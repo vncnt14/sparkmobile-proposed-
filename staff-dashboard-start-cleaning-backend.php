@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Data inserted successfully
             echo '<script>alert("Service successful.");</script>';
             // Redirect to a new page
-            echo '<script>window.location.href = "csservice_staffview.php";</script>';
+            echo '<script>window.location.href = "staff-dashboard.php";</script>';
         } else {
             // Error occurred while inserting data into servicedone table
             echo '<script>alert("Error inserting data: ' . mysqli_error($connection) . '");</script>';
