@@ -31,6 +31,10 @@ $servicenameData= mysqli_fetch_assoc($result2);
 $query1 = "SELECT *FROM services WHERE servicename_id = '$servicename_id'";
 $result1 = mysqli_query($connection, $query1);
 
+$slot_query = "SELECT *FROM slots WHERE user_id = '$user_id'";
+$slot_result = mysqli_query($connection, $slot_query);
+$slotData = mysqli_fetch_assoc($slot_result);
+
 
 
 
@@ -436,6 +440,7 @@ button {
               <form action="csselectedservice.php" method="POST" id="serviceForm"> <!-- Replace 'submit_selected_services.php' with the actual URL of your submission handler -->
                 <h2 class="ms-5"><?php echo $servicenameData['service_name'];?></h2>
                 <div class="container mx-auto mt-5">
+                    <input type="hidden" name="slotNumber" id="slotNumber" value="<?php echo $slotData['slotNumber'];?>">
                     <input type="hidden" id="user_id" name="user_id" value="<?php echo $user_id; ?>">
                     <input type="hidden" id="vehicle_id" name="vehicle_id" value="<?php echo $vehicleData['vehicle_id']; ?>">
                     <input type="hidden" id="servicename_id" name="servicename_id" value="<?php echo $servicenameData['servicename_id']; ?>">

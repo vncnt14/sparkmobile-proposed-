@@ -14,6 +14,8 @@ if (!isset($_SESSION['username'])) {
 $userID = $_SESSION['user_id'];
 $vehicle_id = $_SESSION['vehicle_id'];
 
+$serviceID = $_SESSION['service_id'];
+
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
 $query = "SELECT * FROM users WHERE user_id = '$userID'";
@@ -21,6 +23,18 @@ $query = "SELECT * FROM users WHERE user_id = '$userID'";
 $result = mysqli_query($connection, $query);
 $userData = mysqli_fetch_assoc($result);
 
+
+
+$staff_query = "SELECT ss.*, ss.selected_id, ss.servicename_id, ss.vehicle_id,
+ss.services, ss.price, ss.user_id, u.firstname, u.lastname, ss.slotNumber, sn.service_name
+FROM select_service ss
+INNER JOIN users u ON u.user_id = ss.user_id
+INNER JOIN service_names sn ON sn.servicename_id = ss.servicename_id
+WHERE ss.is_deleted = '0'
+ORDER BY ss.selected_id ASC";
+
+// Ordering by first name in ascending order
+$staff_result = mysqli_query($connection, $staff_query);
 
 
 
@@ -189,6 +203,26 @@ mysqli_close($connection);
         object-fit: cover;
         border-radius: 50%;
     }
+
+    .game-card {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 15px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+    }
+
+    .game-logo {
+        width: 80px;
+        height: 80px;
+        border-radius: 16px;
+    }
+
+    .ratings .star {
+        color: gold;
+    }
 </style>
 
 <body>
@@ -263,7 +297,7 @@ mysqli_close($connection);
                         <span>HISTORY</span>
                     </a>
                 </li>
-                
+
                 <li>
                     <a href="#" class="nav-link px-3">
                         <span class="me-2"><i class="fas fa-medal"></i>
@@ -284,8 +318,77 @@ mysqli_close($connection);
     </div>
     </div>
     <!-- main content -->
+
     <main>
-        
+
+
+        <div class="container py-4 text-dark">
+            <h2 class="text-center"><strong><i></i>SERVICES</strong></h2>
+            <p class="text-center">Click the button to proceed cleaning</p>
+            <div class="row mt-4">
+                <?php
+                if ($result) {
+                    // Variable to track the minimum selected_id
+                    $minSelectedId = null;
+
+                    // Find the minimum selected_id
+                    foreach ($staff_result as $row) {
+                        if ($minSelectedId === null || $row['selected_id'] < $minSelectedId) {
+                            $minSelectedId = $row['selected_id'];
+                        }
+                    }
+
+                    // Loop through the results again to output each card
+                    foreach ($staff_result as $row) {
+                ?>
+                        <div class="col-lg-6 mb-4">
+                            <div class="card border-gray shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title align-items-center">
+                                        Slot Number: <?php echo isset($row['slotNumber']) ? $row['slotNumber'] : 'N/A'; ?>
+                                    </h5>
+                                    <h6 class="card-subtitle mb-2">
+                                        <strong>Name:</strong><?php echo isset($row['firstname']) ? $row['firstname'] : 'N/A'; ?>
+                                        <?php echo isset($row['lastname']) ? $row['lastname'] : 'N/A'; ?>
+                                    </h6>
+                                    <p class="card-text">
+                                        <strong>Service Name:</strong> <?php echo isset($row['service_name']) ? $row['service_name'] : 'N/A'; ?><br>
+                                        <strong>Services:</strong>
+                                        <?php
+                                        // Explode the services and display each one individually
+                                        $services = isset($row['services']) ? explode(',', $row['services']) : array();
+                                        foreach ($services as $service) {
+                                            echo $service . '<br>';
+                                        }
+                                        ?>
+                                    </p>
+                                    <p class="card-text">
+                                        <strong>Price:</strong> &#x20B1; <?php echo isset($row['price']) ? $row['price'] : 'N/A'; ?>
+                                    </p>
+
+                                    <?php
+                                    // Check if the current selected_id is the minimum
+                                    $isDisabled = $row['selected_id'] !== $minSelectedId;
+                                    ?>
+
+                                    <a href="csservice_staffview1.php?selected_id=<?php echo isset($row['selected_id']) ? $row['selected_id'] : ''; ?>&servicename_id=<?php echo $row['servicename_id']; ?>"
+                                        class="btn btn-primary w-100 <?php echo $isDisabled ? 'disabled' : ''; ?>"
+                                        <?php echo $isDisabled ? 'onclick="return false;"' : ''; ?>>
+                                        View Details
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                <?php
+                    }
+                } else {
+                    echo '<div class="col-12"><p class="text-danger">Error: ' . mysqli_error($connection) . '</p></div>';
+                }
+                ?>
+            </div>
+        </div>
+
+
     </main>
 
 
@@ -316,6 +419,7 @@ mysqli_close($connection);
 
     <script src="./js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="./js/jquery-3.5.1.js"></script>
     <script src="./js/jquery.dataTables.min.js"></script>
     <script src="./js/dataTables.bootstrap5.min.js"></script>
