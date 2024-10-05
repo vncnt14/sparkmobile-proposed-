@@ -15,10 +15,10 @@ if (!isset($_SESSION['username'])) {
 $user_id= $_GET['user_id'];
 $serviceID = $_SESSION['service_id'];
 
-$query = "SELECT servicedone.*, carowners.firstname, carowners.lastname, service_names.service_name
-FROM servicedone
-INNER JOIN carowners ON servicedone.user_id = carowners.user_id
-INNER JOIN service_names ON servicedone.servicename_id = service_names.servicename_id WHERE servicedone.user_id = $user_id";
+$query = "SELECT finish_jobs.*, users.firstname, users.lastname, service_names.service_name
+FROM finish_jobs
+INNER JOIN users ON finish_jobs.user_id = users.user_id
+INNER JOIN service_names ON finish_jobs.servicename_id = service_names.servicename_id WHERE finish_jobs.user_id = $user_id";
 // Ordering by first name in ascending order
 $result = mysqli_query($connection, $query);
 $paymentData = mysqli_fetch_assoc($result);

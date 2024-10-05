@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $self = isset($_POST["self"]) ? $_POST["self"] : "";
 
     // Use prepared statements to prevent SQL injection
-    $query = "INSERT INTO carcondition (user_id, vehicle_id, battery, lights, oil, water, brake, air, gas, engine, tire, self) 
+    $query = "INSERT INTO carcondition_details (user_id, vehicle_id, battery, lights, oil, water, brake, air, gas, engine, tire, self) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     $stmt = mysqli_prepare($connection, $query);

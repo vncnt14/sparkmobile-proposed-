@@ -17,9 +17,9 @@ sd.*
 FROM 
 payment_details pd
 LEFT JOIN 
-carowners co ON co.user_id = pd.user_id
+users co ON co.user_id = pd.user_id
 LEFT JOIN 
-servicedone sd ON co.user_id = sd.user_id WHERE sd.user_id = '$user_id'";
+finish_jobs sd ON co.user_id = sd.user_id WHERE sd.user_id = '$user_id'";
 
 $result = mysqli_query($connection, $query);
 
@@ -414,13 +414,13 @@ li :hover{
                 <td colspan="2"></td>
                 <td>
                     <div class="col-md-4 text-dark">
-                        <p>SUBTOTAL: ₱<?php echo $subtotal; ?>.00</p>
+                        <strong><p>SUBTOTAL: ₱ <?php echo $subtotal; ?>.00</p></strong>
                     </div>
                     <div class="col-md-4 text-dark">
-                        <p>AMOUNT PAID: ₱<?php echo $invoiceData['amount']?>.00</p>
+                        <strong><p>AMOUNT PAID: ₱ <?php echo $invoiceData['amount']?>.00</p></strong>
                     </div>
                     <div class="col-md-4 text-dark">
-                        <p>CHANGE: ₱<?php echo $change; ?>.00</p>
+                        <strong><p>CHANGE: ₱ <?php echo $change; ?>.00</p></strong>
                     </div>
                 </td>
             </tr>

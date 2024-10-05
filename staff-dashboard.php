@@ -27,7 +27,7 @@ $userData = mysqli_fetch_assoc($result);
 
 $staff_query = "SELECT ss.*, ss.selected_id, ss.servicename_id, ss.vehicle_id,
 ss.services, ss.price, ss.user_id, u.firstname, u.lastname, ss.slotNumber, sn.service_name
-FROM select_service ss
+FROM service_details ss
 INNER JOIN users u ON u.user_id = ss.user_id
 INNER JOIN service_names sn ON sn.servicename_id = ss.servicename_id
 WHERE ss.is_deleted = '0'

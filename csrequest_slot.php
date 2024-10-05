@@ -27,7 +27,7 @@ if (!$result) {
 $vehicleData = mysqli_fetch_assoc($result);
 
 // Fetch slot information from the database for the current date
-$query1 = "SELECT * FROM slots WHERE slot_id ORDER BY slotNumber DESC";
+$query1 = "SELECT * FROM queuing_slots WHERE slot_id ORDER BY slotNumber DESC";
 $result1 = mysqli_query($connection, $query1);
 
 // Check if query was successful

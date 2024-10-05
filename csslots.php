@@ -13,7 +13,7 @@ include('config.php');  // You'll need to replace this with your actual database
 
 // Function to check if a slot number is available
 function isSlotAvailable($userID, $slotNumber, $connection) {
-    $checkQuery = "SELECT * FROM slots WHERE slotNumber = '$slotNumber'";
+    $checkQuery = "SELECT * FROM queuing_slots WHERE slotNumber = '$slotNumber'";
     $checkResult = mysqli_query($connection, $checkQuery);
 
     return mysqli_num_rows($checkResult) == 0;
@@ -26,7 +26,7 @@ function bookSlot($userID, $vehicle_id, $slotNumber, $connection) {
     $currentDateTime->setTimezone(new DateTimeZone('Asia/Manila'));
     $date = $currentDateTime->format('Y-m-d H:i:s');
 
-    $insertQuery = "INSERT INTO slots (user_id, vehicle_id, slotNumber, date) VALUES ('$userID', '$vehicle_id', '$slotNumber', '$date')";
+    $insertQuery = "INSERT INTO queuing_slots (user_id, vehicle_id, slotNumber, date) VALUES ('$userID', '$vehicle_id', '$slotNumber', '$date')";
     $insertResult = mysqli_query($connection, $insertQuery);
 
     if ($insertResult) {

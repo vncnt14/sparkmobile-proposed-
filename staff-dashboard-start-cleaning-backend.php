@@ -15,17 +15,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $timer = $_POST['timer'];
     $is_deleted = $_POST['is_deleted'];
 
+
     // Soft delete data from the select_service table by updating a flag column
-    $soft_delete_query = "UPDATE select_service SET is_deleted = 1 WHERE selected_id = '$selected_id'";
+    $soft_delete_query = "UPDATE service_details SET is_deleted = 1 WHERE selected_id = '$selected_id'";
     
     if (mysqli_query($connection, $soft_delete_query)) {
         // Update successful, now perform SQL query to insert data into the servicedone table
-        $insert_query = "INSERT INTO servicedone (selected_id, vehicle_id, user_id, servicename_id, services, price, total_price, timer, is_deleted) 
+        $insert_query = "INSERT INTO finish_jobs (selected_id, vehicle_id, user_id, servicename_id, services, price, total_price, timer, is_deleted) 
                          VALUES ('$selected_id', '$vehicle_id', '$user_id', '$servicename_id', '$services', '$price', '$total_price', '$timer', '$is_deleted')";
 
         if (mysqli_query($connection, $insert_query)) {
             // Data inserted successfully
-            echo '<script>alert("Service successful.");</script>';
+            echo '<script>alert("Service Finish.");</script>';
             // Redirect to a new page
             echo '<script>window.location.href = "staff-dashboard.php";</script>';
         } else {

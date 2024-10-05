@@ -23,8 +23,8 @@ $result = mysqli_query($connection, $query);
 $userData = mysqli_fetch_assoc($result);
 
 
-$query = "SELECT ss.*, sn.service_name, u.firstname, u.lastname
-FROM select_service ss
+$query = "SELECT ss.*, sn.service_name, u.firstname, u.lastname, ss.status
+FROM service_details ss
 INNER JOIN service_names sn ON ss.servicename_id = sn.servicename_id
 INNER JOIN users u ON ss.user_id = u.user_id
 WHERE ss.selected_id = '$selected_id' AND ss.servicename_id = '$servicename_id'";
@@ -335,6 +335,7 @@ mysqli_close($connection);
               <input type="hidden" name="servicename_id" value="<?php echo $selectedData['servicename_id']; ?>">
               <input type="hidden" name="user_id" value="<?php echo $selectedData['user_id']; ?>">
               <input type="hidden" name="is_deleted" id="is_deleted" value="0">
+              <input type="hidden" name="status" id="status" value="<?php echo $selectedData['status'];?>">
 
               <!-- Service field -->
 

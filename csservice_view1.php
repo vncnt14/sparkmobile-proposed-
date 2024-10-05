@@ -25,14 +25,18 @@ $result = mysqli_query($connection, $query);
 $vehicleData = mysqli_fetch_assoc($result);
 
 
-$query1 = "SELECT * FROM carowners WHERE user_id = $userID";
+$query1 = "SELECT * FROM users WHERE user_id = $userID";
 // Execute the query and fetch the user data
 $result1 = mysqli_query($connection, $query1);
 $userData = mysqli_fetch_assoc($result1);
 
-$service_query = "SELECT * FROM servicedone WHERE user_id = $userID and vehicle_id = '$vehicle_id'";
+$service_query = "SELECT * FROM finish_jobs WHERE user_id = $userID and vehicle_id = '$vehicle_id'";
 $result2 = mysqli_query($connection, $service_query);
 $serviceData = mysqli_fetch_assoc($result2);
+
+$status_query = "SELECT * FROM service_details WHERE user_id = $userID and vehicle_id = '$vehicle_id'";
+$status_result = mysqli_query($connection, $status_query);
+$statusData = mysqli_fetch_assoc($status_result);
 
 // Close the database connection
 mysqli_close($connection);
@@ -477,11 +481,11 @@ li :hover{
                       <h5>Status</h5>
                       <?php
                       // Reset the result pointer to the beginning
-                      mysqli_data_seek($result2, 0);
+                      mysqli_data_seek($status_result, 0);
                       $hasData = false; // Reset flag for the next column
                       // Display Status
-                      while ($serviceData = mysqli_fetch_assoc($result2)) {
-                          echo "<p>" . $serviceData['status'] . "</p>";
+                      while ($statusData = mysqli_fetch_assoc($status_result)) {
+                          echo "<p>" . $statusData['status'] . "</p>";
                           $hasData = true; // Set flag to true if data is found
                       }
                       if (!$hasData) {

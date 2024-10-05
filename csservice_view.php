@@ -30,11 +30,11 @@ $query1 = "SELECT * FROM users WHERE user_id = $userID";
 $result1 = mysqli_query($connection, $query1);
 $userData = mysqli_fetch_assoc($result1);
 
-$service_query = "SELECT * FROM select_service WHERE user_id = $userID and vehicle_id = '$vehicle_id'";
+$service_query = "SELECT * FROM service_details WHERE user_id = $userID and vehicle_id = '$vehicle_id'";
 $result2 = mysqli_query($connection, $service_query);
 $serviceData = mysqli_fetch_assoc($result2);
 
-$servicedone_query = "SELECT * FROM servicedone WHERE user_id = $userID and vehicle_id = '$vehicle_id'";
+$servicedone_query = "SELECT * FROM finish_jobs WHERE user_id = $userID and vehicle_id = '$vehicle_id'";
 $result3 = mysqli_query($connection, $servicedone_query);
 $servicedoneData = mysqli_fetch_assoc($result3);
 

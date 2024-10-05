@@ -28,7 +28,7 @@ if (!$result) {
 $vehicleData = mysqli_fetch_assoc($result);
 
 // Fetch slot information from the database for the current date
-$query1 = "SELECT * FROM slots WHERE DATE(date) = CURDATE() ORDER BY slotNumber DESC";
+$query1 = "SELECT * FROM queuing_slots WHERE DATE(date) = CURDATE() ORDER BY slotNumber DESC";
 $result1 = mysqli_query($connection, $query1);
 
 // Check if query was successful
@@ -496,7 +496,7 @@ li :hover{
     $userID = $_SESSION['user_id'];
 
     // Fetch slot information based on user ID
-    $query = "SELECT * FROM slots WHERE user_id = '$userID' AND vehicle_id = '$vehicle_id'";
+    $query = "SELECT * FROM queuing_slots WHERE user_id = '$userID' AND vehicle_id = '$vehicle_id'";
     // Execute the query and fetch all rows of user data
     $result = mysqli_query($connection, $query);
 

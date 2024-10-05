@@ -430,6 +430,7 @@ mysqli_close($connection);
   <!-- main content -->
   <main>
     <div class="container-vinfo text-dark me-4">
+    
 
     </div>
 
