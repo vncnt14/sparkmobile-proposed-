@@ -17,7 +17,7 @@ $servicename_id = $_GET['servicename_id'];
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
 $query = "SELECT s.*, sn.service_name 
-          FROM services s
+          FROM offered_services s
           JOIN service_names sn ON s.servicename_id = sn.servicename_id
           WHERE s.servicename_id = '$servicename_id'";
 

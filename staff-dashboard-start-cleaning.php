@@ -2,7 +2,7 @@
 session_start();
 
 // Include database connection file
-include('config.php');// You'll need to replace this with your actual database connection code
+include('config.php'); // You'll need to replace this with your actual database connection code
 
 // Redirect to the login page if the user is not logged in
 if (!isset($_SESSION['username'])) {
@@ -37,7 +37,7 @@ $selectedData = mysqli_fetch_assoc($result);
 
 
 // Close the database connection
-mysqli_close($connection);
+
 ?>
 
 <!DOCTYPE html>
@@ -334,97 +334,123 @@ mysqli_close($connection);
               <input type="hidden" name="vehicle_id" value="<?php echo $selectedData['vehicle_id']; ?>">
               <input type="hidden" name="servicename_id" value="<?php echo $selectedData['servicename_id']; ?>">
               <input type="hidden" name="user_id" value="<?php echo $selectedData['user_id']; ?>">
-              <input type="hidden" name="is_deleted" id="is_deleted" value="0">
-              <input type="hidden" name="status" id="status" value="<?php echo $selectedData['status'];?>">
+              <input type="hidden" name="status" id="status" value="<?php echo $selectedData['status']; ?>">
+              <input type="hidden"  name="is_deleted" id="is_deleted" value="0">
 
-              <!-- Service field -->
-
+              <!-- Display user name -->
               <div class="mb-3">
-              <strong><label for="services" class="form-label">Name</label></strong>
-                <input type="text" class="form-control" id="services" name="services" value="<?php echo $selectedData['firstname']; ?> <?php echo $selectedData['lastname']; ?>" readonly>
+                <strong><label for="name" class="form-label">Name</label></strong>
+                <input type="text" class="form-control" id="name" name="name" value="<?php echo $selectedData['firstname'] . ' ' . $selectedData['lastname']; ?>" readonly>
               </div>
 
-              <div class="mb-3">
-                <strong><label for="services" class="form-label">Service</label></strong>
-                <input type="text" class="form-control" id="services" name="services" value="<?php echo $selectedData['services']; ?>" readonly>
-              </div>
+              <?php
+              // Fetch all services and prices grouped by slotNumber for the current user
+              $user_id = $selectedData['user_id'];
+              $service_query = "SELECT slotNumber, GROUP_CONCAT(services) AS services, GROUP_CONCAT(price) AS prices 
+              FROM service_details 
+              WHERE user_id = '$user_id' 
+              GROUP BY slotNumber";
 
-              <!-- Price field -->
-              <div class="mb-3">
-                <strong><label for="prices" class="form-label">Price (₱)</label></strong>
-                <input type="text" class="form-control" id="prices" name="price" value="<?php echo $selectedData['price']; ?>" readonly>
-              </div>
+              $service_result = mysqli_query($connection, $service_query);
+
+              // Initialize total price
+              $totalPrice = 0;
+
+              // Loop through the results and display services and prices per slot
+              while ($row = mysqli_fetch_assoc($service_result)) {
+                $slotNumber = $row['slotNumber'];
+                $services = explode(',', $row['services']);
+                $prices = explode(',', $row['prices']);
+
+                // Calculate total price for each slot
+                $slotTotalPrice = array_sum($prices);
+                $totalPrice += $slotTotalPrice;
+              ?>
+                <!-- Display grouped services by slot -->
+                <div class="mb-3">
+                  <strong><label for="services_<?php echo $slotNumber; ?>" class="form-label">Services</label></strong>
+                  <input type="text" class="form-control" name="services" id="services_<?php echo $slotNumber; ?>" value="<?php echo implode(', ', $services); ?>" readonly>
+                </div>
+
+                <!-- Display grouped prices by slot -->
+                <div class="mb-3">
+                  <strong><label for="prices_<?php echo $slotNumber; ?>" class="form-label">Prices</label></strong>
+                  <input type="text" class="form-control" name="price" id="price_<?php echo $slotNumber; ?>" value="₱ <?php echo implode(', ₱ ', $prices); ?>" readonly>
+                </div>
+              <?php
+              }
+              ?>
 
               <!-- Total Price field -->
               <div class="mb-3">
                 <strong><label for="total_price" class="form-label">Total Price (₱)</label></strong>
-                <input type="text" class="form-control" id="total_price" name="total_price" value="<?php echo $selectedData['total_price']; ?>.00" readonly>
+                <input type="text" class="form-control" id="total_price" name="total_price" value="<?php echo $totalPrice; ?>.00" readonly>
               </div>
 
               <div class="form-group mb-3 text-dark">
-                                <label for="timer">Timer:</label>
-                                <span id="timer" class="timer-display text-dark">00:00:00</span>
-                                <input type="hidden" id="timer_input" name="timer" value="00:00:00">
-                            </div>
+                <label for="timer">Timer:</label>
+                <span id="timer" class="timer-display text-dark">00:00:00</span>
+                <input type="hidden" id="timer_input" name="timer" value="00:00:00">
+              </div>
 
-
-                            <button id="startBtn" type="button" class="btn btn-primary btn-md mb-3">Start</button>
-                            <button id="finishBtn" type="submit" class="btn btn-danger btn-md mb-3">Finish</button>
+              <button id="startBtn" type="button" class="btn btn-primary btn-md mb-3">Start</button>
+              <button id="finishBtn" type="submit" class="btn btn-danger btn-md mb-3">Finish</button>
             </form>
+
           </div>
         </div>
       </div>
     </div>
   </main>
 
-<!-- jQuery -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <!-- Bootstrap JS -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            var timerInterval;
-            var startTime;
-            var elapsedTime = 0;
-            var running = false;
+  <!-- jQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      var timerInterval;
+      var startTime;
+      var elapsedTime = 0;
+      var running = false;
 
-            // Function to start the timer
-            function startTimer() {
-                startTime = Date.now() - elapsedTime;
-                timerInterval = setInterval(updateTimer, 1000);
-                running = true;
-            }
+      // Function to start the timer
+      function startTimer() {
+        startTime = Date.now() - elapsedTime;
+        timerInterval = setInterval(updateTimer, 1000);
+        running = true;
+      }
 
-            // Function to update the timer display
-            function updateTimer() {
-                var currentTime = Date.now();
-                elapsedTime = currentTime - startTime;
-                var formattedTime = new Date(elapsedTime).toISOString().substr(11, 8);
-                $('#timer').text(formattedTime);
-                $('#timer_input').val(formattedTime); // Update the hidden input field with the timer value
-            }
+      // Function to update the timer display
+      function updateTimer() {
+        var currentTime = Date.now();
+        elapsedTime = currentTime - startTime;
+        var formattedTime = new Date(elapsedTime).toISOString().substr(11, 8);
+        $('#timer').text(formattedTime);
+        $('#timer_input').val(formattedTime); // Update the hidden input field with the timer value
+      }
 
-            // Function to stop the timer
-            function stopTimer() {
-                clearInterval(timerInterval);
-                running = false;
-            }
+      // Function to stop the timer
+      function stopTimer() {
+        clearInterval(timerInterval);
+        running = false;
+      }
 
-            // Event listener for start button click
-            $('#startBtn').click(function() {
-                if (!running) {
-                    startTimer();
-                }
-            });
+      // Event listener for start button click
+      $('#startBtn').click(function() {
+        if (!running) {
+          startTimer();
+        }
+      });
 
-            // Event listener for finish button click
-            $('#finishBtn').click(function() {
-                if (running) {
-                    stopTimer();
-                }
-            });
-        });
-    </script>
+      // Event listener for finish button click
+      $('#finishBtn').click(function() {
+        if (running) {
+          stopTimer();
+        }
+      });
+    });
+  </script>
 
 
   <script>

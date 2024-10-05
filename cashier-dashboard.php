@@ -14,8 +14,6 @@ if (!isset($_SESSION['username'])) {
 $userID = $_SESSION['user_id'];
 $vehicle_id = $_SESSION['vehicle_id'];
 
-$serviceID = $_SESSION['service_id'];
-
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
 $query = "SELECT * FROM users WHERE user_id = '$userID'";
@@ -23,18 +21,6 @@ $query = "SELECT * FROM users WHERE user_id = '$userID'";
 $result = mysqli_query($connection, $query);
 $userData = mysqli_fetch_assoc($result);
 
-
-
-$staff_query = "SELECT ss.*, ss.selected_id, ss.servicename_id, ss.vehicle_id,
-ss.services, ss.price, ss.user_id, u.firstname, u.lastname, ss.slotNumber, sn.service_name
-FROM service_details ss
-INNER JOIN users u ON u.user_id = ss.user_id
-INNER JOIN service_names sn ON sn.servicename_id = ss.servicename_id
-WHERE ss.is_deleted = '0'
-ORDER BY ss.selected_id ASC";
-
-// Ordering by first name in ascending order
-$staff_result = mysqli_query($connection, $staff_query);
 
 
 
@@ -203,26 +189,6 @@ mysqli_close($connection);
         object-fit: cover;
         border-radius: 50%;
     }
-
-    .game-card {
-        background-color: #fff;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        padding: 15px;
-        margin-bottom: 20px;
-        display: flex;
-        align-items: center;
-    }
-
-    .game-logo {
-        width: 80px;
-        height: 80px;
-        border-radius: 16px;
-    }
-
-    .ratings .star {
-        color: gold;
-    }
 </style>
 
 <body>
@@ -272,19 +238,19 @@ mysqli_close($connection);
 
 
                 <div class=" welcome fw-bold px-3 mb-3">
-                    <h5 class="text-center">Welcome back <?php echo $userData['firstname']; ?>!</h5>
+                    <h5 class="text-center">Welcome back  <?php echo $userData['firstname']; ?> !</h5>
                 </div>
                 <div class="ms-3" id="dateTime"></div>
                 </li>
                 <li>
                 <li class="v-1">
-                    <a href="staff-dashboard.php" class="nav-link px-3">
+                    <a href="cashier-dashboard.php" class="nav-link px-3">
                         <span class="me-2"><i class="fas fa-home"></i></i></span>
                         <span class="start">DASHBOARD</span>
                     </a>
                 </li>
                 <li class="">
-                    <a href="staff-profile.php" class="nav-link px-3">
+                    <a href="cashier-dashboard-profile.php" class="nav-link px-3">
                         <span class="me-2"><i class="fas fa-user"></i></i></span>
                         <span class="start">PROFILE</span>
                     </a>
@@ -292,17 +258,16 @@ mysqli_close($connection);
                 <li>
 
                 <li class="">
-                    <a href="owner-shop-profile1.php" class="nav-link px-3">
-                        <span class="me-2"><i class="fas fa-calendar"></i></i></span>
-                        <span>HISTORY</span>
+                    <a href="cashier-dashboard-payment.php" class="nav-link px-3">
+                        <span class="me-2"><i class="fas fa-money-bill"></i></i></span>
+                        <span>PAYMENTS</span>
                     </a>
                 </li>
 
-                <li>
-                    <a href="#" class="nav-link px-3">
-                        <span class="me-2"><i class="fas fa-medal"></i>
-                            </i></span>
-                        <span>REWARDS</span>
+                <li class="">
+                    <a href="cashier-dashboard-records.php" class="nav-link px-3">
+                        <span class="me-2"><i class="fas fa-money-bill"></i></i></span>
+                        <span>RECORDS</span>
                     </a>
                 </li>
                 <li>
@@ -318,84 +283,10 @@ mysqli_close($connection);
     </div>
     </div>
     <!-- main content -->
-
     <main>
-
-
-    <div class="container py-4 text-dark">
-    <h2 class="text-center"><strong><i></i>SERVICES</strong></h2>
-    <p class="text-center">Click the button to proceed cleaning</p>
-    <div class="row mt-4">
-        <?php
-        if ($result) {
-            // Step 1: Create an array to group services by slotNumber
-            $groupedServices = [];
-
-            // Step 2: Loop through staff_result and group by slotNumber
-            foreach ($staff_result as $row) {
-                $slotNumber = isset($row['slotNumber']) ? $row['slotNumber'] : 'N/A';
-
-                if (!isset($groupedServices[$slotNumber])) {
-                    $groupedServices[$slotNumber] = [
-                        'services' => [],
-                        'prices' => [],
-                        'selected_id' => $row['selected_id'], // Store selected_id
-                        'servicename_id' => $row['servicename_id'], // Store servicename_id
-                        'user_id' => $row['user_id'], // Store user_id
-                    ];
-                }
-
-                // Add service and price to the group
-                $groupedServices[$slotNumber]['services'][] = isset($row['service_name']) ? $row['service_name'] : 'N/A';
-                $groupedServices[$slotNumber]['prices'][] = isset($row['price']) ? $row['price'] : 'N/A';
-            }
-
-            // Step 3: Output each slot's card with grouped services and prices
-            foreach ($groupedServices as $slotNumber => $slotData) {
-        ?>
-                <div class="col-lg-6 mb-4">
-                    <div class="card border-gray shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title text-center">
-                                Slot Number: <?php echo $slotNumber; ?>
-                            </h5>
-                            <p class="card-text">
-                                <strong>Services:</strong><br>
-                                <?php
-                                // Loop through services and display them
-                                foreach ($slotData['services'] as $index => $service) {
-                                    echo $service . '<br>';
-                                }
-                                ?>
-                            </p>
-                            <p class="card-text">
-                                <strong>Prices:</strong><br>
-                                <?php
-                                // Loop through prices and display them
-                                foreach ($slotData['prices'] as $index => $price) {
-                                    echo '&#x20B1; ' . $price . '<br>';
-                                }
-                                ?>
-                            </p>
-
-                            <a href="staff-dashboard-view-details.php?selected_id=<?php echo $slotData['selected_id']; ?>&servicename_id=<?php echo $slotData['servicename_id']; ?>&user_id=<?php echo $slotData['user_id'];?>"
-                                class="btn btn-primary w-100">
-                                View Details
-                            </a>
-                        </div>
-                    </div>
-                </div>
-        <?php
-            }
-        } else {
-            echo '<div class="col-12"><p class="text-danger">Error: ' . mysqli_error($connection) . '</p></div>';
-        }
-        ?>
-    </div>
-</div>
-
-
-
+        <div class="container">
+            <a href="cashier-dashboard-payment.php"><button type="button" class="btn btn-primary">View Payments</button></a>
+        </div>
     </main>
 
 
@@ -426,7 +317,6 @@ mysqli_close($connection);
 
     <script src="./js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="./js/jquery-3.5.1.js"></script>
     <script src="./js/jquery.dataTables.min.js"></script>
     <script src="./js/dataTables.bootstrap5.min.js"></script>

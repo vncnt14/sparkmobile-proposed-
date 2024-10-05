@@ -65,8 +65,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Close the database connection
             mysqli_close($connection);
 
-            echo '<script>alert("Payment successfull.");</script>';
-            echo '<script>window.location.href = "cspayment_managerview2.php?user_id=' . $user_id . '";</script>';
+            echo '<script>alert("Payment successfull!.");</script>';
+            echo '<script>window.location.href = "cashier-dashboard-payment-invoice.php?user_id=' . $user_id . '";</script>';
         } else {
             echo "Error: Unable to execute insertion.<br>" . mysqli_error($connection);
         }

@@ -9,7 +9,7 @@ $services = $_POST['services'];
 $price = $_POST['price'];
 
 // Use prepared statements to prevent SQL injection
-$sql = "INSERT INTO services (servicename_id, service_name, services, price) VALUES ('$id', '$service_name', '$services', '$price')";
+$sql = "INSERT INTO offered_services (servicename_id, service_name, services, price) VALUES ('$id', '$service_name', '$services', '$price')";
 
 if(mysqli_query($connection, $sql)) {
     echo '<script language="javascript">';

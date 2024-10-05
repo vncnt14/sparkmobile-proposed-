@@ -2,7 +2,7 @@
 session_start();
 
 // Include database connection file
-include('config.php');  // You'll need to replace this with your actual database connection code
+include('config.php'); // You'll need to replace this with your actual database connection code
 
 // Redirect to the login page if the user is not logged in
 if (!isset($_SESSION['username'])) {
@@ -11,10 +11,11 @@ if (!isset($_SESSION['username'])) {
 }
 
 // Fetch user information based on ID
+
 $userID = $_SESSION['user_id'];
 $vehicle_id = $_SESSION['vehicle_id'];
-
 $serviceID = $_SESSION['service_id'];
+$user_id = $_GET['user_id'];
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
@@ -25,18 +26,31 @@ $userData = mysqli_fetch_assoc($result);
 
 
 
-$staff_query = "SELECT ss.*, ss.selected_id, ss.servicename_id, ss.vehicle_id,
-ss.services, ss.price, ss.user_id, u.firstname, u.lastname, ss.slotNumber, sn.service_name
-FROM service_details ss
-INNER JOIN users u ON u.user_id = ss.user_id
-INNER JOIN service_names sn ON sn.servicename_id = ss.servicename_id
-WHERE ss.is_deleted = '0'
-ORDER BY ss.selected_id ASC";
+// Use a JOIN query to fetch data from multiple tables
+$invoice_query = "SELECT 
+co.*, 
+pd.*, 
+sd.*
+FROM 
+payment_details pd
+LEFT JOIN 
+users co ON co.user_id = pd.user_id
+LEFT JOIN 
+finish_jobs sd ON co.user_id = sd.user_id WHERE sd.user_id = '$user_id' LIMIT 1";
 
-// Ordering by first name in ascending order
-$staff_result = mysqli_query($connection, $staff_query);
+$invoice_result = mysqli_query($connection, $invoice_query);
 
+// Check if the query was successful
+if (!$invoice_result) {
+    die("Error: " . mysqli_error($connection));
+}
 
+// Fetch the data
+$invoiceData = mysqli_fetch_assoc($invoice_result);
+
+$query2 = "SELECT *FROM payment_details WHERE user_id = '$user_id'";
+$result2 = mysqli_query($connection, $query2);
+$paymentData = mysqli_fetch_assoc($result2);
 
 // Close the database connection
 mysqli_close($connection);
@@ -204,25 +218,29 @@ mysqli_close($connection);
         border-radius: 50%;
     }
 
-    .game-card {
-        background-color: #fff;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        padding: 15px;
-        margin-bottom: 20px;
-        display: flex;
-        align-items: center;
+    .thick-border td {
+        border-top: 3px solid #000;
+        /* You can adjust the thickness and color here */
     }
+   
+    @media print {
+        body * {
+            visibility: hidden; /* Hide everything */
+        }
+        #invoice, #invoice * {
+            visibility: visible; /* Show only the invoice */
+        }
+        #invoice {
+            position: absolute;
+            left: 0;
+            top: 0; /* Position it for print */
+        }
+        #print-button {
+                display: none; /* Hide the print button */
+            }
+    }
+</style>
 
-    .game-logo {
-        width: 80px;
-        height: 80px;
-        border-radius: 16px;
-    }
-
-    .ratings .star {
-        color: gold;
-    }
 </style>
 
 <body>
@@ -272,37 +290,36 @@ mysqli_close($connection);
 
 
                 <div class=" welcome fw-bold px-3 mb-3">
-                    <h5 class="text-center">Welcome back <?php echo $userData['firstname']; ?>!</h5>
+                    <h5 class="text-center">Welcome back <?php echo $userData['firstname']; ?> !</h5>
                 </div>
                 <div class="ms-3" id="dateTime"></div>
                 </li>
                 <li>
-                <li class="v-1">
-                    <a href="staff-dashboard.php" class="nav-link px-3">
+                <li class="">
+                    <a href="cashier-dashboard.php" class="nav-link px-3">
                         <span class="me-2"><i class="fas fa-home"></i></i></span>
                         <span class="start">DASHBOARD</span>
                     </a>
                 </li>
                 <li class="">
-                    <a href="staff-profile.php" class="nav-link px-3">
+                    <a href="cashier-dashboard-profile.php" class="nav-link px-3">
                         <span class="me-2"><i class="fas fa-user"></i></i></span>
                         <span class="start">PROFILE</span>
                     </a>
                 </li>
                 <li>
 
-                <li class="">
-                    <a href="owner-shop-profile1.php" class="nav-link px-3">
-                        <span class="me-2"><i class="fas fa-calendar"></i></i></span>
-                        <span>HISTORY</span>
+                <li class="v-1">
+                    <a href="cashier-dashboard-payment.php" class="nav-link px-3">
+                        <span class="me-2"><i class="fas fa-money-bill"></i></i></span>
+                        <span>PAYMENTS</span>
                     </a>
                 </li>
 
-                <li>
-                    <a href="#" class="nav-link px-3">
-                        <span class="me-2"><i class="fas fa-medal"></i>
-                            </i></span>
-                        <span>REWARDS</span>
+                <li class="">
+                    <a href="cashier-dashboard-records.php" class="nav-link px-3">
+                        <span class="me-2"><i class="fas fa-book"></i></i></span>
+                        <span>RECORDS</span>
                     </a>
                 </li>
                 <li>
@@ -318,85 +335,116 @@ mysqli_close($connection);
     </div>
     </div>
     <!-- main content -->
-
     <main>
+    <?php
+    // Initialize an array to store all the invoice data
+    $invoiceDataArray = array();
 
+    // Fetch data from the database and store it in the array
+    mysqli_data_seek($invoice_result, 0);
+    while ($invoiceData = mysqli_fetch_assoc($invoice_result)) {
+        $invoiceDataArray[] = $invoiceData;
+    }
 
-    <div class="container py-4 text-dark">
-    <h2 class="text-center"><strong><i></i>SERVICES</strong></h2>
-    <p class="text-center">Click the button to proceed cleaning</p>
-    <div class="row mt-4">
-        <?php
-        if ($result) {
-            // Step 1: Create an array to group services by slotNumber
-            $groupedServices = [];
+    // Calculate subtotal
+    $subtotal = 0;
+    foreach ($invoiceDataArray as $invoiceData) {
+        $subtotal += $invoiceData['total_price'];
+    }
 
-            // Step 2: Loop through staff_result and group by slotNumber
-            foreach ($staff_result as $row) {
-                $slotNumber = isset($row['slotNumber']) ? $row['slotNumber'] : 'N/A';
+    // Initialize amount paid (you can get this from form submission)
+    $amountPaid = $invoiceData['amount'];
 
-                if (!isset($groupedServices[$slotNumber])) {
-                    $groupedServices[$slotNumber] = [
-                        'services' => [],
-                        'prices' => [],
-                        'selected_id' => $row['selected_id'], // Store selected_id
-                        'servicename_id' => $row['servicename_id'], // Store servicename_id
-                        'user_id' => $row['user_id'], // Store user_id
-                    ];
-                }
+    // Calculate change only if amount paid is greater than or equal to subtotal
+    if ($amountPaid >= $subtotal) {
+        $change = $amountPaid - $subtotal;
+    } else {
+        $change = 0; // Set change to zero if amount paid is less than subtotal
+    }
+    ?>
 
-                // Add service and price to the group
-                $groupedServices[$slotNumber]['services'][] = isset($row['service_name']) ? $row['service_name'] : 'N/A';
-                $groupedServices[$slotNumber]['prices'][] = isset($row['price']) ? $row['price'] : 'N/A';
-            }
+    <div class="container" id="invoice">
+        <div class="row">
+            <h2 class="mb-4 text-dark text-center">INVOICE</h2>
+            <div class="col-md-6 text-dark mb-5">
+                <h5>Invoice to:</h5>
+                <p><?php echo isset($invoiceDataArray[0]['firstname']) ? $invoiceDataArray[0]['firstname'] : ''; ?> <?php echo isset($invoiceDataArray[0]['lastname']) ? $invoiceDataArray[0]['lastname'] : ''; ?></p>
+                <p><?php echo isset($invoiceDataArray[0]['completeadd']) ? $invoiceDataArray[0]['completeadd'] : ''; ?></p>
+                <p><?php echo isset($invoiceDataArray[0]['email']) ? $invoiceDataArray[0]['email'] : ''; ?></p>
+            </div>
+            <div class="col-md-6 text-dark">
+                <h5>Invoice No: # <?php echo isset($invoiceDataArray[0]['total_price_id']) ? $invoiceDataArray[0]['total_price_id'] : ''; ?></h5>
+                <h5>Date: <?php echo isset($invoiceDataArray[0]['date']) ? $invoiceDataArray[0]['date'] : ''; ?></h5>
+                <h5>Mode of Payment: <?php echo isset($invoiceDataArray[0]['payment_method']) ? $invoiceDataArray[0]['payment_method'] : ''; ?></h5>
+            </div>
+        </div>
 
-            // Step 3: Output each slot's card with grouped services and prices
-            foreach ($groupedServices as $slotNumber => $slotData) {
-        ?>
-                <div class="col-lg-6 mb-4">
-                    <div class="card border-gray shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title text-center">
-                                Slot Number: <?php echo $slotNumber; ?>
-                            </h5>
-                            <p class="card-text">
-                                <strong>Services:</strong><br>
-                                <?php
-                                // Loop through services and display them
-                                foreach ($slotData['services'] as $index => $service) {
-                                    echo $service . '<br>';
-                                }
-                                ?>
-                            </p>
-                            <p class="card-text">
-                                <strong>Prices:</strong><br>
-                                <?php
-                                // Loop through prices and display them
-                                foreach ($slotData['prices'] as $index => $price) {
-                                    echo '&#x20B1; ' . $price . '<br>';
-                                }
-                                ?>
-                            </p>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Services</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    foreach ($invoiceDataArray as $invoiceData) {
+                        // Explode services and prices into arrays
+                        $services = explode(',', $invoiceData['services']); // Split services
+                        $prices = explode(',', $invoiceData['price']); // Split prices
 
-                            <a href="staff-dashboard-view-details.php?selected_id=<?php echo $slotData['selected_id']; ?>&servicename_id=<?php echo $slotData['servicename_id']; ?>&user_id=<?php echo $slotData['user_id'];?>"
-                                class="btn btn-primary w-100">
-                                View Details
-                            </a>
-                        </div>
-                    </div>
-                </div>
-        <?php
-            }
-        } else {
-            echo '<div class="col-12"><p class="text-danger">Error: ' . mysqli_error($connection) . '</p></div>';
-        }
-        ?>
+                        // Ensure both arrays have the same count
+                        $count = max(count($services), count($prices));
+
+                        // Loop through each service and its corresponding price
+                        for ($i = 0; $i < $count; $i++) {
+                            // Get the service and price, use empty string as fallback
+                            $service = isset($services[$i]) ? trim($services[$i]) : 'N/A';
+
+                            // Clean up the price and convert to float
+                            $price = isset($prices[$i]) ? trim($prices[$i]) : '0.00';
+                            $priceFloat = floatval(str_replace(['₱', ' ', ','], '', $price)); // Remove currency symbol, spaces, and commas
+                    ?>
+                            <tr>
+                                <td><?php echo $service; ?></td>
+                                <td>1</td> <!-- Set quantity to always be '1' -->
+                                <td>₱<?php echo number_format($priceFloat, 2); ?></td>
+                            </tr>
+                    <?php
+                        }
+                    }
+                    ?>
+                    <tr class="thick-border">
+                        <td colspan="2" class="text-end"><strong>Subtotal:</strong></td>
+                        <td>₱<?php echo number_format($subtotal, 2); ?>.00</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="text-end"><strong>Amount Paid:</strong></td>
+                        <td>₱<?php echo number_format($amountPaid, 2); ?>.00</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="text-end"><strong>Change:</strong></td>
+                        <td>₱<?php echo number_format($change, 2); ?>.00</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <button id="print-button" class="btn btn-primary" type="button" onclick="printInvoice()">Print Invoice</button>
     </div>
-</div>
+
+    <script>
+        function printInvoice() {
+            // Print the current window content (entire page)
+            window.print();
+        }
+    </script>
+</main>
 
 
 
-    </main>
+
 
 
     <script>
@@ -424,9 +472,10 @@ mysqli_close($connection);
 
 
 
+
+
     <script src="./js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="./js/jquery-3.5.1.js"></script>
     <script src="./js/jquery.dataTables.min.js"></script>
     <script src="./js/dataTables.bootstrap5.min.js"></script>

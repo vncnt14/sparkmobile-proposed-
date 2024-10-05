@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
     // Soft delete data from the select_service table by updating a flag column
-    $soft_delete_query = "UPDATE service_details SET is_deleted = 1 WHERE selected_id = '$selected_id'";
+    $soft_delete_query = "UPDATE service_details SET is_deleted = 1 WHERE vehicle_id = '$vehicle_id'";
     
     if (mysqli_query($connection, $soft_delete_query)) {
         // Update successful, now perform SQL query to insert data into the servicedone table

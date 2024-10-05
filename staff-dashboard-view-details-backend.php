@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Update the status column in the vehicles table
     $query = "UPDATE vehicles SET status = 'Currently Washing' WHERE vehicle_id = $vehicle_id";
-    $status_query = "UPDATE service_details SET status = 'Finish' WHERE selected_id = $selected_id";
+    $status_query = "UPDATE service_details SET status = 'Finish' WHERE vehicle_id = $vehicle_id";
 
     // Execute the first query for updating vehicle status
     if (mysqli_query($connection, $query)) {

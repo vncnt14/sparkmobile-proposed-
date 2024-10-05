@@ -11,7 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $price = mysqli_real_escape_string($connection, $_POST['price']);
 
     // Use prepared statements to prevent SQL injection
-    $sql = "UPDATE services SET services=?, price=? WHERE service_id=?";
+    $sql = "UPDATE offered_services SET services=?, price=? WHERE service_id=?";
     $stmt = mysqli_prepare($connection, $sql);
 
     // Bind parameters and execute the statement
@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Fetch the updated service data
         $query = "SELECT s.*, sn.service_name 
-          FROM services s
+          FROM offered_services s
           JOIN service_names sn ON s.servicename_id = sn.servicename_id
           WHERE s.service_id = '$service_id'";
 
