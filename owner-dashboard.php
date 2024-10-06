@@ -257,15 +257,9 @@ mysqli_close($connection);
                 </li>
                 <li>
 
-                <li class="">
-                    <a href="owner-shop-profile1.php" class="nav-link px-3">
-                        <span class="me-2"><i class="fas fa-money-bill"></i></i></span>
-                        <span>MY SHOPS</span>
-                    </a>
-                </li>
                 <li><a class="nav-link px-3 sidebar-link" data-bs-toggle="collapse" href="#layouts">
-                        <span class="me-2"><i class="fas fa-calendar"></i></i></span>
-                        <span>INVENTORY</span>
+                        <span class="me-2"><i class="fas fa-building"></i></i></span>
+                        <span>MY SHOPS</span>
                         <span class="ms-auto">
                             <span class="right-icon">
                                 <i class="bi bi-chevron-down"></i>
@@ -275,28 +269,37 @@ mysqli_close($connection);
                     <div class="collapse" id="layouts">
                         <ul class="navbar-nav ps-3">
                             <li class="v-1">
-                                <a href="setappoinment.php" class="nav-link px-3">
+                                <a href="owner-shop-profile1.php" class="nav-link px-3">
+                                    <span class="me-2">Profile</span>
+                                </a>
+                            </li>
+                            <li class="v-1">
+                                <a href="ower-shop-service.php" class="nav-link px-3">
+                                    <span class="me-2">Services</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li><a class="nav-link px-3 sidebar-link" data-bs-toggle="collapse" href="#inventory">
+                        <span class="me-2"><i class="fas fa-calendar"></i></i></span>
+                        <span>INVENTORY</span>
+                        <span class="ms-auto">
+                            <span class="right-icon">
+                                <i class="bi bi-chevron-down"></i>
+                            </span>
+                        </span>
+                    </a>
+                    <div class="collapse" id="inventory">
+                        <ul class="navbar-nav ps-3">
+                            <li class="v-1">
+                                <a href="owner-dashboard-inventory-cleaning-products.php" class="nav-link px-3">
                                     <span class="me-2">Cleaning Products</span>
                                 </a>
                             </li>
                             <li class="v-1">
                                 <a href="checkingcar.php" class="nav-link px-3">
                                     <span class="me-2">Equipments</span>
-                                </a>
-                            </li>
-                            <li class="v-1">
-                                <a href="csrequest_slot.php" class="nav-link px-3">
-                                    <span class="me-2">Request Slot</span>
-                                </a>
-                            </li>
-                            <li class="v-1">
-                                <a href="csprocess3.php" class="nav-link px-3">
-                                    <span class="me-2">Select Service</span>
-                                </a>
-                            </li>
-                            <li class="v-1">
-                                <a href="#" class="nav-link px-3">
-                                    <span class="me-2">Register your car</span>
                                 </a>
                             </li>
                             <li class="v-1">
@@ -366,7 +369,6 @@ mysqli_close($connection);
     <!-- main content -->
     <main>
         <div class="container">
-            <a href="cspayment_managerview.php"><button type="button" class="btn btn-primary">View Payments</button></a>
             <a href="csservice_adminview.php"><button type="button" class="btn btn-primary">Services</button></a>
         </div>
     </main>
