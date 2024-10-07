@@ -22,9 +22,18 @@ $query = "SELECT * FROM users WHERE user_id = '$userID'";
 $result = mysqli_query($connection, $query);
 $userData = mysqli_fetch_assoc($result);
 
-$shop_query = "SELECT *FROM service_names WHERE shop_id = '$shop_id'";
-$shop_result = mysqli_query($connection, $shop_query);
-$shopData = mysqli_fetch_assoc($shop_result);
+$servicename_id = $_GET['servicename_id'];
+
+// Fetch user information from the database based on the user's ID
+// Replace this with your actual database query
+$query = "SELECT s.*, sn.service_name 
+          FROM offered_services s
+          JOIN service_names sn ON s.servicename_id = sn.servicename_id
+          WHERE s.servicename_id = '$servicename_id'";
+
+// Execute the query and fetch the user data
+$result = mysqli_query($connection, $query);
+$servicenameData = mysqli_fetch_assoc($result);
 
 
 
@@ -271,7 +280,7 @@ mysqli_close($connection);
             <span class="start">DASHBOARD</span>
           </a>
         </li>
-        <li class="">
+        <li class="v-1">
           <a href="user-profile.php" class="nav-link px-3">
             <span class="me-2"><i class="fas fa-user"></i></i></span>
             <span class="start">PROFILE</span>
@@ -404,41 +413,45 @@ mysqli_close($connection);
   </div>
   </div>
   <!-- main content -->
-  <main>
-    <div class="col-md-9 text-dark ms-5">
+  <main class="container mt-4">
+    <div class="col-md-9 mx-auto">
       <!-- column 2 -->
-      <h2><strong><i></i>SERVICES</strong></h2>
+      <h2 class="text-center text-dark">
+        <strong><?php echo isset($servicenameData['service_name']) ? $servicenameData['service_name'] : ''; ?></strong>
+      </h2>
+      <hr>
 
+      <!-- Service Table -->
       <div class="table-responsive">
-        <table class="table table-bordered border-gray">
+        <table class="table table-bordered border-secondary">
           <thead class="v-2 text-light">
             <tr>
-              <th scope="col">Service Name</th>
-              <th scope="col-md-4">Action</th>
+              <th scope="col">Services</th>
+              <th scope="col">Price</th>
+              <th scope="col">Action</th>
             </tr>
           </thead>
           <tbody>
             <?php
-            if ($shop_result) {
-              foreach ($shop_result as $row) {
+            if ($result) {
+              foreach ($result as $row) {
                 echo '<tr>';
-                echo '<td>' . (isset($row['service_name']) ? $row['service_name'] : 'service_name') . '</td>';
+                echo '<td>' . (isset($row['services']) ? $row['services'] : 'service') . '</td>';
+                echo '<td>' . '₱' . (isset($row['price']) ?  $row['price']  : 'price') . '</td>';
                 echo '<td>';
-                echo '<div class="d-flex justify-content-center">';
-                echo '<a href="owner-shop-service-list-add-service.php?id=' . (isset($row['servicename_id']) ? $row['servicename_id'] : '') . '&shop_id=' . (isset($row['shop_id']) ? $row['shop_id'] : '') . '" class="btn btn-primary btn-sm me-2">Add Services</a>';
-                echo '<a href="owner-shop-service-list-view.php?servicename_id=' . (isset($row['servicename_id']) ? $row['servicename_id'] : '') . '&shop_id=' . (isset($row['shop_id']) ? $row['shop_id'] : '') . '" class="btn btn-success btn-sm">View Service</a>';
+                echo '<div class="text-center">';
+                echo '<a href="owner-shop-service-list-edit.php?service_id=' . $row['service_id'] . '&shop_id=' . $row['shop_id'] . '" class="btn btn-primary btn-sm">Edit Service</a>';
                 echo '</div>';
                 echo '</td>';
                 echo '</tr>';
               }
             } else {
-              echo '<tr><td colspan="2">Error: ' . mysqli_error($connection) . '</td></tr>';
+              echo '<tr><td colspan="3" class="text-center">Error: ' . mysqli_error($connection) . '</td></tr>';
             }
             ?>
           </tbody>
         </table>
       </div>
-      <a href="owner-shop-service-list-add-service-name.php?shop_id=<?php echo $shop_id;?>" class="btn btn-primary">Add Service Name</a>
     </div>
   </main>
 

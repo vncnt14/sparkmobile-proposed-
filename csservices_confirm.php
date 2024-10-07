@@ -9,6 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $service_id = mysqli_real_escape_string($connection, $_POST['service_id']);
     $services = mysqli_real_escape_string($connection, $_POST['services']);
     $price = mysqli_real_escape_string($connection, $_POST['price']);
+    $shop_id = $_POST['shop_id'];
 
     // Use prepared statements to prevent SQL injection
     $sql = "UPDATE offered_services SET services=?, price=? WHERE service_id=?";
@@ -34,7 +35,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($result) {
             $servicenameData = mysqli_fetch_assoc($result);
-            echo 'window.location.href = "csservice_adminview1.php?servicename_id=' . (isset($servicenameData['servicename_id']) ? $servicenameData['servicename_id'] : '') . (isset($servicenameData['service_id']) ? '&service_id=' . $servicenameData['service_id'] : '') . '"';
+            echo 'window.location.href = "owner-shop-service-list.php?servicename_id=' 
+            . (isset($servicenameData['servicename_id']) ? $servicenameData['servicename_id'] : '') 
+            . (isset($servicenameData['service_id']) ? '&service_id=' . $servicenameData['service_id'] : '') 
+            . (isset($servicenameData['shop_id']) ? '&shop_id=' . $servicenameData['shop_id'] : '') 
+            . '"';
+        
         } else {
             echo 'alert("Error fetching updated service data!");';
             echo 'window.location.href = "csservice_adminedit3.php";';

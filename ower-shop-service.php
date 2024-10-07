@@ -13,6 +13,10 @@ if (!isset($_SESSION['username'])) {
 // Fetch user information based on ID
 $user_id = $_SESSION['user_id'];
 
+$user_query = "SELECT * FROM users WHERE user_id = '$user_id'";
+$user_result = mysqli_query($connection, $user_query);
+$userData = mysqli_fetch_assoc($user_result);
+
 // Fetch user information from the database based on the user's ID
 $query = "SELECT * FROM shops WHERE user_id = '$user_id'";
 $result = mysqli_query($connection, $query);
@@ -295,7 +299,7 @@ mysqli_close($connection);
 
 
         <div class=" welcome fw-bold px-3 mb-3">
-          <h5 class="text-center">Welcome back <?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>!</h5>
+          <h5 class="text-center">Welcome back Owner <?php echo isset($userData['firstname']) ? $userData['firstname'] : ''; ?>!</h5>
         </div>
         <div class="ms-3" id="dateTime"></div>
         </li>
@@ -313,11 +317,29 @@ mysqli_close($connection);
           </a>
         </li>
 
-        <li class="v-1">
-          <a href="cars-profile.php" class="nav-link px-3">
-            <span class="me-2"><i class="fas fa-car"></i></i></span>
+        <li><a class="nav-link px-3 sidebar-link" data-bs-toggle="collapse" href="#shoplayouts">
+            <span class="me-2"><i class="fas fa-building"></i></i></span>
             <span>MY SHOPS</span>
+            <span class="ms-auto">
+              <span class="right-icon">
+                <i class="bi bi-chevron-down"></i>
+              </span>
+            </span>
           </a>
+          <div class="collapse" id="shoplayouts">
+            <ul class="navbar-nav ps-3">
+              <li class="v-1">
+                <a href="owner-shop-profile1.php" class="nav-link px-3">
+                  <span class="me-2">Profile</span>
+                </a>
+              </li>
+              <li class="v-1">
+                <a href="ower-shop-service.php" class="nav-link px-3">
+                  <span class="me-2">Services</span>
+                </a>
+              </li>
+            </ul>
+          </div>
         </li>
         <li class="">
           <a
@@ -433,76 +455,76 @@ mysqli_close($connection);
       <div class="container mt-3">
         <div class="d-flex align-items-center">
           <h4 class="mb-0">MY SHOP</h4>
-          
-      </div>
-      <div class="v-2 card-header mt-2">
-        <div class="row row-cols-1 row-cols-md-1 g-4">
-          <?php
-          // Check if there are any shops
-          if (!empty($shops)) {
-            $count = count($shops);
-            $colClass = $count > 1 ? 'col-md-6' : 'offset-md-3 col-md-6'; // Determine column class based on the number of shops
 
-            foreach ($shops as $row) {
-              echo '<div class="' . $colClass . '">'; // Apply column class
-              echo '<div class="card mb-2">';
-
-              // Profile picture section
-
-              echo '<div class="card-header v-1 text-light">';
-              echo '<h5 class="card-title">' . htmlspecialchars($row['shop_name']) . '</h5>';
-              echo '</div>';
-              echo '<div class="card-body container-fluid">';
-              echo '<img src="' . htmlspecialchars($row['profile']) . '" alt="Profile Picture" class="card-img-top profile-picture container-fluid">';
-              echo '<p class="card-text mt-3"><strong>Street Address:</strong> ' . htmlspecialchars($row['street_address']) . '</p>';
-              echo '<p class="card-text"><strong>Barangay:</strong> ' . htmlspecialchars($row['barangay']) . '</p>';
-              echo '<p class="card-text"><strong>City:</strong> ' . htmlspecialchars($row['city']) . '</p>';
-              echo '<p class="card-text"><strong>Postal Code:</strong> ' . htmlspecialchars($row['postal']) . '</p>';
-              echo '<a href="owner-shop-service-list.php?shop_id=' . htmlspecialchars($row['shop_id']) . '" class="btn btn-primary">Edit Shop Services</a>';
-              echo '</div>';
-              echo '</div>';
-              echo '</div>';
-            }
-          } else {
-            echo '<p class="text-light">No shops found.</p>';
-          }
-          ?>
         </div>
+        <div class="v-2 card-header mt-2">
+          <div class="row row-cols-1 row-cols-md-1 g-4">
+            <?php
+            // Check if there are any shops
+            if (!empty($shops)) {
+              $count = count($shops);
+              $colClass = $count > 1 ? 'col-md-6' : 'offset-md-3 col-md-6'; // Determine column class based on the number of shops
 
+              foreach ($shops as $row) {
+                echo '<div class="' . $colClass . '">'; // Apply column class
+                echo '<div class="card mb-2">';
+
+                // Profile picture section
+
+                echo '<div class="card-header v-1 text-light">';
+                echo '<h5 class="card-title">' . htmlspecialchars($row['shop_name']) . '</h5>';
+                echo '</div>';
+                echo '<div class="card-body container-fluid">';
+                echo '<img src="' . htmlspecialchars($row['profile']) . '" alt="Profile Picture" class="card-img-top profile-picture container-fluid">';
+                echo '<p class="card-text mt-3"><strong>Street Address:</strong> ' . htmlspecialchars($row['street_address']) . '</p>';
+                echo '<p class="card-text"><strong>Barangay:</strong> ' . htmlspecialchars($row['barangay']) . '</p>';
+                echo '<p class="card-text"><strong>City:</strong> ' . htmlspecialchars($row['city']) . '</p>';
+                echo '<p class="card-text"><strong>Postal Code:</strong> ' . htmlspecialchars($row['postal']) . '</p>';
+                echo '<a href="owner-shop-service-list.php?shop_id=' . htmlspecialchars($row['shop_id']) . '" class="btn btn-primary">Edit Shop Services</a>';
+                echo '</div>';
+                echo '</div>';
+                echo '</div>';
+              }
+            } else {
+              echo '<p class="text-light">No shops found.</p>';
+            }
+            ?>
+          </div>
+
+        </div>
       </div>
-    </div>
 
 
-    <!-- Custom JavaScript to display the range value -->
-    <script>
-      function updateDateTime() {
-        // Get the current date and time
-        var currentDateTime = new Date();
+      <!-- Custom JavaScript to display the range value -->
+      <script>
+        function updateDateTime() {
+          // Get the current date and time
+          var currentDateTime = new Date();
 
-        // Format the date and time
-        var date = currentDateTime.toDateString();
-        var time = currentDateTime.toLocaleTimeString();
+          // Format the date and time
+          var date = currentDateTime.toDateString();
+          var time = currentDateTime.toLocaleTimeString();
 
-        // Display the formatted date and time
-        document.getElementById('dateTime').innerHTML = '<p>Date: ' + date + '</p><p>Time: ' + time + '</p>';
-      }
+          // Display the formatted date and time
+          document.getElementById('dateTime').innerHTML = '<p>Date: ' + date + '</p><p>Time: ' + time + '</p>';
+        }
 
-      // Update the date and time every second
-      setInterval(updateDateTime, 1000);
+        // Update the date and time every second
+        setInterval(updateDateTime, 1000);
 
-      // Initial call to display date and time immediately
-      updateDateTime();
-    </script>
+        // Initial call to display date and time immediately
+        updateDateTime();
+      </script>
 
-    <script src="./js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
-    <script src="./js/jquery-3.5.1.js"></script>
-    <script src="./js/jquery.dataTables.min.js"></script>
-    <script src="./js/dataTables.bootstrap5.min.js"></script>
-    <script src="./js/script.js"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+      <script src="./js/bootstrap.bundle.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
+      <script src="./js/jquery-3.5.1.js"></script>
+      <script src="./js/jquery.dataTables.min.js"></script>
+      <script src="./js/dataTables.bootstrap5.min.js"></script>
+      <script src="./js/script.js"></script>
+      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </body>
 
 </html>

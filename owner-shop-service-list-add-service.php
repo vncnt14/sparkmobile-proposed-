@@ -13,6 +13,7 @@ if (!isset($_SESSION['username'])) {
 // Fetch user information based on ID
 $userID = $_SESSION['user_id'];
 $vehicle_id = $_SESSION['vehicle_id'];
+$id = $_GET['id'];
 $shop_id = $_GET['shop_id'];
 
 // Fetch user information from the database based on the user's ID
@@ -22,9 +23,9 @@ $query = "SELECT * FROM users WHERE user_id = '$userID'";
 $result = mysqli_query($connection, $query);
 $userData = mysqli_fetch_assoc($result);
 
-$shop_query = "SELECT *FROM service_names WHERE shop_id = '$shop_id'";
-$shop_result = mysqli_query($connection, $shop_query);
-$shopData = mysqli_fetch_assoc($shop_result);
+$service_query = "SELECT *FROM service_names WHERE servicename_id = '$id'";
+$service_result = mysqli_query($connection, $service_query);
+$serviceData = mysqli_fetch_assoc($service_result);
 
 
 
@@ -211,6 +212,10 @@ mysqli_close($connection);
   .owner-btn {
     margin-left: 51%
   }
+
+  .price-paragraph {
+    font-size: 12px;
+  }
 </style>
 
 <body>
@@ -271,7 +276,7 @@ mysqli_close($connection);
             <span class="start">DASHBOARD</span>
           </a>
         </li>
-        <li class="">
+        <li class="v-1">
           <a href="user-profile.php" class="nav-link px-3">
             <span class="me-2"><i class="fas fa-user"></i></i></span>
             <span class="start">PROFILE</span>
@@ -407,40 +412,36 @@ mysqli_close($connection);
   <main>
     <div class="col-md-9 text-dark ms-5">
       <!-- column 2 -->
-      <h2><strong><i></i>SERVICES</strong></h2>
+      <h2><strong><i></i> ADD SERVICES</strong></h2>
+      <hr>
 
-      <div class="table-responsive">
-        <table class="table table-bordered border-gray">
-          <thead class="v-2 text-light">
-            <tr>
-              <th scope="col">Service Name</th>
-              <th scope="col-md-4">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php
-            if ($shop_result) {
-              foreach ($shop_result as $row) {
-                echo '<tr>';
-                echo '<td>' . (isset($row['service_name']) ? $row['service_name'] : 'service_name') . '</td>';
-                echo '<td>';
-                echo '<div class="d-flex justify-content-center">';
-                echo '<a href="owner-shop-service-list-add-service.php?id=' . (isset($row['servicename_id']) ? $row['servicename_id'] : '') . '&shop_id=' . (isset($row['shop_id']) ? $row['shop_id'] : '') . '" class="btn btn-primary btn-sm me-2">Add Services</a>';
-                echo '<a href="owner-shop-service-list-view.php?servicename_id=' . (isset($row['servicename_id']) ? $row['servicename_id'] : '') . '&shop_id=' . (isset($row['shop_id']) ? $row['shop_id'] : '') . '" class="btn btn-success btn-sm">View Service</a>';
-                echo '</div>';
-                echo '</td>';
-                echo '</tr>';
-              }
-            } else {
-              echo '<tr><td colspan="2">Error: ' . mysqli_error($connection) . '</td></tr>';
-            }
-            ?>
-          </tbody>
-        </table>
-      </div>
-      <a href="owner-shop-service-list-add-service-name.php?shop_id=<?php echo $shop_id;?>" class="btn btn-primary">Add Service Name</a>
+      <div class="row"></div>
+
+      <form class="details-form" action="csservice_adminedit1.php" method="POST">
+        <input type="hidden" name="shop_id" id="shop_id" value="<?php echo $shop_id; ?>">
+        <input type="hidden" id="servicename_id" name="id" value="<?php echo $serviceData['servicename_id']; ?>">
+
+        <div class="mb-3">
+          <label for="service_name" class="form-label">Service Name:</label>
+          <input type="text" id="service_name" name="service_name" class="form-control" value="<?php echo $serviceData['service_name']; ?>" readonly>
+        </div>
+
+        <div class="mb-3">
+          <label for="services" class="form-label">Services:</label>
+          <input type="text" id="services" name="services" class="form-control" value="">
+        </div>
+
+        <div class="mb-3">
+          <label for="price" class="form-label">Price(₱):</label>
+          <input type="text" id="price" name="price" class="form-control" value="">
+          <p class="price-paragraph">Please include decimal (100.00)</p>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+      </form>
     </div>
   </main>
+
 
 
 

@@ -13,6 +13,10 @@ if (!isset($_SESSION['username'])) {
 // Fetch user information based on ID
 $user_id = $_SESSION['user_id'];
 
+$user_query = "SELECT * FROM users WHERE user_id = '$user_id'";
+$user_result = mysqli_query($connection, $user_query);
+$userData  = mysqli_fetch_assoc($user_result);
+
 // Fetch user information from the database based on the user's ID
 $query = "SELECT * FROM shops WHERE user_id = '$user_id'";
 $result = mysqli_query($connection, $query);
@@ -295,7 +299,7 @@ mysqli_close($connection);
 
 
         <div class=" welcome fw-bold px-3 mb-3">
-          <h5 class="text-center">Welcome back <?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>!</h5>
+          <h5 class="text-center">Welcome back Owner <?php echo isset($userData['firstname']) ? $userData['firstname'] : ''; ?>!</h5>
         </div>
         <div class="ms-3" id="dateTime"></div>
         </li>
@@ -313,12 +317,30 @@ mysqli_close($connection);
           </a>
         </li>
 
-        <li class="v-1">
-          <a href="cars-profile.php" class="nav-link px-3">
-            <span class="me-2"><i class="fas fa-car"></i></i></span>
-            <span>MY SHOPS</span>
-          </a>
-        </li>
+        <li><a class="nav-link px-3 sidebar-link" data-bs-toggle="collapse" href="#shoplayouts">
+                        <span class="me-2"><i class="fas fa-building"></i></i></span>
+                        <span>MY SHOPS</span>
+                        <span class="ms-auto">
+                            <span class="right-icon">
+                                <i class="bi bi-chevron-down"></i>
+                            </span>
+                        </span>
+                    </a>
+                    <div class="collapse" id="shoplayouts">
+                        <ul class="navbar-nav ps-3">
+                            <li class="v-1">
+                                <a href="owner-shop-profile1.php" class="nav-link px-3">
+                                    <span class="me-2">Profile</span>
+                                </a>
+                            </li>
+                            <li class="v-1">
+                                <a href="ower-shop-service.php" class="nav-link px-3">
+                                    <span class="me-2">Services</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
         <li class="">
           <a
             class="nav-link px-3 sidebar-link"

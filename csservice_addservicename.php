@@ -216,24 +216,26 @@ li :hover{
       <hr>
       
   	</div><!-- /span-3 -->
-    <div class="col-md-9">   	
-      <!-- column 2 -->	
-       <h2><strong><i></i> EDIT SERVICES</strong></h2>     
-       <hr>
-      
+    <div class="col-md-9 mx-auto">
+    <!-- Column 2 -->
+    <h2 class="text-center">
+        <strong><i></i> EDIT SERVICES</strong>
+    </h2>
+    <hr>
+
     <div class="row"></div>
 
     <form class="details-form" action="csservice_addservicename1.php" method="POST">
-     
-      
-        <div class="form-section">
-          <label for="service_name">Service Name</label>
-          <input type="text" id="service_name" name="service_name" value="" required>
-          
-          <input type="submit" value="Save Changes" class="btn me-2 btn-primary">
+        <div class="mb-3">
+            <label for="service_name" class="form-label">Service Name</label>
+            <input type="text" id="service_name" name="service_name" class="form-control" value="" required>
         </div>
-       
-      </form>
+        
+        <div class="text-center">
+            <input type="submit" value="Save Changes" class="btn btn-primary">
+        </div>
+    </form>
+</div>
 
 
 
