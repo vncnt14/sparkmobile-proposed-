@@ -31,7 +31,7 @@ $servicenameData= mysqli_fetch_assoc($result2);
 $query1 = "SELECT *FROM offered_services WHERE servicename_id = '$servicename_id'";
 $result1 = mysqli_query($connection, $query1);
 
-$slot_query = "SELECT *FROM queuing_slots WHERE user_id = '$user_id'";
+$slot_query = "SELECT *FROM queuing_slots WHERE vehicle_id = '$vehicle_id'";
 $slot_result = mysqli_query($connection, $slot_query);
 $slotData = mysqli_fetch_assoc($slot_result);
 

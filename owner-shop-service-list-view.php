@@ -26,7 +26,7 @@ $servicename_id = $_GET['servicename_id'];
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
-$query = "SELECT s.*, sn.service_name 
+$query = "SELECT s.*, sn.service_name, s.shop_id
           FROM offered_services s
           JOIN service_names sn ON s.servicename_id = sn.servicename_id
           WHERE s.servicename_id = '$servicename_id'";
@@ -416,6 +416,7 @@ mysqli_close($connection);
   <main class="container mt-4">
     <div class="col-md-9 mx-auto">
       <!-- column 2 -->
+      <a href="owner-shop-service-list.php?shop_id=<?php echo $servicenameData['shop_id'];?>"><button type="button" class="btn btn-primary">Back</button></a>
       <h2 class="text-center text-dark">
         <strong><?php echo isset($servicenameData['service_name']) ? $servicenameData['service_name'] : ''; ?></strong>
       </h2>

@@ -17,7 +17,7 @@ $role = $_SESSION['role'];
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
-$query = "SELECT * FROM carowners WHERE user_id = '$userID' AND role='$role'";
+$query = "SELECT * FROM users WHERE user_id = '$userID' AND role='$role'";
 // Execute the query and fetch the user data
 $result = mysqli_query($connection, $query);
 $shopownerData = mysqli_fetch_assoc($result);
@@ -25,9 +25,10 @@ $shopownerData = mysqli_fetch_assoc($result);
 // Assuming you have already established a database connection
 
 // Query to retrieve all data from the database
-$query1 = "SELECT payment_details.*, payment_details.amount, carowners.user_id, carowners.firstname, carowners.lastname, carowners.contact, payment_details.date
+$query1 = "SELECT payment_details.*, payment_details.amount, users.user_id, users.firstname, users.lastname, 
+users.contact, payment_details.date
            FROM payment_details
-           INNER JOIN carowners ON payment_details.user_id = carowners.user_id";
+           INNER JOIN users ON payment_details.user_id = users.user_id";
 
 $result1 = mysqli_query($connection, $query1);
 // Close the database connection
@@ -145,7 +146,7 @@ mysqli_close($connection);
                     echo '<button class="btn btn-primary btn">Edit</button>'; // Edit button
                     echo '<td>';
                     echo '<form action="cspayment-delete.php" method="POST">';
-                    echo'<input type="hidden" name="total_price_id" id="total_price_id" value="' . $row['total_price_id'] . '">';
+                    echo'<input type="hidden" name="total_price_id" id="total_price_id" value="' . $row['payment_id'] . '">';
                     echo '<button class="btn btn-danger btn">Delete</button>'; // Edit button
                     echo '</form>';
                     echo '</tr>';

@@ -265,9 +265,9 @@ mysqli_close($connection);
                 </li>
 
                 <li class="">
-                    <a href="cashier-dashboard-records.php" class="nav-link px-3">
-                        <span class="me-2"><i class="fas fa-money-bill"></i></i></span>
-                        <span>RECORDS</span>
+                    <a href="cashier-dashboard-sales-report.php" class="nav-link px-3">
+                        <span class="me-2"><i class="fas fa-book"></i></i></span>
+                        <span>SALES REPORT</span>
                     </a>
                 </li>
                 <li>

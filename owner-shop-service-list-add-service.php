@@ -434,7 +434,7 @@ mysqli_close($connection);
         <div class="mb-3">
           <label for="price" class="form-label">Price(₱):</label>
           <input type="text" id="price" name="price" class="form-control" value="">
-          <p class="price-paragraph">Please include decimal (100.00)</p>
+          <p class="price-paragraph">Please include decimals e.g (100.00)</p>
         </div>
 
         <button type="submit" class="btn btn-primary">Save Changes</button>

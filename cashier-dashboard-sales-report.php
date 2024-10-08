@@ -15,7 +15,7 @@ if (!isset($_SESSION['username'])) {
 $userID = $_SESSION['user_id'];
 $vehicle_id = $_SESSION['vehicle_id'];
 $serviceID = $_SESSION['service_id'];
-$user_id = $_GET['user_id'];
+$servicename_id = $_SESSION['servicename_id'];
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
@@ -25,17 +25,19 @@ $result = mysqli_query($connection, $query);
 $userData = mysqli_fetch_assoc($result);
 
 
-
-$query = "SELECT finish_jobs.*, users.firstname, users.lastname, service_names.service_name
+// Fetch user information from the database based on the user's ID
+// Replace this with your actual database query
+$query = "SELECT finish_jobs.*, users.firstname, users.lastname, vehicles.model, payment_details.*, service_names.service_name
 FROM finish_jobs
 INNER JOIN users ON finish_jobs.user_id = users.user_id
-INNER JOIN service_names ON finish_jobs.servicename_id = service_names.servicename_id WHERE finish_jobs.user_id = $user_id AND finish_jobs.is_deleted = '0'";
-// Ordering by first name in ascending order
+INNER JOIN vehicles ON finish_jobs.vehicle_id = vehicles.vehicle_id
+INNER JOIN payment_details ON finish_jobs.user_id = payment_details.user_id
+INNER JOIN service_names ON finish_jobs.servicename_id = service_names.servicename_id";
+
+
+// Execute the query and fetch the user data
 $result = mysqli_query($connection, $query);
-$paymentData = mysqli_fetch_assoc($result);
-
-
-
+$servicenameData = mysqli_fetch_assoc($result);
 
 // Close the database connection
 mysqli_close($connection);
@@ -202,6 +204,43 @@ mysqli_close($connection);
         object-fit: cover;
         border-radius: 50%;
     }
+
+    .thick-border td {
+        border-top: 3px solid #000;
+        /* You can adjust the thickness and color here */
+    }
+
+    @media print {
+        body * {
+            visibility: hidden;
+            /* Hide everything */
+        }
+
+        #invoice,
+        #invoice * {
+            visibility: visible;
+            /* Show only the invoice */
+        }
+
+        #invoice {
+            position: absolute;
+            left: 0;
+            top: 0;
+            /* Position it for print */
+        }
+
+        #print-button {
+            display: none;
+            /* Hide the print button */
+        }
+
+        #invoice-totalAmount {
+            margin-top: 10%;
+            visibility: visible;
+        }
+    }
+</style>
+
 </style>
 
 <body>
@@ -270,17 +309,17 @@ mysqli_close($connection);
                 </li>
                 <li>
 
-                <li class="v-1">
+                <li class="">
                     <a href="cashier-dashboard-payment.php" class="nav-link px-3">
                         <span class="me-2"><i class="fas fa-money-bill"></i></i></span>
                         <span>PAYMENTS</span>
                     </a>
                 </li>
 
-                <li class="">
+                <li class="v-1">
                     <a href="cashier-dashboard-records.php" class="nav-link px-3">
                         <span class="me-2"><i class="fas fa-book"></i></i></span>
-                        <span>RECORDS</span>
+                        <span>SALES REPORT</span>
                     </a>
                 </li>
                 <li>
@@ -297,130 +336,151 @@ mysqli_close($connection);
     </div>
     <!-- main content -->
     <main>
-    <div class="col-md-9 text-dark ms-5">
-        <!-- column 2 -->
-        <h2><strong><?php echo $paymentData['firstname']; ?> <?php echo $paymentData['lastname']; ?></strong></h2>
-        <p>Below is the services and the prices of the customer.</p>
-        <hr>
-
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header"><strong>All services</strong></div>
-                    <div class="card-body">
-                        <form action="cspayment_managerconfirm.php" method="POST">
-                            <input type="hidden" name="user_id" id="user_id" value="<?php echo $paymentData['user_id']; ?>">
-
-                            <?php
-                            $totalPrice = 0; // Initialize total price variable
-
-                            if ($result) {
-                                // Loop through the results to create cards
-                                foreach ($result as $row) {
-                                    echo '<div class="col-md-4 mb-3">';
-                                    echo '<div class="card">';
-                                    echo '<div class="card-header">' . (isset($row['service_name']) ? $row['service_name'] : 'N/A') . '</div>';
-                                    echo '<div class="card-body">';
-                                    echo '<p><strong>Name:</strong> ' . (isset($row['firstname']) ? $row['firstname'] : 'N/A') . " " . (isset($row['lastname']) ? $row['lastname'] : 'N/A') . '</p>';
-                                    echo '<p><strong>Services:</strong> ';
-                                    // Explode the services and display each one individually
-                                    $services = isset($row['services']) ? explode(',', $row['services']) : array();
-                                    foreach ($services as $service) {
-                                        echo $service . '<br>';
-                                    }
-                                    $price = isset($row['total_price']) ? $row['total_price'] : 0; // Get the price or default to 0 if not set
-                                    $totalPrice += $price; // Add price to total price
-                                    echo '<p><strong>Price (&#x20B1;):</strong> ' . $price . '</p>'; // Display individual price
-                                    echo '</div>';
-                                    echo '</div>';
-                                    echo '</div>';
-                                }
-                            } else {
-                                echo '<div class="col-md-12">';
-                                echo '<div class="alert alert-danger" role="alert">Error: ' . mysqli_error($connection) . '</div>';
-                                echo '</div>';
-                            }
-                            ?>
-
-                            <!-- Modal -->
-                            <div class="modal fade" id="changeModal" tabindex="-1" aria-labelledby="changeModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-lg">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="changeModalLabel">Calculating Payment</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="mb-3">
-                                                <label for="date" class="form-label">Date of Payment:</label>
-                                                <input type="text" class="form-control" name="date" id="date" value="<?php echo date('Y-m-d'); ?>" readonly>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="payment_method" class="form-label">Payment Method:</label>
-                                                <select class="form-control" name="payment_method" id="payment_method" required>
-                                                    <option value="None">Select</option>
-                                                    <option value="Cash">Cash</option>
-                                                    <option value="G Cash">G Cash</option>
-                                                    <option value="Maya">Maya</option>
-                                                    <option value="Paypal">Paypal</option>
-                                                </select>
-                                            </div>
-                                            <div class="mb-3">
-                                                <h4>Total Price: &#x20B1;<span id="modalTotalPrice" class="price text-dark" name="change_amount" value="<?php echo $totalPrice; ?>"><?php echo $totalPrice; ?>.00</span></h4>
-                                                <label for="modalAmount" class="form-label">Amount Paid (&#x20B1;): </label>
-                                                <input type="text" class="form-control" name="modalAmount" id="modalAmount" value=".00">
-                                                <h1 id="changeResult" name="change_payment" style="color:red; font-weight: bold;"></h1>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-success" id="confirmChangeBtn">Accept</button>
-                                            <button type="submit" class="btn btn-primary">Submit</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
+        <div class="container-fluid text-dark">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="page-header">
+                        <h1 class="text-center">Sales Report</h1>
                     </div>
                 </div>
+                <div class="">
+                    <form action="cashier-dashboard-sales-report.php" method="GET">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="start_date" class="form-label">Start Date:</label>
+                                <input type="date" id="start_date" name="start_date" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="end_date" class="form-label">End Date:</label>
+                                <input type="date" id="end_date" name="end_date" class="form-control">
+                            </div>
+                        </div>
+                        <div class="d-grid">
+                            <button id="searchButton" class="btn btn-primary" type="submit">Search</button>
+                        </div>
+                    </form>
+                    <br>
+                    <br>
 
-                <div style="margin-left: 10px; margin-bottom: 10px;">
-                    <h4>Total Price: &#x20B1;<?php echo $totalPrice; ?>.00</h4>
+                    <table class="table table-hover table-bordered table-striped table-responsive" id="invoice">
+                        <thead class="v-2 text-light">
+                            <tr>
+                                <th class="px-4">Date</th>
+                                <th class="px-4">Transaction ID</th>
+                                <th class="px-4">Customer Name</th>
+                                <th class="px-4">Vehicle Details</th>
+                                <th class="px-4">Type of Service</th>
+                                <th class="px-4">Total Price (₱)</th>
+                                <th class="px-4">Payment Method</th>
+                                <th class="px-4">Transaction Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            include('config.php');
+
+                            // Initialize search parameters
+                            $whereClause = '';
+
+                            // Check if search dates are provided
+                            if (isset($_GET['start_date']) && isset($_GET['end_date'])) {
+                                $start_date = $_GET['start_date'];
+                                $end_date = $_GET['end_date'];
+
+                                // Add the date range filter to the WHERE clause
+                                $whereClause = " WHERE payment_details.date BETWEEN '$start_date' AND '$end_date'";
+                            } elseif (isset($_GET['start_date'])) {
+                                $start_date = $_GET['start_date'];
+                                $whereClause = " WHERE payment_details.date >= '$start_date'";
+                            } elseif (isset($_GET['end_date'])) {
+                                $end_date = $_GET['end_date'];
+                                $whereClause = " WHERE payment_details.date <= '$end_date'";
+                            }
+
+                            // Construct SQL query with search parameters
+                            $query = "SELECT finish_jobs.*, users.firstname, users.lastname, vehicles.model, payment_details.*, service_names.service_name
+                    FROM finish_jobs
+                    INNER JOIN users ON finish_jobs.user_id = users.user_id
+                    INNER JOIN vehicles ON finish_jobs.vehicle_id = vehicles.vehicle_id
+                    INNER JOIN payment_details ON finish_jobs.user_id = payment_details.user_id
+                    INNER JOIN service_names ON finish_jobs.servicename_id = service_names.servicename_id $whereClause";
+
+                            $result = mysqli_query($connection, $query);
+
+                            // Check if any rows are returned
+                            if (mysqli_num_rows($result) > 0) {
+                                // Loop through the results and display the table
+                                while ($row = mysqli_fetch_assoc($result)) {
+                                    echo '<tr>';
+                                    echo '<td>' . $row['date'] . '</td>';
+                                    echo '<td>' . $row['payment_id'] . '</td>';
+                                    echo '<td>' . $row['firstname'] . ' ' . $row['lastname'] . '</td>';
+                                    echo '<td>' . $row['model'] . '</td>';
+                                    echo '<td>' . $row['service_name'] . '</td>';
+
+                                    // Explode the price to separate the peso sign from the value
+                                    $priceParts = explode('₱', $row['price']);
+
+                                    // If there is a valid split, show the numeric value
+                                    if (isset($priceParts[1])) {
+                                        echo '<td>₱' . number_format((float)trim($priceParts[1]), 2) . '</td>';
+                                    } else {
+                                        // Handle case where there's no peso sign (if that occurs)
+                                        echo '<td>' . $row['price'] . '</td>';
+                                    }
+
+                                    echo '<td>' . $row['payment_method'] . '</td>';
+                                    echo '<td>Paid</td>';
+                                    echo '</tr>';
+                                }
+                            } else {
+                                // Display a message if no data is found for the selected dates
+                                echo '<tr><td colspan="8" class="text-center">No data found for the selected date range.</td></tr>';
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+
+                    <?php
+                    // Assuming $result contains the data from your database query
+
+                    $totalAmount = 0; // Initialize total amount variable
+
+                    // Iterate through the result to calculate the total amount
+                    foreach ($result as $row) {
+                        // Remove the peso sign and any whitespace before casting to a float
+                        $price = str_replace('₱', '', $row['price']);  // Remove peso sign
+                        $price = trim($price);  // Remove any leading/trailing spaces
+                        $totalAmount += (float)$price;  // Convert to float and add to total amount
+                    }
+                    ?>
+
+                    <div class="alert alert-info" id="invoice-totalAmount">
+                        Total Amount: ₱ <?php echo number_format($totalAmount, 2); ?>
+                    </div>
+
+
+                    <div class="d-flex justify-content-between">
+                        <a href="cashier-dashboard-sales-report1.php"><button class="btn btn-primary">View Next Page</button></a>
+                        <button id="print-button" class="btn btn-primary" type="button" onclick="printInvoice()">Print Sales</button>
+                    </div>
                 </div>
-
-                <button type="button" class="btn btn-primary" id="calculateChangeBtn" style="margin-left: 10px;">
-                    Confirm
-                </button>
             </div>
         </div>
-    </div>
-</main>
 
-<script>
-    // Show modal when Confirm button is clicked
-    document.getElementById('calculateChangeBtn').addEventListener('click', function() {
-        var changeModal = new bootstrap.Modal(document.getElementById('changeModal'));
-        changeModal.show();
-    });
+        <script>
+            function printInvoice() {
+                // Print the current window content (entire page)
+                window.print();
+            }
+        </script>
 
-    // Calculate change on Accept button click
-    document.getElementById('confirmChangeBtn').addEventListener('click', function() {
-        var totalPrice = <?php echo $totalPrice; ?>;
-        var amountPaid = parseFloat(document.getElementById('modalAmount').value);
 
-        if (isNaN(amountPaid)) {
-            alert('Please enter a valid amount.');
-            return;
-        }
+    </main>
 
-        var change = amountPaid - totalPrice;
-        var changeResult = document.getElementById('changeResult');
-        if (change >= 0) {
-            changeResult.innerHTML = 'Change: &#x20B1;' + change.toFixed(2);
-        } else {
-            changeResult.innerHTML = 'Insufficient amount paid.';
-        }
-    });
-</script>
+
+
+
 
 
     <script>
@@ -442,6 +502,8 @@ mysqli_close($connection);
         // Initial call to display date and time immediately
         updateDateTime();
     </script>
+
+
 
 
 

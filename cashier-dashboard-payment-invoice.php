@@ -15,7 +15,6 @@ if (!isset($_SESSION['username'])) {
 $userID = $_SESSION['user_id'];
 $vehicle_id = $_SESSION['vehicle_id'];
 $serviceID = $_SESSION['service_id'];
-$user_id = $_GET['user_id'];
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
@@ -317,9 +316,9 @@ mysqli_close($connection);
                 </li>
 
                 <li class="">
-                    <a href="cashier-dashboard-records.php" class="nav-link px-3">
+                    <a href="cashier-dashboard-sales-report.php" class="nav-link px-3">
                         <span class="me-2"><i class="fas fa-book"></i></i></span>
-                        <span>RECORDS</span>
+                        <span>SALES REPORT</span>
                     </a>
                 </li>
                 <li>

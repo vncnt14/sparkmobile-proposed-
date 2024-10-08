@@ -16,12 +16,12 @@ $servicename_id = $_SESSION['servicename_id'];
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
-$query = "SELECT servicedone.*, carowners.firstname, carowners.lastname, vehicles.model, payment_details.*, service_names.service_name
-FROM servicedone
-INNER JOIN carowners ON servicedone.user_id = carowners.user_id
-INNER JOIN vehicles ON servicedone.vehicle_id = vehicles.vehicle_id
-INNER JOIN payment_details ON servicedone.user_id = payment_details.user_id
-INNER JOIN service_names ON servicedone.servicename_id = service_names.servicename_id";
+$query = "SELECT finish_jobs.*, users.firstname, users.lastname, vehicles.model, payment_details.*, service_names.service_name
+FROM finish_jobs
+INNER JOIN users ON finish_jobs.user_id = users.user_id
+INNER JOIN vehicles ON finish_jobs.vehicle_id = vehicles.vehicle_id
+INNER JOIN payment_details ON finish_jobs.user_id = payment_details.user_id
+INNER JOIN service_names ON finish_jobs.servicename_id = service_names.servicename_id";
 
 
 // Execute the query and fetch the user data
@@ -470,12 +470,12 @@ mysqli_close($connection);
               }
 
               // Construct SQL query with search parameters
-              $query = "SELECT servicedone.*, carowners.firstname, carowners.lastname, vehicles.model, payment_details.*, service_names.service_name
-              FROM servicedone
-              INNER JOIN carowners ON servicedone.user_id = carowners.user_id
-              INNER JOIN vehicles ON servicedone.vehicle_id = vehicles.vehicle_id
-              INNER JOIN payment_details ON servicedone.user_id = payment_details.user_id
-              INNER JOIN service_names ON servicedone.servicename_id = service_names.servicename_id $whereClause";
+              $query = "SELECT finish_jobs.*, users.firstname, users.lastname, vehicles.model, payment_details.*, service_names.service_name
+              FROM finish_jobs
+              INNER JOIN users ON finish_jobs.user_id = users.user_id
+              INNER JOIN vehicles ON finish_jobs.vehicle_id = vehicles.vehicle_id
+              INNER JOIN payment_details ON finish_jobs.user_id = payment_details.user_id
+              INNER JOIN service_names ON finish_jobs.servicename_id = service_names.servicename_id $whereClause";
 
               $result = mysqli_query($connection, $query);
 
@@ -485,7 +485,7 @@ mysqli_close($connection);
                 while ($row = mysqli_fetch_assoc($result)) {
                   echo '<tr>';
                   echo '<td>' . $row['date'] . '</td>';
-                  echo '<td>' . $row['total_price_id'] . '</td>';
+                  echo '<td>' . $row['payment_id'] . '</td>';
                   echo '<td>' . $row['firstname'] . ' ' . $row['lastname'] . '</td>';
                   echo '<td>' . $row['model'] . '</td>';
                   echo '<td>' . $row['service_name'] . '</td>';

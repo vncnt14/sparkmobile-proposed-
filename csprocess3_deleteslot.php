@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Validate input (optional)
 
     // Prepare and execute SQL statement to delete slot
-    $sql = "DELETE FROM slots WHERE vehicle_id = ? AND user_id = ?";
+    $sql = "DELETE FROM queuing_slots WHERE vehicle_id = ? AND user_id = ?";
     $stmt = $connection->prepare($sql);
     $stmt->bind_param("ii", $vehicle_id, $user_id); // Assuming both vehicle_id and user_id are integers
     $stmt->execute();
