@@ -210,35 +210,26 @@ mysqli_close($connection);
         /* You can adjust the thickness and color here */
     }
 
-    @media print {
-        body * {
-            visibility: hidden;
-            /* Hide everything */
+    
+        @media print {
+            body * {
+                visibility: visible; /* Hide everything */
+            }
+            #invoice, #invoice-totalAmount {
+                visibility: visible; /* Show only the table and total amount */
+            }
+            #invoice, #invoice-totalAmount {
+                position: absolute; /* Position elements for printing */
+                left: 0;
+                top: 0;
+            }
+            #invoice {
+                visibility: hidden;
+            }
+            #print-button {
+                visibility: hidden;
+            }
         }
-
-        #invoice,
-        #invoice * {
-            visibility: visible;
-            /* Show only the invoice */
-        }
-
-        #invoice {
-            position: absolute;
-            left: 0;
-            top: 0;
-            /* Position it for print */
-        }
-
-        #print-button {
-            display: none;
-            /* Hide the print button */
-        }
-
-        #invoice-totalAmount {
-            margin-top: 10%;
-            visibility: visible;
-        }
-    }
 </style>
 
 </style>
@@ -336,151 +327,138 @@ mysqli_close($connection);
     </div>
     <!-- main content -->
     <main>
-        <div class="container-fluid text-dark">
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <div class="page-header">
-                        <h1 class="text-center">Sales Report</h1>
-                    </div>
+    <div class="container-fluid text-dark">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="page-header">
+                    <h1 class="text-center">Sales Report</h1>
                 </div>
-                <div class="">
-                    <form action="cashier-dashboard-sales-report.php" method="GET">
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="start_date" class="form-label">Start Date:</label>
-                                <input type="date" id="start_date" name="start_date" class="form-control">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="end_date" class="form-label">End Date:</label>
-                                <input type="date" id="end_date" name="end_date" class="form-control">
-                            </div>
+            </div>
+            <div class="" >
+                <form action="cashier-dashboard-sales-report.php" method="GET">
+                    <div class="row mb-3">
+                        <div class="col-md-6" id="invoice">
+                            <label for="start_date" class="form-label">Start Date:</label>
+                            <input type="date" id="start_date" name="start_date" class="form-control">
                         </div>
-                        <div class="d-grid">
-                            <button id="searchButton" class="btn btn-primary" type="submit">Search</button>
+                        <div class="col-md-6" id="invoice">
+                            <label for="end_date" class="form-label">End Date:</label>
+                            <input type="date" id="end_date" name="end_date" class="form-control">
                         </div>
-                    </form>
-                    <br>
-                    <br>
+                    </div>
+                    <div class="d-grid">
+                        <button id="invoice" class="btn btn-primary" type="submit">Search</button>
+                    </div>
+                </form>
+                <br>
+                <br>
 
-                    <table class="table table-hover table-bordered table-striped table-responsive" id="invoice">
-                        <thead class="v-2 text-light">
-                            <tr>
-                                <th class="px-4">Date</th>
-                                <th class="px-4">Transaction ID</th>
-                                <th class="px-4">Customer Name</th>
-                                <th class="px-4">Vehicle Details</th>
-                                <th class="px-4">Type of Service</th>
-                                <th class="px-4">Total Price (₱)</th>
-                                <th class="px-4">Payment Method</th>
-                                <th class="px-4">Transaction Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            include('config.php');
+                <table class="table table-hover table-bordered table-striped table-responsive" >
+                    <thead class="v-2 text-light">
+                        <tr>
+                            <th class="px-4">Date</th>
+                            <th class="px-4">Transaction ID</th>
+                            <th class="px-4">Customer Name</th>
+                            <th class="px-4">Vehicle Details</th>
+                            <th class="px-4">Type of Service & Price</th>
+                            <th class="px-4">Payment Method</th>
+                            <th class="px-4">Transaction Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        include('config.php');
 
-                            // Initialize search parameters
-                            $whereClause = '';
+                        // Initialize search parameters
+                        $whereClause = '';
 
-                            // Check if search dates are provided
-                            if (isset($_GET['start_date']) && isset($_GET['end_date'])) {
-                                $start_date = $_GET['start_date'];
-                                $end_date = $_GET['end_date'];
+                        // Check if search dates are provided
+                        if (isset($_GET['start_date']) && isset($_GET['end_date'])) {
+                            $start_date = $_GET['start_date'];
+                            $end_date = $_GET['end_date'];
 
-                                // Add the date range filter to the WHERE clause
-                                $whereClause = " WHERE payment_details.date BETWEEN '$start_date' AND '$end_date'";
-                            } elseif (isset($_GET['start_date'])) {
-                                $start_date = $_GET['start_date'];
-                                $whereClause = " WHERE payment_details.date >= '$start_date'";
-                            } elseif (isset($_GET['end_date'])) {
-                                $end_date = $_GET['end_date'];
-                                $whereClause = " WHERE payment_details.date <= '$end_date'";
-                            }
+                            // Add the date range filter to the WHERE clause
+                            $whereClause = " WHERE payment_details.date BETWEEN '$start_date' AND '$end_date'";
+                        } elseif (isset($_GET['start_date'])) {
+                            $start_date = $_GET['start_date'];
+                            $whereClause = " WHERE payment_details.date >= '$start_date'";
+                        } elseif (isset($_GET['end_date'])) {
+                            $end_date = $_GET['end_date'];
+                            $whereClause = " WHERE payment_details.date <= '$end_date'";
+                        }
 
-                            // Construct SQL query with search parameters
-                            $query = "SELECT finish_jobs.*, users.firstname, users.lastname, vehicles.model, payment_details.*, service_names.service_name
-                    FROM finish_jobs
-                    INNER JOIN users ON finish_jobs.user_id = users.user_id
-                    INNER JOIN vehicles ON finish_jobs.vehicle_id = vehicles.vehicle_id
-                    INNER JOIN payment_details ON finish_jobs.user_id = payment_details.user_id
-                    INNER JOIN service_names ON finish_jobs.servicename_id = service_names.servicename_id $whereClause";
+                        // Construct SQL query with search parameters
+                        $query = "SELECT finish_jobs.*, users.firstname, users.lastname, vehicles.model, payment_details.*, service_names.service_name
+                                  FROM finish_jobs
+                                  INNER JOIN users ON finish_jobs.user_id = users.user_id
+                                  INNER JOIN vehicles ON finish_jobs.vehicle_id = vehicles.vehicle_id
+                                  INNER JOIN payment_details ON finish_jobs.user_id = payment_details.user_id
+                                  INNER JOIN service_names ON finish_jobs.servicename_id = service_names.servicename_id $whereClause";
 
-                            $result = mysqli_query($connection, $query);
+                        $result = mysqli_query($connection, $query);
 
-                            // Check if any rows are returned
-                            if (mysqli_num_rows($result) > 0) {
-                                // Loop through the results and display the table
-                                while ($row = mysqli_fetch_assoc($result)) {
-                                    echo '<tr>';
-                                    echo '<td>' . $row['date'] . '</td>';
-                                    echo '<td>' . $row['payment_id'] . '</td>';
-                                    echo '<td>' . $row['firstname'] . ' ' . $row['lastname'] . '</td>';
-                                    echo '<td>' . $row['model'] . '</td>';
-                                    echo '<td>' . $row['service_name'] . '</td>';
+                        // Initialize total amount variable
+                        $totalAmount = 0;
 
-                                    // Explode the price to separate the peso sign from the value
-                                    $priceParts = explode('₱', $row['price']);
+                        // Check if any rows are returned
+                        if (mysqli_num_rows($result) > 0) {
+                            // Loop through the results and display the table
+                            while ($row = mysqli_fetch_assoc($result)) {
+                                echo '<tr>';
+                                echo '<td>' . $row['date'] . '</td>';
+                                echo '<td>' . $row['payment_id'] . '</td>';
+                                echo '<td>' . $row['firstname'] . ' ' . $row['lastname'] . '</td>';
+                                echo '<td>' . $row['model'] . '</td>';
 
-                                    // If there is a valid split, show the numeric value
-                                    if (isset($priceParts[1])) {
-                                        echo '<td>₱' . number_format((float)trim($priceParts[1]), 2) . '</td>';
-                                    } else {
-                                        // Handle case where there's no peso sign (if that occurs)
-                                        echo '<td>' . $row['price'] . '</td>';
+                                // Displaying type of services and prices
+                                $services = explode(',', $row['services']); // Assuming service_name is comma-separated
+                                $prices = explode(',', $row['price']); // Assuming price is comma-separated
+
+                                // Check if both arrays have the same length to avoid errors
+                                $output = '';
+                                if (count($services) === count($prices)) {
+                                    for ($i = 0; $i < count($services); $i++) {
+                                        // Append each service and price with a line break
+                                        $output .= trim($services[$i]) . ' - ' . trim($prices[$i]) . '<br>'; 
+                                        
+                                        // Sum the price to total amount, removing peso sign and converting to float
+                                        $price = str_replace(['₱', ' '], '', $prices[$i]);  // Remove peso sign and spaces
+                                        $totalAmount += (float)$price;  // Add to total amount
                                     }
-
-                                    echo '<td>' . $row['payment_method'] . '</td>';
-                                    echo '<td>Paid</td>';
-                                    echo '</tr>';
                                 }
-                            } else {
-                                // Display a message if no data is found for the selected dates
-                                echo '<tr><td colspan="8" class="text-center">No data found for the selected date range.</td></tr>';
+
+                                echo '<td>' . $output . '</td>'; // Display the formatted output
+                                echo '<td>' . $row['payment_method'] . '</td>';
+                                echo '<td>Paid</td>';
+                                echo '</tr>';
                             }
-                            ?>
-                        </tbody>
-                    </table>
+                        } else {
+                            // Display a message if no data is found for the selected dates
+                            echo '<tr><td colspan="8" class="text-center">No data found for the selected date range.</td></tr>';
+                        }
+                        ?>
+                    </tbody>
+                </table>
 
-                    <?php
-                    // Assuming $result contains the data from your database query
+                <div class="alert alert-info">
+                    Total Amount: ₱ <?php echo number_format($totalAmount, 2); ?>
+                </div>
 
-                    $totalAmount = 0; // Initialize total amount variable
-
-                    // Iterate through the result to calculate the total amount
-                    foreach ($result as $row) {
-                        // Remove the peso sign and any whitespace before casting to a float
-                        $price = str_replace('₱', '', $row['price']);  // Remove peso sign
-                        $price = trim($price);  // Remove any leading/trailing spaces
-                        $totalAmount += (float)$price;  // Convert to float and add to total amount
-                    }
-                    ?>
-
-                    <div class="alert alert-info" id="invoice-totalAmount">
-                        Total Amount: ₱ <?php echo number_format($totalAmount, 2); ?>
-                    </div>
-
-
-                    <div class="d-flex justify-content-between">
-                        <a href="cashier-dashboard-sales-report1.php"><button class="btn btn-primary">View Next Page</button></a>
-                        <button id="print-button" class="btn btn-primary" type="button" onclick="printInvoice()">Print Sales</button>
-                    </div>
+                <div class="d-flex justify-content-between">
+                    <a href="cashier-dashboard-sales-report1.php"><button class="btn btn-primary" id="invoice">View Next Page</button></a>
+                    <button id="print-button" class="btn btn-primary" type="button" onclick="printInvoice()">Print Sales</button>
                 </div>
             </div>
         </div>
+    </div>
 
-        <script>
-            function printInvoice() {
-                // Print the current window content (entire page)
-                window.print();
-            }
-        </script>
-
-
-    </main>
-
-
-
-
+    <script>
+        function printInvoice() {
+            // Print the current window content (entire page)
+            window.print();
+        }
+    </script>
+</main>
 
 
     <script>

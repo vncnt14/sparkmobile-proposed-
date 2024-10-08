@@ -320,83 +320,94 @@ mysqli_close($connection);
     <!-- main content -->
 
     <main>
+        <div class="container py-4 text-dark">
+            <h2 class="text-center"><strong><i></i>SERVICES</strong></h2>
+            <p class="text-center">Click the button to proceed cleaning</p>
+            <div class="row mt-4">
+                <?php
+                if ($result) {
+                    // Step 1: Create an array to group services by slotNumber
+                    $groupedServices = [];
 
+                    // Step 2: Loop through staff_result and group by slotNumber
+                    foreach ($staff_result as $row) {
+                        $slotNumber = isset($row['slotNumber']) ? $row['slotNumber'] : 'N/A';
 
-    <div class="container py-4 text-dark">
-    <h2 class="text-center"><strong><i></i>SERVICES</strong></h2>
-    <p class="text-center">Click the button to proceed cleaning</p>
-    <div class="row mt-4">
-        <?php
-        if ($result) {
-            // Step 1: Create an array to group services by slotNumber
-            $groupedServices = [];
+                        if (!isset($groupedServices[$slotNumber])) {
+                            $groupedServices[$slotNumber] = [
+                                'services' => [],
+                                'prices' => [],
+                                'selected_id' => $row['selected_id'], // Store selected_id
+                                'servicename_id' => $row['servicename_id'], // Store servicename_id
+                                'user_id' => $row['user_id'], // Store user_id
+                            ];
+                        }
 
-            // Step 2: Loop through staff_result and group by slotNumber
-            foreach ($staff_result as $row) {
-                $slotNumber = isset($row['slotNumber']) ? $row['slotNumber'] : 'N/A';
+                        // Add service and price to the group
+                        $groupedServices[$slotNumber]['services'][] = isset($row['service_name']) ? $row['service_name'] : 'N/A';
+                        $groupedServices[$slotNumber]['prices'][] = isset($row['price']) ? $row['price'] : 'N/A';
+                    }
 
-                if (!isset($groupedServices[$slotNumber])) {
-                    $groupedServices[$slotNumber] = [
-                        'services' => [],
-                        'prices' => [],
-                        'selected_id' => $row['selected_id'], // Store selected_id
-                        'servicename_id' => $row['servicename_id'], // Store servicename_id
-                        'user_id' => $row['user_id'], // Store user_id
-                    ];
-                }
+                    // Step 3: Track whether the first slot's button has been rendered
+                    $isFirstSlotRendered = false;
 
-                // Add service and price to the group
-                $groupedServices[$slotNumber]['services'][] = isset($row['service_name']) ? $row['service_name'] : 'N/A';
-                $groupedServices[$slotNumber]['prices'][] = isset($row['price']) ? $row['price'] : 'N/A';
-            }
+                    // Output each slot's card with grouped services and prices
+                    foreach ($groupedServices as $slotNumber => $slotData) {
+                ?>
+                        <div class="col-lg-6 mb-4">
+                            <div class="card border-gray shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title text-center">
+                                        Slot Number: <?php echo $slotNumber; ?>
+                                    </h5>
+                                    <p class="card-text">
+                                        <strong>Services:</strong><br>
+                                        <?php
+                                        // Loop through services and display them
+                                        foreach ($slotData['services'] as $index => $service) {
+                                            echo $service . '<br>';
+                                        }
+                                        ?>
+                                    </p>
+                                    <p class="card-text">
+                                        <strong>Prices:</strong><br>
+                                        <?php
+                                        // Loop through prices and display them
+                                        foreach ($slotData['prices'] as $index => $price) {
+                                            echo '&#x20B1; ' . $price . '<br>';
+                                        }
+                                        ?>
+                                    </p>
 
-            // Step 3: Output each slot's card with grouped services and prices
-            foreach ($groupedServices as $slotNumber => $slotData) {
-        ?>
-                <div class="col-lg-6 mb-4">
-                    <div class="card border-gray shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title text-center">
-                                Slot Number: <?php echo $slotNumber; ?>
-                            </h5>
-                            <p class="card-text">
-                                <strong>Services:</strong><br>
-                                <?php
-                                // Loop through services and display them
-                                foreach ($slotData['services'] as $index => $service) {
-                                    echo $service . '<br>';
-                                }
-                                ?>
-                            </p>
-                            <p class="card-text">
-                                <strong>Prices:</strong><br>
-                                <?php
-                                // Loop through prices and display them
-                                foreach ($slotData['prices'] as $index => $price) {
-                                    echo '&#x20B1; ' . $price . '<br>';
-                                }
-                                ?>
-                            </p>
-
-                            <a href="staff-dashboard-view-details.php?selected_id=<?php echo $slotData['selected_id']; ?>&servicename_id=<?php echo $slotData['servicename_id']; ?>&user_id=<?php echo $slotData['user_id'];?>"
-                                class="btn btn-primary w-100">
-                                View Details
-                            </a>
+                                    <?php if (!$isFirstSlotRendered) { ?>
+                                        <!-- First slot, render an enabled button -->
+                                        <a href="staff-dashboard-view-details.php?selected_id=<?php echo $slotData['selected_id']; ?>&servicename_id=<?php echo $slotData['servicename_id']; ?>&user_id=<?php echo $slotData['user_id']; ?>"
+                                            class="btn btn-primary w-100">
+                                            View Details
+                                        </a>
+                                        <?php
+                                        // Mark that the first slot's button has been rendered
+                                        $isFirstSlotRendered = true;
+                                        ?>
+                                    <?php } else { ?>
+                                        <!-- All subsequent slots, render a disabled button -->
+                                        <button class="btn btn-secondary w-100" disabled>
+                                            View Details
+                                        </button>
+                                    <?php } ?>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-        <?php
-            }
-        } else {
-            echo '<div class="col-12"><p class="text-danger">Error: ' . mysqli_error($connection) . '</p></div>';
-        }
-        ?>
-    </div>
-</div>
-
-
-
+                <?php
+                    }
+                } else {
+                    echo '<div class="col-12"><p class="text-danger">Error: ' . mysqli_error($connection) . '</p></div>';
+                }
+                ?>
+            </div>
+        </div>
     </main>
+
 
 
     <script>

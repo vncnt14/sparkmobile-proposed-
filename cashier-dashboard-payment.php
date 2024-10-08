@@ -305,7 +305,7 @@ mysqli_close($connection);
       <div class="row"></div>
               
       <table class="table table-bordered border-gray">
-            <thead class="v-2">
+            <thead class="v-2 text-light">
                 <tr>
                     <th scope="col">Name</th>
                     <th scope="col">Services</th>

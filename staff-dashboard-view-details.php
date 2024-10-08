@@ -325,7 +325,7 @@ $selectedData = mysqli_fetch_assoc($result);
       <div class="container py-5">
         <div class="row">
           <div class="col-12">
-            <h2 class="text-black"><?php echo $selectedData['service_name']; ?></h2>
+            <h2 class="text-black">Service Name: <?php echo $selectedData['service_name']; ?></h2>
             <hr class="mt-0 mb-4">
           </div>
         </div>
@@ -342,7 +342,7 @@ $selectedData = mysqli_fetch_assoc($result);
 
               <!-- Display user name -->
               <div class="mb-3">
-                <strong><label for="name" class="form-label">Name</label></strong>
+                <strong><label for="name" class="form-label">Customer Name:</label></strong>
                 <input type="text" class="form-control" id="name" name="name" value="<?php echo $selectedData['firstname'] . ' ' . $selectedData['lastname']; ?>" readonly>
               </div>
 
@@ -371,13 +371,13 @@ $selectedData = mysqli_fetch_assoc($result);
               ?>
                 <!-- Display grouped services by slot -->
                 <div class="mb-3">
-                  <strong><label for="services_<?php echo $slotNumber; ?>" class="form-label">Services</label></strong>
+                  <strong><label for="services_<?php echo $slotNumber; ?>" class="form-label">Services:</label></strong>
                   <input type="text" class="form-control" id="services_<?php echo $slotNumber; ?>" value="<?php echo implode(', ', $services); ?>" readonly>
                 </div>
 
                 <!-- Display grouped prices by slot -->
                 <div class="mb-3">
-                  <strong><label for="prices_<?php echo $slotNumber; ?>" class="form-label">Prices</label></strong>
+                  <strong><label for="prices_<?php echo $slotNumber; ?>" class="form-label">Prices:</label></strong>
                   <input type="text" class="form-control" id="prices_<?php echo $slotNumber; ?>" value="₱ <?php echo implode(', ₱ ', $prices); ?>" readonly>
                 </div>
               <?php
@@ -386,7 +386,7 @@ $selectedData = mysqli_fetch_assoc($result);
 
               <!-- Total Price field -->
               <div class="mb-3">
-                <strong><label for="total_price" class="form-label">Total Price (₱)</label></strong>
+                <strong><label for="total_price" class="form-label">Total Price (₱):</label></strong>
                 <input type="text" class="form-control" id="total_price" name="total_price" value="<?php echo $totalPrice; ?>.00" readonly>
               </div>
 

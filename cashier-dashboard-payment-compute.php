@@ -26,8 +26,10 @@ $userData = mysqli_fetch_assoc($result);
 
 
 
-$query = "SELECT finish_jobs.*, users.firstname, users.lastname, service_names.service_name
+$query = "SELECT finish_jobs.*, users.firstname, users.lastname, 
+service_names.service_name, vehicles.vehicle_id, finish_jobs.services
 FROM finish_jobs
+INNER JOIN vehicles ON vehicles.vehicle_id = finish_jobs.vehicle_id
 INNER JOIN users ON finish_jobs.user_id = users.user_id
 INNER JOIN service_names ON finish_jobs.servicename_id = service_names.servicename_id WHERE finish_jobs.user_id = $user_id AND finish_jobs.is_deleted = '0'";
 // Ordering by first name in ascending order
@@ -297,130 +299,136 @@ mysqli_close($connection);
     </div>
     <!-- main content -->
     <main>
-    <div class="col-md-9 text-dark ms-5">
-        <!-- column 2 -->
-        <h2><strong><?php echo $paymentData['firstname']; ?> <?php echo $paymentData['lastname']; ?></strong></h2>
-        <p>Below is the services and the prices of the customer.</p>
-        <hr>
+        <div class="col-md-9 text-dark ms-5">
+            <!-- column 2 -->
+            <h2><strong><?php echo $paymentData['firstname']; ?> <?php echo $paymentData['lastname']; ?></strong></h2>
+            <p>Below is the services and the prices of the customer.</p>
+            <hr>
 
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header"><strong>All services</strong></div>
-                    <div class="card-body">
-                        <form action="cspayment_managerconfirm.php" method="POST">
-                            <input type="hidden" name="user_id" id="user_id" value="<?php echo $paymentData['user_id']; ?>">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header"><strong>All services</strong></div>
+                        <div class="card-body">
+                            <form action="cspayment_managerconfirm.php" method="POST">
 
-                            <?php
-                            $totalPrice = 0; // Initialize total price variable
 
-                            if ($result) {
-                                // Loop through the results to create cards
-                                foreach ($result as $row) {
-                                    echo '<div class="col-md-4 mb-3">';
-                                    echo '<div class="card">';
-                                    echo '<div class="card-header">' . (isset($row['service_name']) ? $row['service_name'] : 'N/A') . '</div>';
-                                    echo '<div class="card-body">';
-                                    echo '<p><strong>Name:</strong> ' . (isset($row['firstname']) ? $row['firstname'] : 'N/A') . " " . (isset($row['lastname']) ? $row['lastname'] : 'N/A') . '</p>';
-                                    echo '<p><strong>Services:</strong> ';
-                                    // Explode the services and display each one individually
-                                    $services = isset($row['services']) ? explode(',', $row['services']) : array();
-                                    foreach ($services as $service) {
-                                        echo $service . '<br>';
+
+
+                                <?php
+                                $totalPrice = 0; // Initialize total price variable
+
+                                if ($result) {
+                                    // Loop through the results to create cards
+                                    foreach ($result as $row) {
+                                        echo '<div class="col-md-4 mb-3">';
+                                        echo '<div class="card">';
+                                        echo '<div class="card-header">' . (isset($row['service_name']) ? $row['service_name'] : 'N/A') . '</div>';
+                                        echo '<div class="card-body">';
+                                        echo '<p><strong>Name:</strong> ' . (isset($row['firstname']) ? $row['firstname'] : 'N/A') . " " . (isset($row['lastname']) ? $row['lastname'] : 'N/A') . '</p>';
+                                        echo '<p><strong>Services:</strong> ';
+                                        // Explode the services and display each one individually
+                                        $services = isset($row['services']) ? explode(',', $row['services']) : array();
+                                        foreach ($services as $service) {
+                                            echo $service . '<br>';
+                                        }
+                                        $price = isset($row['total_price']) ? $row['total_price'] : 0; // Get the price or default to 0 if not set
+                                        $totalPrice += $price; // Add price to total price
+                                        echo '<p><strong>Price (&#x20B1;):</strong> ' . $price . '</p>'; // Display individual price
+                                        echo '</div>';
+                                        echo '</div>';
+                                        echo '</div>';
                                     }
-                                    $price = isset($row['total_price']) ? $row['total_price'] : 0; // Get the price or default to 0 if not set
-                                    $totalPrice += $price; // Add price to total price
-                                    echo '<p><strong>Price (&#x20B1;):</strong> ' . $price . '</p>'; // Display individual price
-                                    echo '</div>';
-                                    echo '</div>';
+                                } else {
+                                    echo '<div class="col-md-12">';
+                                    echo '<div class="alert alert-danger" role="alert">Error: ' . mysqli_error($connection) . '</div>';
                                     echo '</div>';
                                 }
-                            } else {
-                                echo '<div class="col-md-12">';
-                                echo '<div class="alert alert-danger" role="alert">Error: ' . mysqli_error($connection) . '</div>';
-                                echo '</div>';
-                            }
-                            ?>
+                                ?>
 
-                            <!-- Modal -->
-                            <div class="modal fade" id="changeModal" tabindex="-1" aria-labelledby="changeModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-lg">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="changeModalLabel">Calculating Payment</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="mb-3">
-                                                <label for="date" class="form-label">Date of Payment:</label>
-                                                <input type="text" class="form-control" name="date" id="date" value="<?php echo date('Y-m-d'); ?>" readonly>
+                                <!-- Modal -->
+                                <div class="modal fade" id="changeModal" tabindex="-1" aria-labelledby="changeModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="changeModalLabel">Calculating Payment</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
-                                            <div class="mb-3">
-                                                <label for="payment_method" class="form-label">Payment Method:</label>
-                                                <select class="form-control" name="payment_method" id="payment_method" required>
-                                                    <option value="None">Select</option>
-                                                    <option value="Cash">Cash</option>
-                                                    <option value="G Cash">G Cash</option>
-                                                    <option value="Maya">Maya</option>
-                                                    <option value="Paypal">Paypal</option>
-                                                </select>
+                                            <div class="modal-body">
+                                                <div class="mb-3">
+                                                    <label for="date" class="form-label">Date of Payment:</label>
+                                                    <input type="text" class="form-control" name="date" id="date" value="<?php echo date('Y-m-d'); ?>" readonly>
+                                                    <input type="hidden" name="user_id" id="user_id" value="<?php echo $paymentData['user_id']; ?>">
+                                                    <input type="hidden" name="vehicle_id" id="vehile_id" value="<?php echo $paymentData['vehicle_id']; ?>">
+                                                    <input type="hidden" name="firstname" id="fistname" value="<?php echo  $paymentData['firstname']; ?>">
+                                                    <input type="hidden" name="lastname" id="lasatname" value="<?php echo $paymentData['lastname']; ?>">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="payment_method" class="form-label">Payment Method:</label>
+                                                    <select class="form-control" name="payment_method" id="payment_method" required>
+                                                        <option value="None">Select</option>
+                                                        <option value="Cash">Cash</option>
+                                                        <option value="G Cash">G Cash</option>
+                                                        <option value="Maya">Maya</option>
+                                                        <option value="Paypal">Paypal</option>
+                                                    </select>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <h4>Total Price: &#x20B1;<span id="modalTotalPrice" class="price text-dark" name="change_amount" value="<?php echo $totalPrice; ?>"><?php echo $totalPrice; ?>.00</span></h4>
+                                                    <label for="modalAmount" class="form-label">Amount Paid (&#x20B1;): </label>
+                                                    <input type="text" class="form-control" name="modalAmount" id="modalAmount" value=".00">
+                                                    <h1 id="changeResult" name="change_payment" style="color:red; font-weight: bold;"></h1>
+                                                </div>
                                             </div>
-                                            <div class="mb-3">
-                                                <h4>Total Price: &#x20B1;<span id="modalTotalPrice" class="price text-dark" name="change_amount" value="<?php echo $totalPrice; ?>"><?php echo $totalPrice; ?>.00</span></h4>
-                                                <label for="modalAmount" class="form-label">Amount Paid (&#x20B1;): </label>
-                                                <input type="text" class="form-control" name="modalAmount" id="modalAmount" value=".00">
-                                                <h1 id="changeResult" name="change_payment" style="color:red; font-weight: bold;"></h1>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-success" id="confirmChangeBtn">Accept</button>
+                                                <button type="submit" class="btn btn-primary">Submit</button>
                                             </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-success" id="confirmChangeBtn">Accept</button>
-                                            <button type="submit" class="btn btn-primary">Submit</button>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
                     </div>
-                </div>
 
-                <div style="margin-left: 10px; margin-bottom: 10px;">
-                    <h4>Total Price: &#x20B1;<?php echo $totalPrice; ?>.00</h4>
-                </div>
+                    <div style="margin-left: 10px; margin-bottom: 10px;">
+                        <h4>Total Price: &#x20B1;<?php echo $totalPrice; ?>.00</h4>
+                    </div>
 
-                <button type="button" class="btn btn-primary" id="calculateChangeBtn" style="margin-left: 10px;">
-                    Confirm
-                </button>
+                    <button type="button" class="btn btn-primary" id="calculateChangeBtn" style="margin-left: 10px;">
+                        Confirm
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
-</main>
+    </main>
 
-<script>
-    // Show modal when Confirm button is clicked
-    document.getElementById('calculateChangeBtn').addEventListener('click', function() {
-        var changeModal = new bootstrap.Modal(document.getElementById('changeModal'));
-        changeModal.show();
-    });
+    <script>
+        // Show modal when Confirm button is clicked
+        document.getElementById('calculateChangeBtn').addEventListener('click', function() {
+            var changeModal = new bootstrap.Modal(document.getElementById('changeModal'));
+            changeModal.show();
+        });
 
-    // Calculate change on Accept button click
-    document.getElementById('confirmChangeBtn').addEventListener('click', function() {
-        var totalPrice = <?php echo $totalPrice; ?>;
-        var amountPaid = parseFloat(document.getElementById('modalAmount').value);
+        // Calculate change on Accept button click
+        document.getElementById('confirmChangeBtn').addEventListener('click', function() {
+            var totalPrice = <?php echo $totalPrice; ?>;
+            var amountPaid = parseFloat(document.getElementById('modalAmount').value);
 
-        if (isNaN(amountPaid)) {
-            alert('Please enter a valid amount.');
-            return;
-        }
+            if (isNaN(amountPaid)) {
+                alert('Please enter a valid amount.');
+                return;
+            }
 
-        var change = amountPaid - totalPrice;
-        var changeResult = document.getElementById('changeResult');
-        if (change >= 0) {
-            changeResult.innerHTML = 'Change: &#x20B1;' + change.toFixed(2);
-        } else {
-            changeResult.innerHTML = 'Insufficient amount paid.';
-        }
-    });
-</script>
+            var change = amountPaid - totalPrice;
+            var changeResult = document.getElementById('changeResult');
+            if (change >= 0) {
+                changeResult.innerHTML = 'Change: &#x20B1;' + change.toFixed(2);
+            } else {
+                changeResult.innerHTML = 'Insufficient amount paid.';
+            }
+        });
+    </script>
 
 
     <script>
