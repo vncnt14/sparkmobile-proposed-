@@ -13,6 +13,7 @@ if (!isset($_SESSION['username'])) {
 // Fetch user information based on ID
 $userID = $_SESSION['user_id'];
 $vehicle_id = $_SESSION['vehicle_id'];
+$shop_id = $_GET['shop_id'];
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
@@ -189,6 +190,12 @@ mysqli_close($connection);
         object-fit: cover;
         border-radius: 50%;
     }
+    .asterisk{
+        color: red;
+    }
+    .label{
+        font-size: 12px;
+    }
 </style>
 
 <body>
@@ -293,7 +300,7 @@ mysqli_close($connection);
                     <div class="collapse" id="inventory">
                         <ul class="navbar-nav ps-3">
                             <li class="v-1">
-                                <a href="owner-dashboard-cleaning-products-shops.php" class="nav-link px-3">
+                                <a href="owner-dashboard-inventory-cleaning-products.php" class="nav-link px-3">
                                     <span class="me-2">Cleaning Products</span>
                                 </a>
                             </li>
@@ -356,9 +363,57 @@ mysqli_close($connection);
     </div>
     </div>
     <!-- main content -->
-    <main>
-        <div class="container">
-            <a href="csservice_adminview.php"><button type="button" class="btn btn-primary">Services</button></a>
+    <main class="text-dark">
+        <div class="container mt-5">
+            <h2 class="mb-4">Add Product</h2>
+            <form action="owner-dashboard-inventory-cleaning-products-add-backend.php" method="POST" enctype="multipart/form-data">
+                <div class="row">
+                    <!-- Left Column -->
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <input type="hidden" name="shop_id" id="shop_id" value="<?php echo $shop_id;?>">
+                            <label for="productName" class="form-label">Name<span class="asterisk">*</span></label>
+                            <input type="text" class="form-control" name="product_name" id="product_name" placeholder="Enter product name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="productDescription" class="form-label">Description (optional)</label>
+                            <textarea class="form-control" name="description" id="description" rows="3" placeholder="Enter product description"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="productCategory" class="form-label">Category<span class="asterisk">*</span></label>
+                            <input type="text" class="form-control" name="category" id="category" placeholder="Enter product category">
+                        </div>
+                        <div class="mb-3">
+                            <label for="productPrice" class="form-label">Price<span class="asterisk">*</span></label>
+                            <input type="number" class="form-control" name="price" id="price" placeholder="Enter product price">
+                            <label for="" class="label">Please include decimals (100.00)</label>
+                        </div>
+                        
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="itemCode" class="form-label">Item Code<span class="asterisk">*</span></label>
+                            <input type="number" class="form-control" name="item_code" id="item_code" placeholder="Enter item code">
+                        </div>
+                        <div class="mb-3">
+                            <label for="stockSize" class="form-label">Stock Size<span class="asterisk">*</span></label>
+                            <input type="number" class="form-control" name="stock_size" id="stock_size" placeholder="Enter stock size">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="productPhotos" class="form-label">Product Photo<span class="asterisk">*</span></label>
+                            <input type="file" class="form-control" name="photo" id="photo">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="d-flex justify-content-center">
+                    <button type="submit" class="btn btn-primary px-5 py-2">Save product</button>
+                </div>
+            </form>
         </div>
     </main>
 

@@ -1,32 +1,57 @@
 <?php
 session_start();
-
-// Include database connection file
-include('config.php');  // You'll need to replace this with your actual database connection code
+include('config.php'); // Ensure you include the correct path to your config.php
 
 // Redirect to the login page if the user is not logged in
 if (!isset($_SESSION['username'])) {
-    header("Location index.php");
+    header("Location: index.php");
     exit;
+  }
+  
+  // Fetch user information based on ID
+  $user_id = $_SESSION['user_id'];
+  
+  $user_query = "SELECT * FROM users WHERE user_id = '$user_id'";
+  $user_result = mysqli_query($connection, $user_query);
+  $userData  = mysqli_fetch_assoc($user_result);
+
+
+// Retrieve the shop_id from session or any other method you're using
+$shop_id = isset($_GET['shop_id']) ? $_GET['shop_id'] : '';
+
+// Handle search input
+$search = isset($_GET['search']) ? $_GET['search'] : '';
+
+// Check if shop_id is set
+if (!isset($shop_id) || empty($shop_id)) {
+    echo "Shop ID is not set.";
+    exit; // Stop further execution
 }
 
-// Fetch user information based on ID
-$userID = $_SESSION['user_id'];
-$vehicle_id = $_SESSION['vehicle_id'];
+// Base query to fetch products
+$product_query = "SELECT *FROM inventory_records WHERE shop_id = '$shop_id'";
 
-// Fetch user information from the database based on the user's ID
-// Replace this with your actual database query
-$query = "SELECT * FROM users WHERE user_id = '$userID'";
-// Execute the query and fetch the user data
-$result = mysqli_query($connection, $query);
-$userData = mysqli_fetch_assoc($result);
+// Add search conditions if the user has entered a search term
+if ($search != '') {
+    $product_query .= " AND (product_name LIKE '%$search%' 
+    OR description LIKE '%$search%' 
+    OR category LIKE '%$search%' 
+    OR stock_size LIKE '%$search%' 
+    OR price LIKE '%$search%')";
+}
+
+// Execute the query and get the result
+$product_result = mysqli_query($connection, $product_query);
+
+// Check for query execution errors
+if (!$product_result) {
+    echo "Error executing query: " . mysqli_error($connection);
+    exit; // Stop if there is an error
+}
 
 
-
-
-// Close the database connection
-mysqli_close($connection);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -82,9 +107,7 @@ mysqli_close($connection);
             overflow: auto !important;
         }
 
-        main {
-            margin-left: var(--offcanvas-width);
-        }
+
 
         /* this is to remove the backdrop */
         .offcanvas-backdrop::before {
@@ -188,6 +211,42 @@ mysqli_close($connection);
         height: 200px;
         object-fit: cover;
         border-radius: 50%;
+    }
+
+    .product-table {
+        margin-top: 50px;
+    }
+
+    .table thead th {
+        border-bottom: none;
+    }
+
+    .status-active {
+        color: white;
+        background-color: #8e44ad;
+        padding: 5px 10px;
+        border-radius: 20px;
+    }
+
+    .status-soldout {
+        color: white;
+        background-color: #e74c3c;
+        padding: 5px 10px;
+        border-radius: 20px;
+    }
+
+    .status-lowstock {
+        color: white;
+        background-color: #f39c12;
+        padding: 5px 10px;
+        border-radius: 20px;
+    }
+
+    .btn-rectangle {
+        padding: 10px 20px;
+        /* Increase horizontal padding */
+        border-radius: 5px;
+        /* Remove rounded corners */
     }
 </style>
 
@@ -293,7 +352,7 @@ mysqli_close($connection);
                     <div class="collapse" id="inventory">
                         <ul class="navbar-nav ps-3">
                             <li class="v-1">
-                                <a href="owner-dashboard-cleaning-products-shops.php" class="nav-link px-3">
+                                <a href="owner-dashboard-inventory-cleaning-products.php" class="nav-link px-3">
                                     <span class="me-2">Cleaning Products</span>
                                 </a>
                             </li>
@@ -356,11 +415,85 @@ mysqli_close($connection);
     </div>
     </div>
     <!-- main content -->
-    <main>
-        <div class="container">
-            <a href="csservice_adminview.php"><button type="button" class="btn btn-primary">Services</button></a>
+    <main class="container product-table text-dark" style="margin-left: 15.6%;">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Products</h2>
+        <div class="" style="margin-right: 10%;">
+            <form class="d-flex" action="" method="GET">
+                <input type="text" name="search" class="form-control me-3" placeholder="Search">
+                <input type="hidden" name="shop_id" id="shop_id" value="<?php echo $shop_id;?>">
+                <button type="submit" class="btn btn-secondary me-3">Search</button>
+            </form>
+            <a href="owner-dashboard-inventory-cleaning-products-add.php?shop_id=<?php echo $shop_id;?>">
+                <button class="btn btn-primary btn-sm me-3">+ Add Product</button>
+            </a>
         </div>
-    </main>
+    </div>
+
+    <table class="table table-hover">
+        <thead class="v-2 text-light">
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Name of Product</th>
+                <th scope="col">Status</th>
+                <th scope="col">Stock Info</th>
+                <th scope="col">Category</th>
+                <th scope="col">Price per Pieces</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            // Check if there are results
+            if (mysqli_num_rows($product_result) > 0) {
+                // Loop through the results and populate the table
+                while ($row = mysqli_fetch_assoc($product_result)) {
+                    // Determine stock status and corresponding color classes
+                    if ($row['stock_size'] <= 0) {
+                        $status = "No stock";
+                        $status_class = "text-danger"; // Red color for no stock
+                    } elseif ($row['stock_size'] < 50) {
+                        $status = "Low on stock";
+                        $status_class = "text-warning"; // Warning color (yellow/orange) for low stock
+                    } else {
+                        $status = "Full stocks";
+                        $status_class = "text-success"; // Green color for full stock
+                    }
+            
+                    echo "<tr>
+                        <td>";
+
+                    // Check if the photo exists and is not null
+                    if (!empty($row['photo'])) {
+                        // Convert binary data to a base64-encoded string
+                        $base64 = base64_encode($row['photo']);
+                        // Display the image using base64 encoding
+                        echo "<img src='data:image/jpeg;base64,$base64' class='img-fluid' width='50'>";
+                    } else {
+                        // Optionally, display a placeholder image if the photo is not available
+                        echo "<img src='path/to/placeholder/image.png' class='img-fluid' width='50'>";
+                    }
+                    echo "  </td>
+                        <td>{$row['product_name']}</td>
+                        <td><span class='{$status_class}'>{$status}</span></td>
+                        <td>{$row['stock_size']} in stock</td>
+                        <td>{$row['category']}</td>
+                        <td>₱ {$row['price']} .00</td>
+                        <td><a href='owner-dashboard-inventory-cleaning-products-edit.php?shop_id={$shop_id}&inventory_id={$row['inventory_id']}'><button type='button' class='btn btn-primary btn-sm'>Edit Product</button></a></td>
+                    </tr>";
+                }
+            } else {
+                echo "<tr><td colspan='7' class='text-center'>No products found</td></tr>";
+            }
+            ?>
+        </tbody>
+    </table>
+</main>
+
+<?php
+// Close the database connection
+mysqli_close($connection);
+?>
 
 
     <script>
