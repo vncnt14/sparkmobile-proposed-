@@ -12,7 +12,7 @@ if (!isset($_SESSION['user_id'])) {
 
 // Fetch user information based on ID
 $userID = $_SESSION['user_id'];
-
+$shop_id = $_GET['shop_id'];
 $vehicle_id = $_GET['vehicle_id']; // Retrieve vehicle_id from the URL
 $_SESSION['vehicle_id'] = $vehicle_id; // Store vehicle_id in the session
 
@@ -332,7 +332,7 @@ mysqli_close($connection);
 
 
         <div class=" welcome fw-bold px-3 mb-3">
-          <h5 class="text-center">Welcome back <?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>!</h5>
+          <h5 class="text-center">Welcome back <?php echo isset($_SESSION['firstname']) ? $_SESSION['firstname'] : ''; ?>!</h5>
         </div>
         <div class="ms-3" id="dateTime"></div>
         </li>
@@ -519,8 +519,8 @@ mysqli_close($connection);
           </div>
         </form>
 
-        <a href="csprocess3-4.php?vehicle_id=<?php echo $vehicleData['vehicle_id']; ?>"><button type="button" class="btn btn-success btn-md">Add Services</button></a>
-        <a href="cspayment.php?vehicle_id=<?php echo $vehicle_id; ?>" id="proceedButton"><button type="button" class="btn btn-primary">PROCEED</button></a>
+        <a href="csprocess3-4.php?vehicle_id=<?php echo $vehicleData['vehicle_id']; ?>&shop_id=<?php echo $shop_id; ?>"><button type="button" class="btn btn-primary btn-md">Add Services</button></a>
+        <a href="cspayment.php?vehicle_id=<?php echo $vehicle_id; ?>" id="proceedButton"><button type="button" class="btn btn-secondary">PROCEED</button></a>
       </div>
 
       <script>

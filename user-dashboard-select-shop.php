@@ -237,11 +237,11 @@ $shopData = mysqli_fetch_assoc($shop_result);
     }
 
     .game-logo {
-        width: 500px;
-        height: 500px;
+        width: 300px;
+        height: 300px;
         border-radius: 25px;
-        margin-left: 20px;
-        margin-top: -50px;
+        margin-right: 30px;
+        margin-top: 20px;
     }
 
     .game-name {

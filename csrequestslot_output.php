@@ -13,6 +13,7 @@ if (!isset($_SESSION['user_id'])) {
 $userID = $_SESSION['user_id'];
 $vehicle_id = $_GET['vehicle_id'];
 $vehicleID = $_SESSION['vehicle_id'];
+$shop_id = $_GET['shop_id'];
 
 // Fetch vehicle information from the database based on the vehicle ID
 $query = "SELECT * FROM vehicles WHERE vehicle_id = '$vehicle_id'";
@@ -283,7 +284,7 @@ li :hover{
             
             
               <div class=" welcome fw-bold px-3 mb-3">
-              <h5 class="text-center">Welcome back <?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>!</h5>
+              <h5 class="text-center">Welcome back <?php echo isset($_SESSION['firstname']) ? $_SESSION['firstname'] : ''; ?>!</h5>
               </div>
               <div class="ms-3"id="dateTime"></div>
             </li>
@@ -538,7 +539,7 @@ li :hover{
     $vehicle_id = isset($vehicleData['vehicle_id']) ? $vehicleData['vehicle_id'] : '';
     $user_id = isset($vehicleData['user_id']) ? $vehicleData['user_id'] : '';
 ?>
-<a href="csprocess3.php?vehicle_id=<?php echo $vehicle_id; ?>&user_id=<?php echo $user_id; ?>">
+<a href="csprocess3.php?vehicle_id=<?php echo $vehicle_id; ?>&user_id=<?php echo $user_id; ?>&shop_id=<?php echo $shop_id; ?>">
     <button type="button" class="col-md-4 mb-4 mt-5 offset-md-3 btn btn-primary btn-md">PROCEED</button>
 </a>
 

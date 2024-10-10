@@ -14,10 +14,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $total_price = $_POST['total_price'];
     $timer = $_POST['timer'];
     $is_deleted = $_POST['is_deleted'];
+    $slotNumber = $_POST['slotNumber'];
 
 
     // Soft delete data from the select_service table by updating a flag column
+    $slotNumber_delete = "DELETE FROM queuing_slots WHERE slotNumber= '$slotNumber'";
     $soft_delete_query = "UPDATE service_details SET is_deleted = 1 WHERE vehicle_id = '$vehicle_id'";
+    
+    if(mysqli_query($connection, $slotNumber_delete)){
+        echo "Slot Deleted succesfully";
+
+    }else{
+        echo "Error deleting record: " . mysqli_error($connection);
+    }
+
     
     if (mysqli_query($connection, $soft_delete_query)) {
         // Update successful, now perform SQL query to insert data into the servicedone table

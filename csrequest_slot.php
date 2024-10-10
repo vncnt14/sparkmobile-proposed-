@@ -12,6 +12,7 @@ if (!isset($_SESSION['user_id'])) {
 
 $userID = $_SESSION['user_id'];
 $vehicle_id = $_GET['vehicle_id'];
+$shop_id = $_GET['shop_id'];
 
 // Fetch vehicle information from the database based on the vehicle ID
 $query = "SELECT * FROM vehicles WHERE vehicle_id = '$vehicle_id'";
@@ -26,8 +27,10 @@ if (!$result) {
 // Fetch the vehicle data
 $vehicleData = mysqli_fetch_assoc($result);
 
-// Fetch slot information from the database for the current date
-$query1 = "SELECT * FROM queuing_slots WHERE slot_id ORDER BY slotNumber DESC";
+// Fetch the count of slot numbers currently serving (assuming you have a column `is_serving` that indicates a slot is in use)
+$query1 = "SELECT COUNT(slotNumber) AS taken_slots FROM queuing_slots WHERE is_serving = 1";
+
+// Execute the query
 $result1 = mysqli_query($connection, $query1);
 
 // Check if query was successful
@@ -36,14 +39,15 @@ if (!$result1) {
     exit();
 }
 
-// Fetch the slot data
+// Fetch the count data
 $slotData = mysqli_fetch_assoc($result1);
-$slot = 0;
+$takenSlots = 0;
 
 // Check if slot data was fetched and is not null
 if ($slotData !== null) {
-    $slot = $slotData['slotNumber'];
+    $takenSlots = $slotData['taken_slots'];
 }
+
 
 
 // Close the database connection
@@ -281,7 +285,7 @@ li :hover{
             
             
               <div class=" welcome fw-bold px-3 mb-3">
-              <h5 class="text-center">Welcome back <?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>!</h5>
+              <h5 class="text-center">Welcome back <?php echo isset($_SESSION['firstname']) ? $_SESSION['firstname'] : ''; ?>!</h5>
               </div>
               <div class="ms-3"id="dateTime"></div>
             </li>
@@ -466,6 +470,7 @@ li :hover{
                       <div class="col-md-4">
                           <input type="hidden" id="vehicle_id" name="vehicle_id" value="<?php echo $vehicleData['vehicle_id'];?>">
                           <input type="hidden" id="user_id" name="user_id" value="<?php echo $userID ?>">
+                          <input type="hidden" name="shop_id" id="shop_id" value="<?php echo $shop_id?>">
                           
                       
                       <div class="col-sm">
@@ -474,7 +479,7 @@ li :hover{
                   </div>
                   <ul class="list-inline mt-5 text-start">
                     <li class="list-inline-item">Currently serving</li>
-                    <li class="v-3 list-inline-item"><?php echo $slot ;?></li>
+                    <li class="v-3 list-inline-item"><?php echo $takenSlots ;?></li>
                     <li class="list-inline-item">Out of</li>
                     <li class="v-3 list-inline-item">5</li>
                   </ul>

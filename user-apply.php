@@ -234,7 +234,7 @@ $shopData = mysqli_fetch_assoc($result);
                 <form class="d-flex ms-auto my-3 my-lg-0">
                     </form>
                     <ul class="navbar-nav">
-                        <a class="apply-staff navbar-brand me-5 ms-lg-0 text-uppercase fw-bold" href="user-apply-staff.php">Apply as Staff</a>
+                        
                         <li class="nav-item dropdown">
                             <li class="">
                                 <a href="csnotification.php" class="nav-link px-3">
@@ -470,6 +470,7 @@ $shopData = mysqli_fetch_assoc($result);
 
                                 <img src="<?php echo htmlspecialchars($shopData['profile']); ?>" class="card-img-top" alt="<?php echo htmlspecialchars($shopData['shop_name']); ?> Profile Image">
                                 <h5 class="card-title text-center"><?php echo htmlspecialchars($shopData['shop_name']); ?></h5>
+                                <p>hiring</p>
                                 <div class="card-body">
                                     <center><a href="user-apply-staff.php?shop_id=<?php echo $shopData['shop_id'];?>"><button type="button" class="btn btn-primary">Apply Shop</button></a></center>
                                 </div>

@@ -15,6 +15,7 @@ $user_id = $_GET['user_id'];
 $vehicle_id = $_GET['vehicle_id'];
 $vehicleID = $_SESSION['vehicle_id'];
 $servicename_id = $_GET['servicename_id'];
+$shop_id = $_GET['shop_id'];
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
@@ -278,7 +279,7 @@ button {
             
             
               <div class=" welcome fw-bold px-3 mb-3">
-              <h5 class="text-center">Welcome back <?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>!</h5>
+              <h5 class="text-center">Welcome back <?php echo isset($_SESSION['firstname']) ? $_SESSION['firstname'] : ''; ?>!</h5>
               </div>
               <div class="ms-3"id="dateTime"></div>
             </li>
@@ -446,6 +447,7 @@ button {
                     <input type="hidden" id="servicename_id" name="servicename_id" value="<?php echo $servicenameData['servicename_id']; ?>">
                     <input type="hidden" name="status" id="status" value="Ongoing">
                     <input type="hidden" name="is_deleted" id="is_deleted" value="0">
+                    <input type="hidden" name="shop_id" id="shop_id" value="<?php echo $shop_id;?>">
                     <!-- Collapsible container -->
                     <div class="accordion" id="serviceAccordion">
                         <?php

@@ -15,6 +15,7 @@ $userID = $_SESSION['user_id'];
 $vehicle_id = $_GET['vehicle_id'];
 $vehicleID = $_SESSION['vehicle_id'];
 $servicename_ID = $_SESSION['servicename_id'];
+$shop_id = $_GET['shop_id'];
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
@@ -24,7 +25,7 @@ $result = mysqli_query($connection, $query);
 $vehicleData = mysqli_fetch_assoc($result);
 
 
-$query1 = "SELECT *FROM service_names";
+$query1 = "SELECT *FROM service_names WHERE shop_id = '$shop_id'";
 $result1 = mysqli_query($connection, $query1);
 
 
@@ -269,7 +270,7 @@ li :hover{
             
             
               <div class=" welcome fw-bold px-3 mb-3">
-              <h5 class="text-center">Welcome back <?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>!</h5>
+              <h5 class="text-center">Welcome back <?php echo isset($_SESSION['firstname']) ? $_SESSION['firstname'] : ''; ?>!</h5>
               </div>
               <div class="ms-3"id="dateTime"></div>
             </li>
@@ -542,7 +543,7 @@ li :hover{
               foreach ($result1 as $row) {
                   echo '<tr>';
                   echo '<td>' . (isset($row['service_name']) ? $row['service_name'] : 'Service Name') . '</td>';
-                  echo '<td class="text-center"><a href="csprocess3.3.php?vehicle_id=' . (isset($vehicleData['vehicle_id']) ? $vehicleData['vehicle_id'] : '') . '&servicename_id=' . (isset($row['servicename_id']) ? $row['servicename_id'] : '') . '&user_id=' . (isset($vehicleData['user_id']) ? $vehicleData['user_id'] : '') . '" class="btn btn-primary btn-md">View Services</a></td>'; // Aligning the button to center
+                  echo '<td class="text-center"><a href="csprocess3.3.php?vehicle_id=' . (isset($vehicleData['vehicle_id']) ? $vehicleData['vehicle_id'] : '') . '&servicename_id=' . (isset($row['servicename_id']) ? $row['servicename_id'] : '') . '&user_id=' . (isset($vehicleData['user_id']) ? $vehicleData['user_id'] : '') . '&shop_id=' . (isset($shop_id) ? $shop_id : ''). '" class="btn btn-primary btn-md">View Services</a></td>'; // Aligning the button to center
                   echo '</tr>';
               }
 

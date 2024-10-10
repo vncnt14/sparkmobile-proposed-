@@ -255,7 +255,18 @@ $shop_result = mysqli_query($connection, $shop_query);
                 <form class="d-flex ms-auto my-3 my-lg-0">
                 </form>
                 <ul class="navbar-nav">
-                    <a class="apply-staff navbar-brand me-5 ms-lg-0 text-uppercase fw-bold" href="user-apply.php">Apply as Staff</a>
+                    <div class="dropdown">
+                        <a class="apply-staff navbar-brand me-5 ms-lg-5 text-uppercase dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                            Apply as Staff
+                        </a>
+
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <li><a class="dropdown-item" href="user-apply.php?role=cashier">Cashier</a></li>
+                            <li><a class="dropdown-item" href="user-apply.php?role=manager">Manager</a></li>
+                            <li><a class="dropdown-item" href="user-apply.php?role=car_wash_staff">Car Wash Staff</a></li>
+                        </ul>
+                    </div>
+
                     <li class="nav-item dropdown">
                     <li class="">
                         <a href="csnotification.php" class="nav-link px-3">

@@ -218,7 +218,7 @@ $userData = mysqli_fetch_assoc($result);
 
 
         <div class=" welcome fw-bold px-3 mb-3">
-          <h5 class="text-center">Welcome back <?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>!</h5>
+          <h5 class="text-center">Welcome back <?php echo isset($_SESSION['firstname']) ? $_SESSION['firstname'] : ''; ?>!</h5>
         </div>
         <div class="ms-3" id="dateTime"></div>
         </li>
@@ -361,7 +361,7 @@ $userData = mysqli_fetch_assoc($result);
               <div class="col-xl-4 mb-4 mb-xl-4">
                 <div class="card">
                   <center>
-                    <div class="card-header text-white v-1"><?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>'s Vehicle</div>
+                    <div class="card-header text-white v-1"><?php echo isset($_SESSION['firstname']) ? $_SESSION['firstname'] : ''; ?>'s Vehicle</div>
                   </center>
                   <div class="card-body text-center">
                     <img class="img-account-profile mb-2" src="" alt="">

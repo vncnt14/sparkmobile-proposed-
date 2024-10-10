@@ -17,9 +17,9 @@ sd.*
 FROM 
 payment_details pd
 LEFT JOIN 
-carowners co ON co.user_id = pd.user_id
+users co ON co.user_id = pd.user_id
 LEFT JOIN 
-servicedone sd ON co.user_id = sd.user_id WHERE sd.user_id = '$userID'";
+finish_jobs sd ON co.user_id = sd.user_id WHERE sd.user_id = '$userID'";
 
 $result = mysqli_query($connection, $query);
 
@@ -263,7 +263,7 @@ button {
             
             
               <div class=" welcome fw-bold px-3 mb-3">
-              <h5 class="text-center">Welcome back <?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>!</h5>
+              <h5 class="text-center">Welcome back <?php echo isset($_SESSION['firstname']) ? $_SESSION['firstname'] : ''; ?>!</h5>
               </div>
             </li>
             <li>

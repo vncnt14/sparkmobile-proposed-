@@ -373,7 +373,7 @@ mysqli_close($connection);
               <div class="col-xl-4 mb-4 mb-xl-4">
                 <div class="card">
                   <center>
-                    <div class="v-1 card-header text-light"><?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>'s vehicle</div>
+                    <div class="v-1 card-header text-light"><?php echo isset($_SESSION['firstname']) ? $_SESSION['firstname'] : ''; ?>'s vehicle</div>
                   </center>
                   <div class="card-body text-center">
                     <img class="img-account-profile mb-2" src="<?php echo $vehicleData['profile']; ?>" alt="">

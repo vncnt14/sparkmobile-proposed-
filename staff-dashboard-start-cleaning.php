@@ -23,8 +23,10 @@ $result = mysqli_query($connection, $query);
 $userData = mysqli_fetch_assoc($result);
 
 
-$query = "SELECT ss.*, sn.service_name, u.firstname, u.lastname, ss.status
+$query = "SELECT ss.*, sn.service_name, u.firstname, u.lastname, ss.status,
+qs.slotNumber
 FROM service_details ss
+INNER JOIN queuing_slots qs ON ss.slotNumber = qs.slotNumber
 INNER JOIN service_names sn ON ss.servicename_id = sn.servicename_id
 INNER JOIN users u ON ss.user_id = u.user_id
 WHERE ss.selected_id = '$selected_id' AND ss.servicename_id = '$servicename_id'";
@@ -336,6 +338,7 @@ $selectedData = mysqli_fetch_assoc($result);
               <input type="hidden" name="user_id" value="<?php echo $selectedData['user_id']; ?>">
               <input type="hidden" name="status" id="status" value="<?php echo $selectedData['status']; ?>">
               <input type="hidden"  name="is_deleted" id="is_deleted" value="0">
+              <input type="hidden" name="slotNumber" id="slotNumber" value="<?php echo $selectedData['slotNumber'];?>">
 
               <!-- Display user name -->
               <div class="mb-3">

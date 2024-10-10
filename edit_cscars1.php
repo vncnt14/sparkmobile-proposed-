@@ -229,7 +229,7 @@ li:hover{
             
             
               <div class=" welcome fw-bold px-3 mb-3">
-              <h5 class="text-center">Welcome back <?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>!</h5>
+              <h5 class="text-center">Welcome back <?php echo isset($_SESSION['firstname']) ? $_SESSION['firstname'] : ''; ?>!</h5>
               </div>
             </li>
             <li>
@@ -376,7 +376,7 @@ li:hover{
                           <!-- Profile picture card -->
                           <div class="col-xl-4 mb-4 mb-xl-4">
                               <div class="card">
-                                  <center><div class="card-header text-black"><?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>'s vehicle</div></center>
+                                  <center><div class="card-header text-black"><?php echo isset($_SESSION['firstname']) ? $_SESSION['firstname'] : ''; ?>'s vehicle</div></center>
                                   <div class="card-body text-center">
                                     <img class="img-account-profile rounded-circle mb-2" src="toji.jpg" alt="">
                                     <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>

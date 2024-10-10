@@ -20,13 +20,13 @@ function isSlotAvailable($userID, $slotNumber, $connection) {
 }
 
 // Function to book a slot
-function bookSlot($userID, $vehicle_id, $slotNumber, $connection) {
+function bookSlot($userID, $vehicle_id, $shop_id, $slotNumber, $connection) {
     date_default_timezone_set('Asia/Manila');
     $currentDateTime = new DateTime();
     $currentDateTime->setTimezone(new DateTimeZone('Asia/Manila'));
     $date = $currentDateTime->format('Y-m-d H:i:s');
 
-    $insertQuery = "INSERT INTO queuing_slots (user_id, vehicle_id, slotNumber, date) VALUES ('$userID', '$vehicle_id', '$slotNumber', '$date')";
+    $insertQuery = "INSERT INTO queuing_slots (user_id, vehicle_id, shop_id, slotNumber, date) VALUES ('$userID', '$vehicle_id', '$shop_id', '$slotNumber', '$date')";
     $insertResult = mysqli_query($connection, $insertQuery);
 
     if ($insertResult) {
@@ -34,12 +34,12 @@ function bookSlot($userID, $vehicle_id, $slotNumber, $connection) {
 
         // Fetch user information from the database based on the user's ID
         // Replace this with your actual database query
-        $query = "SELECT * FROM vehicles WHERE user_id = '$userID' AND vehicle_id = '$vehicle_id'";
+        $query = "SELECT * FROM queuing_slots WHERE user_id = '$userID' AND vehicle_id = '$vehicle_id'";
         $result = mysqli_query($connection, $query);
         $vehicleData = mysqli_fetch_assoc($result);
         echo '<script>
         setTimeout(function() {
-            window.location.href = "csrequestslot_output.php?vehicle_id=' . (isset($vehicleData['vehicle_id']) ? $vehicleData['vehicle_id'] : '') . (isset($vehicleData['user_id']) ? '&user_id=' . $vehicleData['user_id'] : '').'";
+            window.location.href = "csrequestslot_output.php?vehicle_id=' . (isset($vehicleData['vehicle_id']) ? $vehicleData['vehicle_id'] : '') . (isset($vehicleData['user_id']) ? '&user_id=' . $vehicleData['user_id'] : '') . (isset($vehicleData['shop_id']) ? '&shop_id=' . $vehicleData['shop_id'] : '').'";
         }, 100); // Redirect after 1 second
          </script>';
 
@@ -56,6 +56,7 @@ unset($_SESSION['date']);
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $userID = $_POST['user_id'];
     $vehicle_id = $_POST['vehicle_id'];
+    $shop_id = $_POST['shop_id'];
     
 
 
@@ -73,7 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $slotNumber = $availableSlots[0];
 
         // Book the selected slot
-        bookSlot($userID, $vehicle_id, $slotNumber, $connection);
+        bookSlot($userID, $vehicle_id, $shop_id, $slotNumber, $connection);
     } else {
         // Display an alert if all slots are occupied
          // Replace this with your actual database query
@@ -84,7 +85,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo '<script>alert("All slots are occupied. Please come back later.");</script>';
         echo '<script>
         setTimeout(function() {
-            window.location.href = "csrequest_slot.php?vehicle_id=' . (isset($vehicleData['vehicle_id']) ? $vehicleData['vehicle_id'] : '') . (isset($vehicleData['user_id']) ? '&user_id=' . $vehicleData['user_id'] : '').'";
+            window.location.href = "csrequest_slot.php?vehicle_id=' . (isset($vehicleData['vehicle_id']) ? $vehicleData['vehicle_id'] : '') . (isset($vehicleData['user_id']) ? '&user_id=' . $vehicleData['user_id'] : '') . (isset($vehicleData['shop_id']) ? '&shop_id=' . $vehicleData['shop_id'] : '').'";
         }, 100); // Redirect after 1 second
          </script>';
 

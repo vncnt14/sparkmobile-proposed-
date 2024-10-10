@@ -5,7 +5,7 @@ session_start();
 include('config.php');  // You'll need to replace this with your actual database connection code
 
 // Redirect to the login page if the user is not logged in
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['username'])) {
     header("Location: index.php");
     exit;
 }
@@ -14,6 +14,7 @@ if (!isset($_SESSION['user_id'])) {
 $userID = $_SESSION['user_id'];
 $vehicle_id = $_GET['vehicle_id'];
 $vehicleID = $_SESSION['vehicle_id'];
+$shop_id = $_GET['shop_id'];
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
@@ -21,6 +22,10 @@ $query = "SELECT * FROM vehicles WHERE vehicle_id = '$vehicle_id'";
 // Execute the query and fetch the user data
 $result = mysqli_query($connection, $query);
 $vehicleData = mysqli_fetch_assoc($result);
+
+$shop_query = "SELECT *FROM shops WHERE shop_id = '$shop_id'";
+$shop_result = mysqli_query($connection, $shop_query);
+$shopData = mysqli_fetch_assoc($shop_result);
 
 // Close the database connection
 mysqli_close($connection);
@@ -255,7 +260,7 @@ li :hover{
             
             
               <div class=" welcome fw-bold px-3 mb-3">
-              <h5 class="text-center">Welcome back <?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>!</h5>
+              <h5 class="text-center">Welcome back <?php echo isset($_SESSION['firstname']) ? $_SESSION['firstname'] : ''; ?>!</h5>
               </div>
               <div class="ms-3"id="dateTime"></div>
             </li>
@@ -501,7 +506,12 @@ li :hover{
 
           // Submit Button
           echo '<div class="container-popup">';
-          echo '<td><a href="csrequest_slot.php?vehicle_id=' . (isset($vehicleData['vehicle_id']) ? $vehicleData['vehicle_id'] : '') . '&user_id=' . (isset($vehicleData['user_id']) ? $vehicleData['user_id'] : '') . '" class="col-md-4 mb-4 mt-5 offset-md-3 btn btn-primary btn-md">Proceed</a></td>';
+          echo '<td><a href="csrequest_slot.php?vehicle_id=' . 
+          (isset($vehicleData['vehicle_id']) ? $vehicleData['vehicle_id'] : '') . 
+          '&user_id=' . (isset($vehicleData['user_id']) ? $vehicleData['user_id'] : '') . 
+          '&shop_id=' . (isset($shopData['shop_id']) ? $shopData['shop_id'] : '') . 
+          '" class="col-md-4 mb-4 mt-5 offset-md-3 btn btn-primary btn-md">Proceed</a></td>';
+      
 
           echo '</div>';
         ?>

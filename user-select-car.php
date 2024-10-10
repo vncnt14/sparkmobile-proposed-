@@ -430,7 +430,7 @@ li :hover{
                       echo '<p class="card-text"><strong>Model:</strong> ' . (isset($row['model']) ? $row['model'] : 'N/A') . '</p>';
                       echo '<p class="card-text"><strong>Color:</strong> ' . (isset($row['color']) ? $row['color'] : 'N/A') . '</p>';
                       // Add other card details as needed
-                      echo '<a href="checkingcar2.php?vehicle_id=' . (isset($row['vehicle_id']) ? $row['vehicle_id'] : '') . 'shop_id=' . (isset($shopData['shop_id']) ? $shopData['shop_id'] : '') . '" class="btn btn-primary">Select Vehicle</a>';
+                      echo '<a href="checkingcar2.php?vehicle_id=' . (isset($row['vehicle_id']) ? $row['vehicle_id'] : '') . '&shop_id=' . (isset($shopData['shop_id']) ? $shopData['shop_id'] : '') . '" class="btn btn-primary">Select Vehicle</a>';
                       echo '</div>';
                       echo '</div>';
                       echo '</div>';
