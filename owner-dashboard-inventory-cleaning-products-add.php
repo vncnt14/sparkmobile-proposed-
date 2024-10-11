@@ -404,7 +404,7 @@ mysqli_close($connection);
                         
                         <div class="mb-3">
                             <label for="productPhotos" class="form-label">Product Photo<span class="asterisk">*</span></label>
-                            <input type="file" class="form-control" name="photo" id="photo">
+                            <input type="file" class="form-control" name="profile" id="profile">
                         </div>
                     </div>
                 </div>

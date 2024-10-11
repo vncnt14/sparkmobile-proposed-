@@ -193,7 +193,8 @@ mysqli_close($connection);
         /* Adjust the size as needed */
         height: 200px;
         object-fit: cover;
-        border-radius: 50%;
+        border-radius: 5%;
+        margin-left: 150px;
     }
 
     .asterisk {
@@ -371,14 +372,26 @@ mysqli_close($connection);
     </div>
     <!-- main content -->
     <main class="text-dark">
-        <div class="container mt-5">
-            <h2 class="mb-4">Add Product</h2>
-            <form action="owner-dashboard-inventory-cleaning-products-add-backend.php" method="POST" enctype="multipart/form-data">
+        <div class="container">
+            <h2 class="mb-4">Edit Product</h2>
+            <form action="owner-dashboard-inventory-cleaning-products-edit-backend.php" method="POST" enctype="multipart/form-data">
                 <div class="row">
                     <!-- Left Column -->
                     <div class="col-md-6">
                         <div class="mb-3">
                             <input type="hidden" name="shop_id" id="shop_id" value="<?php echo $shop_id; ?>">
+                            <input type="hidden" name="inventory_id" id="inventory_id" value="<?php echo $inventory_id; ?>">
+                            <div class="mb-3">
+                                <div class="col-xl-4 mb-4 mb-xl-4">
+                                    <div class="card-body text-center">
+                                        <img class="img-account-profile mb-3" src="<?php echo $productData['profile']; ?>" alt="">
+                                        
+                                    </div>
+                                </div>
+                                <label for="productPhotos" class="form-label">Upload Product Photo<span class="asterisk"></span></label>
+                                <input type="file" name="profile" id="profile" accept="image/*" class="form-control">
+        
+                            </div>
                             <label for="productName" class="form-label">Name<span class="asterisk"></span></label>
                             <input type="text" class="form-control" name="product_name" id="product_name" value="<?php echo $productData['product_name']; ?>">
                         </div>
@@ -386,6 +399,11 @@ mysqli_close($connection);
                             <label for="productDescription" class="form-label">Description (optional)</label>
                             <input class="form-control" name="description" id="description" rows="3" value="<?php echo $productData['description']; ?>">
                         </div>
+                        
+                    </div>
+                    
+                    <!-- Right Column -->
+                    <div class="col-md-6">
                         <div class="mb-3">
                             <label for="productCategory" class="form-label">Category<span class="asterisk"></span></label>
                             <input type="text" class="form-control" name="category" id="category" value="<?php echo $productData['category']; ?>">
@@ -395,11 +413,6 @@ mysqli_close($connection);
                             <input type="number" class="form-control" name="price" id="price" value="<?php echo $productData['price']; ?>">
                             <label for="" class="label">Please include decimals (100.00)</label>
                         </div>
-
-                    </div>
-
-                    <!-- Right Column -->
-                    <div class="col-md-6">
                         <div class="mb-3">
                             <label for="itemCode" class="form-label">Item Code<span class="asterisk"></span></label>
                             <input type="number" class="form-control" name="item_code" id="item_code" value="<?php echo $productData['item_code']; ?>">
@@ -409,54 +422,17 @@ mysqli_close($connection);
                             <input type="number" class="form-control" name="stock_size" id="stock_size" value="<?php echo $productData['stock_size']; ?>">
                         </div>
 
-                        <div class="mb-3">
-                            <label for="productPhotos" class="form-label">Product Photo<span class="asterisk"></span></label>
-
-                            <?php
-                            // Function to get MIME type from file extension
-                            function getMimeType($extension)
-                            {
-                                $mimeTypes = [
-                                    'jpg' => 'image/jpeg',
-                                    'jpeg' => 'image/jpeg',
-                                    'png' => 'image/png',
-                                    'gif' => 'image/gif',
-                                    'webp' => 'image/webp',
-                                    'bmp' => 'image/bmp',
-                                    'tiff' => 'image/tiff',
-                                ];
-                                return $mimeTypes[strtolower($extension)] ?? 'image/png'; // Default to JPEG
-                            }
-
-                            // Check if the photo exists and is not null
-                            if (!empty($productData['photo'])) {
-                                // Get the file extension (assumes you have access to the filename or similar)
-                                $fileExtension = pathinfo($productData['photo'], PATHINFO_EXTENSION); // Assuming 'photo_name' contains the filename
-                                $mimeType = getMimeType($fileExtension);
-
-                                // Convert binary data to a base64-encoded string
-                                $base64 = base64_encode($productData['photo']);
-
-                                // Display the image using base64 encoding with the correct MIME type
-                                echo "<img src='data:{$mimeType};base64,$base64' class='img-fluid mb-2' style='max-width: 12200%; height: 12000%;' alt='Product Photo'>"; // Adjust styles if necessary
-                            } else {
-                                // Optionally, display a placeholder image if the photo is not available
-                                echo "<img src='path/to/placeholder/image.png' class='img-fluid mb-2' style='max-width: 12200%; height: 12000%;' alt='Placeholder Image'>"; // Adjust styles if necessary
-                            }
-                            ?>
-
-                        </div>
 
 
                     </div>
                 </div>
-        </div>
+                </div>
 
-        <!-- Submit Button -->
-        <div class="d-flex justify-content-center">
-            <button type="submit" class="btn btn-primary px-5 py-2">Save product</button>
-        </div>
-        </form>
+                <!-- Submit Button -->
+                <div class="d-flex justify-content-center">
+                    <button type="submit" class="btn btn-primary px-5 py-2">Save Changes</button>
+                 </div>
+            </form>
         </div>
     </main>
 

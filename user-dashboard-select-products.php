@@ -1,57 +1,37 @@
 <?php
 session_start();
-include('config.php'); // Ensure you include the correct path to your config.php
+
+// Include database connection file
+include('config.php');  // You'll need to replace this with your actual database connection code
 
 // Redirect to the login page if the user is not logged in
 if (!isset($_SESSION['username'])) {
-    header("Location: index.php");
+    header("Location index.php");
     exit;
 }
 
 // Fetch user information based on ID
-$user_id = $_SESSION['user_id'];
+$user_id = $_GET['user_id'];
+$vehicle_id = $_GET['vehicle_id'];
+$shop_id = $_GET['shop_id'];
+$servicename_id = $_GET['servicename_id'];
 
-$user_query = "SELECT * FROM users WHERE user_id = '$user_id'";
-$user_result = mysqli_query($connection, $user_query);
-$userData  = mysqli_fetch_assoc($user_result);
+// Fetch user information from the database based on the user's ID
+// Replace this with your actual database query
+$query = "SELECT * FROM users WHERE user_id = '$user_id'";
+// Execute the query and fetch the user data
+$result = mysqli_query($connection, $query);
+$userData = mysqli_fetch_assoc($result);
 
-
-// Retrieve the shop_id from session or any other method you're using
-$shop_id = isset($_GET['shop_id']) ? $_GET['shop_id'] : '';
-
-// Handle search input
-$search = isset($_GET['search']) ? $_GET['search'] : '';
-
-// Check if shop_id is set
-if (!isset($shop_id) || empty($shop_id)) {
-    echo "Shop ID is not set.";
-    exit; // Stop further execution
-}
-
-// Base query to fetch products
 $product_query = "SELECT *FROM inventory_records WHERE shop_id = '$shop_id'";
-
-// Add search conditions if the user has entered a search term
-if ($search != '') {
-    $product_query .= " AND (product_name LIKE '%$search%' 
-    OR description LIKE '%$search%' 
-    OR category LIKE '%$search%' 
-    OR stock_size LIKE '%$search%' 
-    OR price LIKE '%$search%')";
-}
-
-// Execute the query and get the result
 $product_result = mysqli_query($connection, $product_query);
 
-// Check for query execution errors
-if (!$product_result) {
-    echo "Error executing query: " . mysqli_error($connection);
-    exit; // Stop if there is an error
-}
+
+
+
 
 
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -107,7 +87,9 @@ if (!$product_result) {
             overflow: auto !important;
         }
 
-
+        main {
+            margin-left: var(--offcanvas-width);
+        }
 
         /* this is to remove the backdrop */
         .offcanvas-backdrop::before {
@@ -206,47 +188,11 @@ if (!$product_result) {
     }
 
     .img-account-profile {
-        width: 50px;
+        width: 200px;
         /* Adjust the size as needed */
-        height: 50px;
+        height: 200px;
         object-fit: cover;
-        border-radius: 1%;
-    }
-
-    .product-table {
-        margin-top: 50px;
-    }
-
-    .table thead th {
-        border-bottom: none;
-    }
-
-    .status-active {
-        color: white;
-        background-color: #8e44ad;
-        padding: 5px 10px;
-        border-radius: 20px;
-    }
-
-    .status-soldout {
-        color: white;
-        background-color: #e74c3c;
-        padding: 5px 10px;
-        border-radius: 20px;
-    }
-
-    .status-lowstock {
-        color: white;
-        background-color: #f39c12;
-        padding: 5px 10px;
-        border-radius: 20px;
-    }
-
-    .btn-rectangle {
-        padding: 10px 20px;
-        /* Increase horizontal padding */
-        border-radius: 5px;
-        /* Remove rounded corners */
+        border-radius: 50%;
     }
 </style>
 
@@ -297,19 +243,19 @@ if (!$product_result) {
 
 
                 <div class=" welcome fw-bold px-3 mb-3">
-                    <h5 class="text-center">Welcome back Owner <?php echo $userData['firstname']; ?> !</h5>
+                    <h5 class="text-center">Welcome back  <?php echo $userData['firstname']; ?> !</h5>
                 </div>
                 <div class="ms-3" id="dateTime"></div>
                 </li>
                 <li>
                 <li class="v-1">
-                    <a href="owner-dashboard.php" class="nav-link px-3">
+                    <a href="user-dashboard.php" class="nav-link px-3">
                         <span class="me-2"><i class="fas fa-home"></i></i></span>
                         <span class="start">DASHBOARD</span>
                     </a>
                 </li>
                 <li class="">
-                    <a href="owner-profile.php" class="nav-link px-3">
+                    <a href="user-profile.php" class="nav-link px-3">
                         <span class="me-2"><i class="fas fa-user"></i></i></span>
                         <span class="start">PROFILE</span>
                     </a>
@@ -317,8 +263,8 @@ if (!$product_result) {
                 <li>
 
                 <li><a class="nav-link px-3 sidebar-link" data-bs-toggle="collapse" href="#layouts">
-                        <span class="me-2"><i class="fas fa-building"></i></i></span>
-                        <span>MY SHOPS</span>
+                        <span class="me-2"><i class="fas fa-cars"></i></i></span>
+                        <span>MY CARS</span>
                         <span class="ms-auto">
                             <span class="right-icon">
                                 <i class="bi bi-chevron-down"></i>
@@ -352,7 +298,7 @@ if (!$product_result) {
                     <div class="collapse" id="inventory">
                         <ul class="navbar-nav ps-3">
                             <li class="v-1">
-                                <a href="owner-dashboard-inventory-cleaning-products.php" class="nav-link px-3">
+                                <a href="owner-dashboard-cleaning-products-shops.php" class="nav-link px-3">
                                     <span class="me-2">Cleaning Products</span>
                                 </a>
                             </li>
@@ -415,73 +361,86 @@ if (!$product_result) {
     </div>
     </div>
     <!-- main content -->
-    <main class="container product-table text-dark" style="margin-left: 15.6%;">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>Products</h2>
-            <div class="" style="margin-right: 10%;">
-                <form class="d-flex" action="" method="GET">
-                    <input type="text" name="search" class="form-control me-3" placeholder="Search">
-                    <input type="hidden" name="shop_id" id="shop_id" value="<?php echo $shop_id; ?>">
-                    <button type="submit" class="btn btn-secondary me-3">Search</button>
-                </form>
-                <a href="owner-dashboard-inventory-cleaning-products-add.php?shop_id=<?php echo $shop_id; ?>">
-                    <button class="btn btn-primary btn-sm me-3">+ Add Product</button>
-                </a>
+    <main>
+        <div class="container my-4 text-dark">
+            <!-- Top Navigation Bar -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <a href="csprocess3.3.php?shop_id=<?php echo $shop_id; ?>&vehicle_id=<?php echo $vehicle_id; ?>&servicename_id=<?php echo $servicename_id; ?>&user_id=<?php echo $user_id; ?>"><button class="btn btn-primary mb-5">
+                        <i class="bi bi-arrow-left"></i> <!-- Back Icon -->
+                        Back</button></a>
+                <h2 class="mb-4">Cleaning Products</h2>
+                <button class="btn btn-lg v-2 text-light">
+                    <i class="bi bi-cart"></i> <!-- Cart Icon -->
+                </button>
             </div>
-        </div>
 
-        <table class="table table-hover">
-            <thead class="v-2 text-light">
-                <tr>
-                    <th scope="col"></th>
-                    <th scope="col">Name of Product</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Stock Info</th>
-                    <th scope="col">Category</th>
-                    <th scope="col">Price per Pieces</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
+            <?php
+            // Database connection
+            require_once "config.php";
+
+            // Get shop_id from session or request
+            $shop_id = $_GET['shop_id']; // Assuming shop_id is stored in session
+
+            // Initialize search term
+            $searchTerm = '';
+            if (isset($_POST['search'])) {
+                $searchTerm = $_POST['search'];
+            }
+
+            // Fetch products from inventory_records table for the specific shop with optional search
+            $query = "SELECT product_name, profile, price, category FROM inventory_records WHERE shop_id = ? AND product_name LIKE ?";
+            $stmt = $connection->prepare($query);
+            $searchTermLike = "%" . $searchTerm . "%"; // Prepare for partial matches
+            $stmt->bind_param("is", $shop_id, $searchTermLike); // Assuming shop_id is an integer and search term is a string
+            $stmt->execute();
+            $result = $stmt->get_result();
+            ?>
+
+            <!-- Search Bar -->
+            <form method="POST" class="input-group mb-4">
+                <input type="text" class="form-control" name="search" placeholder="Search" value="<?php echo htmlspecialchars($searchTerm); ?>">
+                <button class="btn btn-lg v-2 text-light" type="submit">
+                    <i class="bi bi-search"></i>
+                </button>
+            </form>
+
+            <!-- Product List -->
+            <div class="list-group">
                 <?php
-                // Check if there are results
-                if (mysqli_num_rows($product_result) > 0) {
-                    // Loop through the results and populate the table
-                    while ($row = mysqli_fetch_assoc($product_result)) {
-                        // Determine stock status and corresponding color classes
-                        if ($row['stock_size'] <= 0) {
-                            $status = "No stock";
-                            $status_class = "text-danger"; // Red color for no stock
-                        } elseif ($row['stock_size'] < 50) {
-                            $status = "Low on stock";
-                            $status_class = "text-warning"; // Warning color (yellow/orange) for low stock
-                        } else {
-                            $status = "Full stocks";
-                            $status_class = "text-success"; // Green color for full stock
-                        }
-
-                        echo "  </td>
-                         <td><img src='{$row['profile']}' alt='Profile Picture' class= 'img-account-profile' 'img-fluid' width='150' height='150'></td>
-                        <td>{$row['product_name']}</td>
-                        <td><span class='{$status_class}'>{$status}</span></td>
-                        <td>{$row['stock_size']} in stock</td>
-                        <td>{$row['category']}</td>
-                        <td>₱ {$row['price']} .00</td>
-                        <td><a href='owner-dashboard-inventory-cleaning-products-edit.php?shop_id={$shop_id}&inventory_id={$row['inventory_id']}'><button type='button' class='btn btn-primary btn-sm'>Edit Product</button></a></td>
-                    </tr>";
+                if (mysqli_num_rows($result) > 0) {
+                    // Loop through the products and display them
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        $product_name = $row['product_name'];
+                        $profile = $row['profile']; // Assuming profile stores the path to the image
+                        $price = $row['price'];
+                        $category = $row['category'];
+                ?>
+                        <div class="list-group-item d-flex align-items-center mb-3">
+                            <img src="<?php echo $profile; ?>" class="img-fluid me-3" alt="Product Image" style="width: 50px; height: 50px;">
+                            <div class="flex-grow-1">
+                                <h6 class="mb-0"><?php echo $product_name; ?></h6>
+                                <small class="text-muted">Category: <?php echo htmlspecialchars($category); ?></small> <!-- Displaying Category -->
+                            </div>
+                            <div class="text-center me-3">
+                                <p class="mb-0">₱<?php echo number_format($price, 2); ?></p> <!-- Displaying Price -->
+                            </div>
+                            <button class="btn btn-outline-danger">
+                                <i class="bi bi-cart"></i>
+                            </button>
+                        </div>
+                <?php
                     }
                 } else {
-                    echo "<tr><td colspan='7' class='text-center'>No products found</td></tr>";
+                    // If no products are found
+                    echo "<p class='text-center'>No products available</p>";
                 }
+                // Close the statement and database connection
+                $stmt->close();
+                mysqli_close($connection);
                 ?>
-            </tbody>
-        </table>
+            </div>
+        </div>
     </main>
-
-    <?php
-    // Close the database connection
-    mysqli_close($connection);
-    ?>
 
 
     <script>

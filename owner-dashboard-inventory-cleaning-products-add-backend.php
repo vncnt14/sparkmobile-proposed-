@@ -1,54 +1,58 @@
 <?php
 session_start();
-include('config.php');
+require_once "config.php";
 
-// Check if form fields are set and not empty
-$product_name = isset($_POST['product_name']) ? $_POST['product_name'] : '';
-$description = isset($_POST['description']) ? $_POST['description'] : '';
-$category = isset($_POST['category']) ? $_POST['category'] : '';
-$item_code = isset($_POST['item_code']) ? $_POST['item_code'] : '';
-$stock_size = isset($_POST['stock_size']) ? $_POST['stock_size'] : '';
-$price = isset($_POST['price']) ? $_POST['price'] : 0.00;
-$shop_id = isset($_POST['shop_id']) ? $_POST['shop_id'] : '';
-
-// Check if a file has been uploaded
-if (isset($_FILES['photo']) && $_FILES['photo']['error'] == UPLOAD_ERR_OK) {
-    // Read the uploaded file as binary data
-    $photo = file_get_contents($_FILES['photo']['tmp_name']);
-} else {
-    $photo = null; // Set to null if no photo is uploaded
-    echo "No photo uploaded. Error code: " . $_FILES['photo']['error'];
+// Redirect to the login page if the user is not logged in
+if (!isset($_SESSION['username'])) {
+    header("Location: index.php");
+    exit;
 }
 
-// Ensure all required fields are filled
-if ($product_name && $description && $category && $item_code && $stock_size && $price && $photo) {
-    // Prepare the SQL query using prepared statements to avoid SQL injection
-    $product_query = "INSERT INTO inventory_records (shop_id, product_name, description, category, item_code, stock_size, price, photo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Get user ID from the session
+    $shop_id = $_POST['shop_id'];
+    $product_name = $_POST["product_name"];
+    $description = $_POST["description"];
+    $category = $_POST["category"];
+    $price = $_POST["price"];
+    $item_code = $_POST["item_code"];
+    $stock_size = $_POST["stock_size"];
 
-    if ($stmt = mysqli_prepare($connection, $product_query)) {
-        // Bind the parameters
-        mysqli_stmt_bind_param($stmt, 'isssiiib', $shop_id, $product_name, $description, $category, $item_code, $stock_size, $price, $photo);
-        
-        // Send the binary data as a parameter to the prepared statement
-        mysqli_stmt_send_long_data($stmt, 7, $photo); // Send photo as BLOB
+    // Handle profile picture upload
+    if (isset($_FILES['profile']['tmp_name'])) {
+        $file = $_FILES['profile']['tmp_name'];
+        $profile = addslashes(file_get_contents($_FILES['profile']['tmp_name']));
+        $profile_name = addslashes($_FILES['profile']['name']);
+        $profile_size = getimagesize($_FILES['profile']['tmp_name']);
 
-        // Execute the prepared statement
-        if (mysqli_stmt_execute($stmt)) {
-            echo "<script>alert('Product successfully added!');</script>";
-            echo "<script>window.location.href='owner-dashboard-inventory-cleaning-products.php?shop_id={$shop_id}';</script>";
+        if ($profile_size == FALSE) {
+            echo "Error: That's not an image!";
+            exit;
         } else {
-            echo "Error adding product: " . mysqli_stmt_error($stmt); // More specific error handling
+            move_uploaded_file($_FILES['profile']['tmp_name'], "uploads/" . $_FILES['profile']['name']);
+            $profile_path = "uploads/" . $_FILES['profile']['name'];
         }
-
-        // Close the statement
-        mysqli_stmt_close($stmt);
     } else {
-        echo "Error preparing query: " . mysqli_error($connection);
+        $profile_path = ''; // Set default profile path if no file uploaded
     }
-} else {
-    echo "<div class='alert alert-danger' role='alert'>Please fill in all required fields and upload a photo.</div>";
+
+    // Insert car details into the vehicles table
+    $query = "INSERT INTO inventory_records (shop_id, product_name, description, category, price, item_code, stock_size, profile) 
+              VALUES ('$shop_id', '$product_name', '$description', '$category', '$price', '$item_code', '$stock_size', '$profile_path')";
+
+    try {
+        mysqli_query($connection, $query);
+        echo '<script>alert("Product added successful!");</script>';
+        echo "<script>
+                    setTimeout(function() {
+                       window.location.href = 'owner-dashboard-inventory-cleaning-products.php?shop_id=" . $shop_id . "';
+                    }, 100); // Redirect after 1 second
+                  </script>";
+        exit;
+    } catch (Exception $e) {
+        echo "Error: " . $e->getMessage();
+    }
 }
 
-// Close the database connection
 mysqli_close($connection);
 ?>
