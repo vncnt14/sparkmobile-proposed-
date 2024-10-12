@@ -18,12 +18,12 @@ $servicename_id = $_GET['servicename_id'];
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
-$query = "SELECT * FROM users WHERE user_id = '$user_id'";
+$user_query = "SELECT * FROM users WHERE user_id = '$user_id'";
 // Execute the query and fetch the user data
-$result = mysqli_query($connection, $query);
-$userData = mysqli_fetch_assoc($result);
+$user_result = mysqli_query($connection, $user_query);
+$userData = mysqli_fetch_assoc($user_result);
 
-$product_query = "SELECT *FROM inventory_records WHERE shop_id = '$shop_id'";
+$product_query = "SELECT inventory_id, product_name, price, profile, category FROM inventory_records WHERE shop_id = '$shop_id'";
 $product_result = mysqli_query($connection, $product_query);
 
 
@@ -194,6 +194,10 @@ $product_result = mysqli_query($connection, $product_query);
         object-fit: cover;
         border-radius: 50%;
     }
+
+    .star-icon {
+        color: orangered;
+    }
 </style>
 
 <body>
@@ -243,7 +247,7 @@ $product_result = mysqli_query($connection, $product_query);
 
 
                 <div class=" welcome fw-bold px-3 mb-3">
-                    <h5 class="text-center">Welcome back  <?php echo $userData['firstname']; ?> !</h5>
+                    <h5 class="text-center">Welcome back <?php echo $userData['firstname']; ?> !</h5>
                 </div>
                 <div class="ms-3" id="dateTime"></div>
                 </li>
@@ -364,15 +368,15 @@ $product_result = mysqli_query($connection, $product_query);
     <main>
         <div class="container my-4 text-dark">
             <!-- Top Navigation Bar -->
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <a href="csprocess3.3.php?shop_id=<?php echo $shop_id; ?>&vehicle_id=<?php echo $vehicle_id; ?>&servicename_id=<?php echo $servicename_id; ?>&user_id=<?php echo $user_id; ?>"><button class="btn btn-primary mb-5">
+            <div class="d-flex justify-content-between align-items-center">
+                <a href="csprocess3.3.php?shop_id=<?php echo $shop_id; ?>&vehicle_id=<?php echo $vehicle_id; ?>&servicename_id=<?php echo $servicename_id; ?>&user_id=<?php echo $user_id; ?>">
+                    <button class="btn btn-primary mb-5">
                         <i class="bi bi-arrow-left"></i> <!-- Back Icon -->
-                        Back</button></a>
-                <h2 class="mb-4">Cleaning Products</h2>
-                <button class="btn btn-lg v-2 text-light">
-                    <i class="bi bi-cart"></i> <!-- Cart Icon -->
-                </button>
+                        Back
+                    </button>
+                </a>
             </div>
+            <h2 class="text-center">Cleaning Products</h2>
 
             <?php
             // Database connection
@@ -388,58 +392,132 @@ $product_result = mysqli_query($connection, $product_query);
             }
 
             // Fetch products from inventory_records table for the specific shop with optional search
-            $query = "SELECT product_name, profile, price, category FROM inventory_records WHERE shop_id = ? AND product_name LIKE ?";
+            $query = "SELECT inventory_id, product_name, profile, price, category FROM inventory_records WHERE shop_id = ? AND product_name LIKE ?";
             $stmt = $connection->prepare($query);
             $searchTermLike = "%" . $searchTerm . "%"; // Prepare for partial matches
             $stmt->bind_param("is", $shop_id, $searchTermLike); // Assuming shop_id is an integer and search term is a string
             $stmt->execute();
-            $result = $stmt->get_result();
+            $result = $stmt->get_result(); // Get the result set from the prepared statement
             ?>
 
             <!-- Search Bar -->
             <form method="POST" class="input-group mb-4">
-                <input type="text" class="form-control" name="search" placeholder="Search" value="<?php echo htmlspecialchars($searchTerm); ?>">
+                <input type="text" class="form-control" name="search" placeholder="Search Cleaning Products" value="<?php echo htmlspecialchars($searchTerm); ?>">
                 <button class="btn btn-lg v-2 text-light" type="submit">
                     <i class="bi bi-search"></i>
                 </button>
             </form>
 
             <!-- Product List -->
-            <div class="list-group">
-                <?php
-                if (mysqli_num_rows($result) > 0) {
-                    // Loop through the products and display them
-                    while ($row = mysqli_fetch_assoc($result)) {
-                        $product_name = $row['product_name'];
-                        $profile = $row['profile']; // Assuming profile stores the path to the image
-                        $price = $row['price'];
-                        $category = $row['category'];
-                ?>
-                        <div class="list-group-item d-flex align-items-center mb-3">
-                            <img src="<?php echo $profile; ?>" class="img-fluid me-3" alt="Product Image" style="width: 50px; height: 50px;">
-                            <div class="flex-grow-1">
-                                <h6 class="mb-0"><?php echo $product_name; ?></h6>
-                                <small class="text-muted">Category: <?php echo htmlspecialchars($category); ?></small> <!-- Displaying Category -->
-                            </div>
-                            <div class="text-center me-3">
-                                <p class="mb-0">₱<?php echo number_format($price, 2); ?></p> <!-- Displaying Price -->
-                            </div>
-                            <button class="btn btn-outline-danger">
-                                <i class="bi bi-cart"></i>
-                            </button>
-                        </div>
-                <?php
+            <div class="container my-4 text-dark">
+                <div class="list-group">
+                    <?php
+                    // Check if there are any rows returned
+                    if ($result->num_rows > 0) {
+                        while ($productData = $result->fetch_assoc()) {
+                            $inventory_id = $productData['inventory_id']; // Get inventory_id from fetched data
+                            $product_name = $productData['product_name'];
+                            $price = $productData['price'];
+                            $profile = $productData['profile'];
+                            $category = $productData['category'];
+
+                            // Display the data as needed
+                            echo '<div class="list-group-item d-flex align-items-center mb-3" data-inventory-id="' . $inventory_id . '" data-bs-toggle="modal" data-bs-target="#productModal" ';
+                            echo 'data-product-name="' . htmlspecialchars($product_name) . '" ';
+                            echo 'data-price="' . htmlspecialchars($price) . '" ';
+                            echo 'data-category="' . htmlspecialchars($category) . '" ';
+                            echo 'data-profile="' . htmlspecialchars($profile) . '">';
+                            echo '<img src="' . htmlspecialchars($profile) . '" class="img-fluid me-3" alt="Product Image" style="width: 50px; height: 50px;">';
+                            echo '<div class="flex-grow-1"><h6 class="mb-0">' . htmlspecialchars($product_name) . '</h6>';
+                            echo '<small class="text-muted">Category: ' . htmlspecialchars($category) . '</small></div>';
+                            echo '<div class="text-center me-3"><p class="mb-0">₱' . number_format($price, 2) . '</p></div>';
+                            echo '<button class="btn btn-outline-danger"><i class="bi bi-eye"></i> View Product</button>';
+                            echo '</div>';
+                        }
+                    } else {
+                        echo "<p class='text-center'>No products available</p>";
                     }
-                } else {
-                    // If no products are found
-                    echo "<p class='text-center'>No products available</p>";
-                }
-                // Close the statement and database connection
-                $stmt->close();
-                mysqli_close($connection);
-                ?>
+                    ?>
+                </div>
             </div>
+
+            <!-- Modal Structure -->
+            <form action="user-dashboard-select-products-backend.php" method="POST" enctype="multipart/form-data">
+                <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="productModalLabel">Product Details</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" name="vehicle_id" id="vehicle_id" value="<?php echo $vehicle_id; ?>">
+                                <input type="hidden" name="servicename_id" id="servicename_id" value="<?php echo $servicename_id; ?>">
+                                <input type="hidden" name="user_id" id="user_id" value="<?php echo $_SESSION['user_id']; ?>">
+                                <input type="hidden" name="shop_id" id="shop_id" value="<?php echo $shop_id; ?>">
+                                <img id="modalProfile" src="" alt="Product Image" class="img-fluid mb-3" style="width: 100%;">
+                                <hr>
+                                <h6 id="modalProductName"></h6>
+                                <i class="bi bi-star-fill star-icon"></i>
+                                <i class="bi bi-star-fill star-icon"></i>
+                                <i class="bi bi-star-fill star-icon"></i>
+                                <i class="bi bi-star-fill star-icon"></i>
+                                <i class="bi bi-star-fill star-icon"></i>
+                                <p class="mt-3" id="modalCategory"></p>
+
+                                <p id="modalPrice"></p>
+
+                                <input type="hidden" id="hiddenProductName" name="product_name">
+                                <input type="hidden" id="hiddenPrice" name="product_price">
+                                <input type="hidden" id="hiddenCategory" name="category">
+                                <input type="hidden" id="hiddenProfile" name="profile">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <!-- JavaScript to populate the modal dynamically -->
+            <script>
+                // This will run when the modal is shown
+                var productModal = document.getElementById('productModal');
+                productModal.addEventListener('show.bs.modal', function(event) {
+                    var button = event.relatedTarget; // Button that triggered the modal
+
+                    // Extract the custom data attributes from the clicked element
+                    
+                    var productName = button.getAttribute('data-product-name');
+                    var price = button.getAttribute('data-price');
+                    var category = button.getAttribute('data-category');
+                    var profile = button.getAttribute('data-profile');
+
+                    // Update the modal's content
+                    var modalProfile = productModal.querySelector('#modalProfile');
+                    var modalProductName = productModal.querySelector('#modalProductName');
+                    var modalCategory = productModal.querySelector('#modalCategory');
+                    var modalPrice = productModal.querySelector('#modalPrice');
+                   
+
+                    modalProfile.src = profile; // Set the profile image
+                    modalProductName.textContent = productName; // Set product name
+                    modalCategory.textContent = 'Category: ' + category; // Set category
+                    modalPrice.textContent = '₱' + parseFloat(price).toFixed(2); // Set price
+                    
+
+                    // Set hidden inputs
+                    document.getElementById('hiddenProductName').value = productName;
+                    document.getElementById('hiddenPrice').value = price;
+                    document.getElementById('hiddenCategory').value = category;
+                    document.getElementById('hiddenProfile').value = profile;
+                });
+            </script>
+
         </div>
+
     </main>
 
 

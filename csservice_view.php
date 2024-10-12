@@ -13,13 +13,14 @@ if (!isset($_SESSION['user_id'])) {
 // Fetch user information based on ID
 $userID = $_SESSION['user_id'];
 $shop_id = $_GET['shop_id'];
+$servicename_id = $_GET['servicename_id'];
 $vehicle_id = $_GET['vehicle_id']; // Retrieve vehicle_id from the URL
 $_SESSION['vehicle_id'] = $vehicle_id; // Store vehicle_id in the session
 
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
-$query = "SELECT * FROM vehicles WHERE vehicle_id = '$vehicle_id'";
+$query = "SELECT *FROM vehicles WHERE vehicle_id = '$vehicle_id'";
 // Execute the query and fetch the user data
 $result = mysqli_query($connection, $query);
 $vehicleData = mysqli_fetch_assoc($result);
@@ -30,9 +31,10 @@ $query1 = "SELECT * FROM users WHERE user_id = $userID";
 $result1 = mysqli_query($connection, $query1);
 $userData = mysqli_fetch_assoc($result1);
 
-$service_query = "SELECT * FROM service_details WHERE user_id = $userID and vehicle_id = '$vehicle_id'";
+$service_query = "SELECT selected_id, product_name, product_price, status, services  FROM service_details WHERE user_id = $userID";
 $result2 = mysqli_query($connection, $service_query);
 $serviceData = mysqli_fetch_assoc($result2);
+
 
 $servicedone_query = "SELECT * FROM finish_jobs WHERE user_id = $userID and vehicle_id = '$vehicle_id'";
 $result3 = mysqli_query($connection, $servicedone_query);
@@ -484,6 +486,7 @@ mysqli_close($connection);
               }
               ?>
             </div>
+
             <div class="col-md-4">
               <h5>Service Duration</h5>
               <?php
@@ -516,10 +519,63 @@ mysqli_close($connection);
               }
               ?>
             </div>
+
+          </div>
+          <hr>
+          <div class="row">
+
+            <div class="col-md-4 mb-3">
+              <h5>Cleaning Products</h5>
+              <?php
+              // Display Services
+              mysqli_data_seek($result2, 0);
+              $hasData = false; // Flag to track if data is present
+
+              while ($serviceData = mysqli_fetch_assoc($result2)) {
+                echo "<p>" . htmlspecialchars($serviceData['product_name']) . " </p>";
+
+
+                $hasData = true; // Set flag to true if data is found
+              }
+
+              if (!$hasData) {
+                echo "<p>NA</p>"; // Display NA if no data is found
+                // Display button if there are no products
+              }
+              ?>
+
+
+            </div>
+            <div class="col-md-4 ">
+              <h5>Product Price</h5>
+              <?php
+              // Display Services
+              mysqli_data_seek($result2, 0);
+              $hasData = false; // Flag to track if data is present
+
+              while ($serviceData = mysqli_fetch_assoc($result2)) {
+                echo "<p>₱ " . htmlspecialchars($serviceData['product_price']) . ".00</p>";
+
+
+                $hasData = true; // Set flag to true if data is found
+              }
+
+              if (!$hasData) {
+                echo "<p>NA</p>"; // Display NA if no data is found
+                // Display button if there are no products
+                echo '<button class="btn btn-primary" onclick="window.location.href=\'your-redirection-page.php\'">Add Products</button>';
+              }
+              ?>
+
+
+            </div>
           </div>
         </form>
+        <hr>
+
 
         <a href="csprocess3-4.php?vehicle_id=<?php echo $vehicleData['vehicle_id']; ?>&shop_id=<?php echo $shop_id; ?>"><button type="button" class="btn btn-primary btn-md">Add Services</button></a>
+        <a href="user-dashboard-select-products.php?vehicle_id=<?php echo $vehicleData['vehicle_id']; ?>&shop_id=<?php echo $shop_id; ?>&servicename_id=<?php echo $servicename_id; ?>&user_id=<?php echo $userData['user_id']; ?>"><button type="button" class="btn v-2 text-light btn-md">Add Cleaning Products</button></a>
         <a href="cspayment.php?vehicle_id=<?php echo $vehicle_id; ?>" id="proceedButton"><button type="button" class="btn btn-secondary">PROCEED</button></a>
       </div>
 

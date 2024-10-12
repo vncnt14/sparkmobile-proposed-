@@ -32,7 +32,7 @@ foreach($_POST['selected_services'] as $service_id) {
     $totalPrice += $price;
 
     // Insert each selected service into the database
-    $query = "INSERT INTO service_details (user_id, vehicle_id, servicename_id, services, price, total_price, status, slotNumber, is_deleted) VALUES ('$user_id', '$vehicle_id', '$servicename_id', '$service', '$price', '$totalPrice', '$status','$slotNumber', $is_deleted)";
+    $query = "INSERT INTO service_details (user_id, vehicle_id, servicename_id, shop_id, services, price, total_price, status, slotNumber, is_deleted) VALUES ('$user_id', '$shop_id', '$vehicle_id', '$servicename_id', '$service', '$price', '$totalPrice', '$status','$slotNumber', $is_deleted)";
     $result = mysqli_query($connection, $query);
 
     // Check if the insertion was successful
@@ -42,10 +42,9 @@ foreach($_POST['selected_services'] as $service_id) {
     }
 }
 
-        
         if($result) {
             // Redirect to the view page
-            header("Location: csservice_view.php?user_id=$user_id&vehicle_id=$vehicle_id&shop_id=$shop_id");
+            header("Location: csservice_view.php?user_id=$user_id&vehicle_id=$vehicle_id&shop_id=$shop_id&servicename_id=$servicename_id");
             exit; // Make sure to exit after redirection
         } else {
             // Handle insertion error

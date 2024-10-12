@@ -512,29 +512,18 @@ mysqli_close($connection);
             </div>
           </div>
 
-          <!-- Modal -->
-          <div class="modal fade text-dark" id="redirectModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h4 class="modal-title" id="logoutModalLabel">Add-ons</h4>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <h4>Do you want to add cleaning products to your vehicle?</h4>
-                </div>
-                <div class="modal-footer">
-                  <a href="user-dashboard-select-products.php?shop_id=<?php echo $shop_id; ?>&vehicle_id=<?php echo $vehicle_id; ?>&servicename_id=<?php echo $servicename_id; ?>&user_id=<?php echo $user_id; ?>">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Yes</button></a>
-                  <a href=""><button type="submit" class="btn btn-danger">No</button></a>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <!-- Corrected Submit Button to Trigger Modal -->
-          <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal" data-bs-target="#redirectModal">Submit</button>
+          <button type="button" class="btn btn-primary btn-md" id="noBtn">Submit</button>
         </form>
+        <script>
+          document.getElementById('noBtn').addEventListener('click', function() {
+            // Keep the original action to submit to the current form processing page (csselectedservice.php)
+            document.getElementById('serviceForm').action = "csselectedservice.php";
+
+            // Submit the form
+            document.getElementById('serviceForm').submit();
+          });
+        </script>
 
 
       </div>

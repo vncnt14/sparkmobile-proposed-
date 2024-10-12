@@ -237,6 +237,29 @@ $shop_result = mysqli_query($connection, $shop_query);
         margin-left: 12px;
         color: #666;
     }
+    .card {
+        width: 18rem; /* Set a smaller width for the card */
+        height: auto; /* Let the height adjust based on content */
+        margin: 0 auto; /* Center the card horizontally if needed */
+    }
+    
+    .card-img-top {
+        height: 200px; /* Adjust the height of the image */
+        object-fit: cover; /* Crop the image if necessary */
+    }
+    
+    .card-body {
+        padding: 10px; /* Adjust padding inside the card */
+    }
+    
+    .card-title {
+        font-size: 1.2rem; /* Adjust the title font size */
+    }
+    
+    .btn {
+        padding: 5px 10px; /* Adjust button size */
+        font-size: 0.9rem; /* Reduce button font size */
+    }
 </style>
 
 
@@ -472,6 +495,7 @@ $shop_result = mysqli_query($connection, $shop_query);
                     echo '<ul class="list-group">';
                     while ($row = $result->fetch_assoc()) {
                         echo '<div class="list-group-item">';
+                        echo '<a href="user-dashboard-select-shop.php?shop_id=' . urlencode($row["shop_id"]) . '" class="text-decoration-none list-group-item-action">';
                         echo '<h5>' . htmlspecialchars($row["shop_name"]) . '</h5>';
                         echo '<p>' . htmlspecialchars($row["barangay"]) . '</p>';
                         echo '</div>';

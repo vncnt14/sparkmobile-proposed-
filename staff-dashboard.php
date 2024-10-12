@@ -23,20 +23,8 @@ $query = "SELECT * FROM users WHERE user_id = '$userID'";
 $result = mysqli_query($connection, $query);
 $userData = mysqli_fetch_assoc($result);
 
-
-
-$staff_query = "SELECT ss.*, ss.selected_id, ss.servicename_id, ss.vehicle_id,
-ss.services, ss.price, ss.user_id, u.firstname, u.lastname, ss.slotNumber, sn.service_name
-FROM service_details ss
-INNER JOIN users u ON u.user_id = ss.user_id
-INNER JOIN service_names sn ON sn.servicename_id = ss.servicename_id
-WHERE ss.is_deleted = '0'
-ORDER BY ss.selected_id ASC";
-
-// Ordering by first name in ascending order
+$staff_query = "SELECT services, price, slotNumber, selected_id, servicename_id, user_id, product_name, product_price FROM service_details WHERE is_deleted = '0'";
 $staff_result = mysqli_query($connection, $staff_query);
-
-
 
 // Close the database connection
 mysqli_close($connection);
@@ -321,11 +309,11 @@ mysqli_close($connection);
 
     <main>
         <div class="container py-4 text-dark">
-            <h2 class="text-center"><strong><i></i>SERVICES</strong></h2>
+            <h2 class="text-center"><strong>SERVICES</strong></h2>
             <p class="text-center">Click the button to proceed cleaning</p>
             <div class="row mt-4">
                 <?php
-                if ($result) {
+                if ($staff_result) {
                     // Step 1: Create an array to group services by slotNumber
                     $groupedServices = [];
 
@@ -337,15 +325,19 @@ mysqli_close($connection);
                             $groupedServices[$slotNumber] = [
                                 'services' => [],
                                 'prices' => [],
+                                'products' => [], // Array to hold product names
+                                'product_prices' => [], // Array to hold product prices
                                 'selected_id' => $row['selected_id'], // Store selected_id
                                 'servicename_id' => $row['servicename_id'], // Store servicename_id
                                 'user_id' => $row['user_id'], // Store user_id
                             ];
                         }
 
-                        // Add service and price to the group
-                        $groupedServices[$slotNumber]['services'][] = isset($row['service_name']) ? $row['service_name'] : 'N/A';
+                        // Add service, price, product name, and product price to the group
+                        $groupedServices[$slotNumber]['services'][] = isset($row['services']) ? $row['services'] : 'N/A';
                         $groupedServices[$slotNumber]['prices'][] = isset($row['price']) ? $row['price'] : 'N/A';
+                        $groupedServices[$slotNumber]['products'][] = isset($row['product_name']) ? $row['product_name'] : 'N/A';
+                        $groupedServices[$slotNumber]['product_prices'][] = isset($row['product_price']) ? $row['product_price'] : 'N/A';
                     }
 
                     // Step 3: Track whether the first slot's button has been rendered
@@ -360,42 +352,82 @@ mysqli_close($connection);
                                     <h5 class="card-title text-center">
                                         Slot Number: <?php echo $slotNumber; ?>
                                     </h5>
-                                    <p class="card-text">
-                                        <strong>Services:</strong><br>
-                                        <?php
-                                        // Loop through services and display them
-                                        foreach ($slotData['services'] as $index => $service) {
-                                            echo $service . '<br>';
-                                        }
-                                        ?>
-                                    </p>
-                                    <p class="card-text">
-                                        <strong>Prices:</strong><br>
-                                        <?php
-                                        // Loop through prices and display them
-                                        foreach ($slotData['prices'] as $index => $price) {
-                                            echo '&#x20B1; ' . $price . '<br>';
-                                        }
-                                        ?>
-                                    </p>
 
+                                    <!-- Row for Services and Prices -->
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p class="card-text">
+                                                <strong>Services:</strong><br>
+                                                <?php
+                                                foreach ($slotData['services'] as $service) {
+                                                    echo $service . '<br>';
+                                                }
+                                                ?>
+                                            </p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="card-text">
+                                                <strong>Prices:</strong><br>
+                                                <?php
+                                                foreach ($slotData['prices'] as $price) {
+                                                    echo '&#x20B1; ' . $price . '<br>';
+                                                }
+                                                ?>
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Row for Products and Product Prices -->
+                                    <div class="row">
+                                        <div class="col-md-6 mt-3 mb-3">
+                                            <p class="card-text">
+                                                <strong>Products:</strong><br>
+                                                <?php
+                                                if (!empty($slotData['products'])) {
+                                                    foreach ($slotData['products'] as $product_name) {
+                                                        echo $product_name . '<br>';
+                                                    }
+                                                } else {
+                                                    echo 'No cleaning products add-ons';
+                                                }
+                                                ?>
+                                            </p>
+                                        </div>
+                                        <div class="col-md-6 mt-3 mb-3">
+                                            <p class="card-text">
+                                                <strong>Product Prices:</strong><br>
+                                                <?php
+                                                if (!empty($slotData['product_prices'])) {
+                                                    foreach ($slotData['product_prices'] as $product_price) {
+                                                        // Check if price exists before showing the Peso sign
+                                                        if (!empty($product_price)) {
+                                                            echo '&#x20B1; ' . $product_price . '.00<br>';
+                                                        } else {
+                                                            echo ''; // No price data, display nothing
+                                                        }
+                                                    }
+                                                } else {
+                                                    echo ''; // Optional: show a message like 'No prices' if needed
+                                                }
+                                                ?>
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Conditional Button Rendering -->
                                     <?php if (!$isFirstSlotRendered) { ?>
-                                        <!-- First slot, render an enabled button -->
                                         <a href="staff-dashboard-view-details.php?selected_id=<?php echo $slotData['selected_id']; ?>&servicename_id=<?php echo $slotData['servicename_id']; ?>&user_id=<?php echo $slotData['user_id']; ?>"
                                             class="btn btn-primary w-100">
                                             View Details
                                         </a>
-                                        <?php
-                                        // Mark that the first slot's button has been rendered
-                                        $isFirstSlotRendered = true;
-                                        ?>
+                                        <?php $isFirstSlotRendered = true; ?>
                                     <?php } else { ?>
-                                        <!-- All subsequent slots, render a disabled button -->
                                         <button class="btn btn-secondary w-100" disabled>
                                             View Details
                                         </button>
                                     <?php } ?>
                                 </div>
+
                             </div>
                         </div>
                 <?php
