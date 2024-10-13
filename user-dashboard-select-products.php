@@ -11,25 +11,22 @@ if (!isset($_SESSION['username'])) {
 }
 
 // Fetch user information based on ID
+$userID = $_SESSION['user_id'];
 $user_id = $_GET['user_id'];
 $vehicle_id = $_GET['vehicle_id'];
 $shop_id = $_GET['shop_id'];
 $servicename_id = $_GET['servicename_id'];
+$selected_id = $_GET['selected_id'];
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
-$user_query = "SELECT * FROM users WHERE user_id = '$user_id'";
+$user_query = "SELECT * FROM users WHERE user_id = '$userID'";
 // Execute the query and fetch the user data
 $user_result = mysqli_query($connection, $user_query);
 $userData = mysqli_fetch_assoc($user_result);
 
-$product_query = "SELECT inventory_id, product_name, price, profile, category FROM inventory_records WHERE shop_id = '$shop_id'";
+$product_query = "SELECT *FROM inventory_records WHERE shop_id = '$shop_id'";
 $product_result = mysqli_query($connection, $product_query);
-
-
-
-
-
 
 ?>
 
@@ -369,10 +366,10 @@ $product_result = mysqli_query($connection, $product_query);
         <div class="container my-4 text-dark">
             <!-- Top Navigation Bar -->
             <div class="d-flex justify-content-between align-items-center">
-                <a href="csprocess3.3.php?shop_id=<?php echo $shop_id; ?>&vehicle_id=<?php echo $vehicle_id; ?>&servicename_id=<?php echo $servicename_id; ?>&user_id=<?php echo $user_id; ?>">
+                <a href="csservice_view.php?shop_id=<?php echo $shop_id; ?>&vehicle_id=<?php echo $vehicle_id; ?>&servicename_id=<?php echo $servicename_id; ?>&user_id=<?php echo $user_id; ?>">
                     <button class="btn btn-primary mb-5">
                         <i class="bi bi-arrow-left"></i> <!-- Back Icon -->
-                        Back
+                        Cancel
                     </button>
                 </a>
             </div>
@@ -392,7 +389,7 @@ $product_result = mysqli_query($connection, $product_query);
             }
 
             // Fetch products from inventory_records table for the specific shop with optional search
-            $query = "SELECT inventory_id, product_name, profile, price, category FROM inventory_records WHERE shop_id = ? AND product_name LIKE ?";
+            $query = "SELECT inventory_id, product_name, profile, price, category, stock_size FROM inventory_records WHERE shop_id = ? AND product_name LIKE ?";
             $stmt = $connection->prepare($query);
             $searchTermLike = "%" . $searchTerm . "%"; // Prepare for partial matches
             $stmt->bind_param("is", $shop_id, $searchTermLike); // Assuming shop_id is an integer and search term is a string
@@ -420,12 +417,14 @@ $product_result = mysqli_query($connection, $product_query);
                             $price = $productData['price'];
                             $profile = $productData['profile'];
                             $category = $productData['category'];
+                            $stock_size = $productData['stock_size'];
 
                             // Display the data as needed
                             echo '<div class="list-group-item d-flex align-items-center mb-3" data-inventory-id="' . $inventory_id . '" data-bs-toggle="modal" data-bs-target="#productModal" ';
                             echo 'data-product-name="' . htmlspecialchars($product_name) . '" ';
                             echo 'data-price="' . htmlspecialchars($price) . '" ';
                             echo 'data-category="' . htmlspecialchars($category) . '" ';
+                            echo 'data-stock_size="' . htmlspecialchars($stock_size) . '" ';
                             echo 'data-profile="' . htmlspecialchars($profile) . '">';
                             echo '<img src="' . htmlspecialchars($profile) . '" class="img-fluid me-3" alt="Product Image" style="width: 50px; height: 50px;">';
                             echo '<div class="flex-grow-1"><h6 class="mb-0">' . htmlspecialchars($product_name) . '</h6>';
@@ -442,6 +441,7 @@ $product_result = mysqli_query($connection, $product_query);
             </div>
 
             <!-- Modal Structure -->
+            <!-- Modal Structure -->
             <form action="user-dashboard-select-products-backend.php" method="POST" enctype="multipart/form-data">
                 <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-sm">
@@ -455,7 +455,8 @@ $product_result = mysqli_query($connection, $product_query);
                                 <input type="hidden" name="servicename_id" id="servicename_id" value="<?php echo $servicename_id; ?>">
                                 <input type="hidden" name="user_id" id="user_id" value="<?php echo $_SESSION['user_id']; ?>">
                                 <input type="hidden" name="shop_id" id="shop_id" value="<?php echo $shop_id; ?>">
-                                <img id="modalProfile" src="" alt="Product Image" class="img-fluid mb-3" style="width: 100%;">
+                                <input type="hidden" name="selected_id" id="selected_id" value="<?php echo $selected_id; ?>">
+                                <img id="modalProfile" src="" alt="Product Image" class="img-fluid mb-2" style="width: 100%;">
                                 <hr>
                                 <h6 id="modalProductName"></h6>
                                 <i class="bi bi-star-fill star-icon"></i>
@@ -463,58 +464,98 @@ $product_result = mysqli_query($connection, $product_query);
                                 <i class="bi bi-star-fill star-icon"></i>
                                 <i class="bi bi-star-fill star-icon"></i>
                                 <i class="bi bi-star-fill star-icon"></i>
-                                <p class="mt-3" id="modalCategory"></p>
+                                <p class="mt-2" id="modalCategory"></p>
+
+                                <!-- Updated quantity input group -->
+                                <div class="input-group quantity-input mb-3">
+                                    <button class="btn btn-danger" type="button" id="button-minus">-</button>
+                                    <input type="number" class="form-control text-center" id="quantity-input" name="quantity" value="1" min="1" max="99" style="width: 50px; height: 40px; border-radius: 10px; margin-top: 20px;">
+                                    <button class="btn btn-danger" type="button" id="button-plus">+</button>
+                                </div>
 
                                 <p id="modalPrice"></p>
+                                <p id="modalStock"></p> <!-- Display stock size here -->
 
                                 <input type="hidden" id="hiddenProductName" name="product_name">
+                                <input type="hidden" id="hiddenInventoryId" name="inventory_id">
                                 <input type="hidden" id="hiddenPrice" name="product_price">
                                 <input type="hidden" id="hiddenCategory" name="category">
                                 <input type="hidden" id="hiddenProfile" name="profile">
+                                <input type="hidden" id="hiddenStock" name="stock_size"> <!-- Hidden input for stock_size -->
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Add to Cart</button>
+                                <button type="submit" class="btn btn-primary">Buy Now</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </form>
 
-            <!-- JavaScript to populate the modal dynamically -->
+
             <script>
-                // This will run when the modal is shown
-                var productModal = document.getElementById('productModal');
-                productModal.addEventListener('show.bs.modal', function(event) {
-                    var button = event.relatedTarget; // Button that triggered the modal
+                document.getElementById('button-minus').addEventListener('click', function() {
+                    var quantityInput = document.getElementById('quantity-input');
+                    var currentValue = parseInt(quantityInput.value);
 
-                    // Extract the custom data attributes from the clicked element
-                    
-                    var productName = button.getAttribute('data-product-name');
-                    var price = button.getAttribute('data-price');
-                    var category = button.getAttribute('data-category');
-                    var profile = button.getAttribute('data-profile');
+                    // Decrease the value, but prevent going below 1
+                    if (currentValue > 1) {
+                        quantityInput.value = currentValue - 1;
+                    }
+                });
 
-                    // Update the modal's content
-                    var modalProfile = productModal.querySelector('#modalProfile');
-                    var modalProductName = productModal.querySelector('#modalProductName');
-                    var modalCategory = productModal.querySelector('#modalCategory');
-                    var modalPrice = productModal.querySelector('#modalPrice');
-                   
+                document.getElementById('button-plus').addEventListener('click', function() {
+                    var quantityInput = document.getElementById('quantity-input');
+                    var currentValue = parseInt(quantityInput.value);
 
-                    modalProfile.src = profile; // Set the profile image
-                    modalProductName.textContent = productName; // Set product name
-                    modalCategory.textContent = 'Category: ' + category; // Set category
-                    modalPrice.textContent = '₱' + parseFloat(price).toFixed(2); // Set price
-                    
-
-                    // Set hidden inputs
-                    document.getElementById('hiddenProductName').value = productName;
-                    document.getElementById('hiddenPrice').value = price;
-                    document.getElementById('hiddenCategory').value = category;
-                    document.getElementById('hiddenProfile').value = profile;
+                    // Increase the value, but prevent exceeding 99
+                    if (currentValue < 99) {
+                        quantityInput.value = currentValue + 1;
+                    }
                 });
             </script>
+
+            <!-- JavaScript to populate the modal dynamically -->
+            <script>
+    // This will run when the modal is shown
+    var productModal = document.getElementById('productModal');
+    productModal.addEventListener('show.bs.modal', function(event) {
+        var button = event.relatedTarget; // Button that triggered the modal
+
+        // Extract the custom data attributes from the clicked element
+        var productName = button.getAttribute('data-product-name');
+        var productInventoryId = button.getAttribute('data-inventory-id'); // Get the inventory ID
+        var price = button.getAttribute('data-price');
+        var category = button.getAttribute('data-category');
+        var profile = button.getAttribute('data-profile');
+        var stock_size = button.getAttribute('data-stock_size'); // Get the stock size
+
+        // Update the modal's content
+        var modalProfile = productModal.querySelector('#modalProfile');
+        var modalProductName = productModal.querySelector('#modalProductName');
+        var modalCategory = productModal.querySelector('#modalCategory');
+        var modalPrice = productModal.querySelector('#modalPrice');
+        var modalStock = productModal.querySelector('#modalStock');
+
+        // Set the values in the modal
+        modalProfile.src = profile; // Set the profile image
+        modalProductName.textContent = productName; // Set product name
+        modalCategory.textContent = 'Category: ' + category; // Set category
+        modalPrice.textContent = '₱' + parseFloat(price).toFixed(2); // Set price
+        modalStock.textContent = 'Available Stock: ' + stock_size; // Display stock size
+
+        // Set hidden inputs
+        document.getElementById('hiddenProductName').value = productName;
+        document.getElementById('hiddenPrice').value = price;
+        document.getElementById('hiddenCategory').value = category;
+        document.getElementById('hiddenProfile').value = profile;
+        document.getElementById('hiddenStock').value = stock_size; // Set stock size
+
+        // Set inventory ID in a hidden input field (if needed)
+        document.getElementById('hiddenInventoryId').value = productInventoryId; // Make sure you have this hidden input in your form
+    });
+</script>
+
 
         </div>
 

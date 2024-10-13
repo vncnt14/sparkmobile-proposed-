@@ -2,7 +2,7 @@
 session_start();
 
 // Include database connection file
-include('config.php');// You'll need to replace this with your actual database connection code
+include('config.php'); // You'll need to replace this with your actual database connection code
 
 // Redirect to the login page if the user is not logged in
 if (!isset($_SESSION['username'])) {
@@ -25,13 +25,14 @@ $userData = mysqli_fetch_assoc($result);
 
 
 
-$query = "SELECT sd.*, sn.service_name, co.firstname, co.lastname, v.vehicle_id
+$finish_query = "SELECT sd.*, sn.service_name, co.firstname, co.lastname, v.vehicle_id, sd.total_price
           FROM finish_jobs sd
           INNER JOIN service_names sn ON sd.servicename_id = sn.servicename_id
           INNER JOIN users co ON sd.user_id = co.user_id
           INNER JOIN vehicles v ON sd.vehicle_id = v.vehicle_id WHERE is_deleted = '0'";
 // Ordering by first name in ascending order
-$result = mysqli_query($connection, $query);
+$finish_result = mysqli_query($connection, $finish_query);
+$finisData = mysqli_fetch_assoc($finish_result);
 
 
 
@@ -250,7 +251,7 @@ mysqli_close($connection);
 
 
                 <div class=" welcome fw-bold px-3 mb-3">
-                    <h5 class="text-center">Welcome back  <?php echo $userData['firstname']; ?> !</h5>
+                    <h5 class="text-center">Welcome back <?php echo $userData['firstname']; ?> !</h5>
                 </div>
                 <div class="ms-3" id="dateTime"></div>
                 </li>
@@ -296,73 +297,89 @@ mysqli_close($connection);
     </div>
     <!-- main content -->
     <main>
-      
-      </div><!-- /span-3 -->
-      <div class="col-md-9 text-dark ms-5">   	
-        <!-- column 2 -->	
-        <h2><strong><i></i>Payments</strong></h2> 
-        <p>Click the button in the action column to view the payment details.</p>    
-      <div class="row"></div>
-              
-      <table class="table table-bordered border-gray">
-            <thead class="v-2 text-light">
-                <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Services</th>
-                    <th scope="col">Price(&#x20B1;)</th>
-                    <th scope="col-md-4">Action</th>
-                </tr>
-            </thead>
-          <tbody>
-            <?php
-              if ($result) {
-                  // Group the data by user using an associative array
-                  $userData = array();
-                  foreach ($result as $row) {
-                      $userId = $row['user_id'];
-                      if (!isset($userData[$userId])) {
-                          $userData[$userId] = array(
-                              'firstname' => $row['firstname'],
-                              'lastname' => $row['lastname'],
-                              'services' => array(),
-                              'totalPrice' => 0
-                          );
-                      }
 
-                      // Add the service and price to the user's data
-                      $userData[$userId]['services'][] = $row['services'];
-                      $userData[$userId]['totalPrice'] += $row['total_price'];
-                  }
+        </div><!-- /span-3 -->
+        <div class="col-md-9 text-dark ms-5">
+            <!-- column 2 -->
+            <h2><strong><i></i>Payments</strong></h2>
+            <p>Click the button in the action column to view the payment details.</p>
+            <div class="row">
 
-                  // Output the data in a single row for each user
-                  foreach ($userData as $userId => $user) {
-                      echo '<tr>';
-                      echo '<td>' . $user['firstname'] . ' ' . $user['lastname'] . '</td>';
-                      echo '<td>';
-                      foreach ($user['services'] as $service) {
-                          echo $service . '<br>';
-                      }
-                      echo '</td>';
-                      echo '<td>' . number_format($user['totalPrice'], 2) . '</td>'; // Format total price with ".00"
-                      echo '<td><a href="cashier-dashboard-payment-compute.php?user_id=' . $userId . '" class="btn btn-primary">View Details</a></td>'; // Button for viewing details
-                      echo '</tr>';
-                  }
-              } else {
-                  echo '<tr><td colspan="4">Error: No data available</td></tr>';
-              }
-            ?>
+                <table class="table table-bordered border-gray">
+                    <thead class="v-2 text-light">
+                        <tr>
+                            <th scope="col">Customer Name</th>
+                            <th scope="col">Services</th>
+                            <th scope="col">Cleaning Product</th>
+                            <th scope="col">Price(&#x20B1;)</th>
+                            <th scope="col-md-4">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        if ($finish_result) {
+                            // Group the data by user using an associative array
+                            $finishData = array();
+                            foreach ($finish_result as $row) {
+                                $userId = $row['user_id'];
+                                if (!isset($finishData[$userId])) {
+                                    $finishData[$userId] = array(
+                                        'firstname' => $row['firstname'],
+                                        'lastname' => $row['lastname'],
+                                        'services' => array(),
+                                        'product_name' => array(),
+                                        'totalPrice' => '' // Initialize as an empty string
+                                    );
+                                }
+
+                                // Add the service to the user's data
+                                $finishData[$userId]['services'][] = $row['services'];
+
+                                // Add the product name to the user's data
+                                if (!empty($row['product_name'])) {
+                                    $finishData[$userId]['product_name'][] = $row['product_name'];
+                                }
+
+                                // Store the last total_price encountered
+                                if (!empty($row['total_price'])) {
+                                    $finishData[$userId]['totalPrice'] = $row['total_price']; // Store total_price directly as it is
+                                }
+                            }
+
+                            // Output the data in a single row for each user
+                            foreach ($finishData as $userId => $user) {
+                                echo '<tr>';
+                                echo '<td>' . htmlspecialchars($user['firstname'] . ' ' . $user['lastname']) . '</td>';
+                                echo '<td>';
+                                foreach ($user['services'] as $service) {
+                                    echo htmlspecialchars($service) . '<br>';
+                                }
+                                echo '</td>';
+                                echo '<td>';
+                                foreach ($user['product_name'] as $product_name) {
+                                    echo htmlspecialchars($product_name) . '<br>';
+                                }
+                                echo '</td>';
+                                // Display the total_price directly without a loop
+                                echo '<td>₱ ' . number_format($user['totalPrice'] / 100, 2) . '</td>'; // Directly display total_price as a decimal
+
+                                echo '<td><a href="cashier-dashboard-payment-compute.php?user_id=' . urlencode($userId) . '" class="btn btn-primary">View Details</a></td>';
+                                echo '</tr>';
+                            }
+                        } else {
+                            echo '<tr><td colspan="4">Error: No data available</td></tr>';
+                        }
+                        ?>
+            </div>
+            </tbody>
+
+            </table>
 
 
 
+            <!-- /Main -->
 
-
-          </tbody>
-      </table>
-
-
-      <!-- /Main -->
-
-    </div>
+        </div>
     </main>
 
 

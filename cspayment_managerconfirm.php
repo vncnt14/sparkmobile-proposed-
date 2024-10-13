@@ -9,6 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $date = isset($_POST['date']) ? $_POST['date'] : '';
     $payment_method = isset($_POST['payment_method']) ? $_POST['payment_method'] : '';
     $amount = isset($_POST['modalAmount']) ? $_POST['modalAmount'] : '';
+    $change_amount = isset($_POST['change_amount']) ? $_POST['change_amount'] : 0.00;
     $totalPrice = isset($_POST['totalPrice']) ? $_POST['totalPrice'] : '';
     $firstname = isset($_POST['firstname']) ? $_POST['firstname'] : '';
     $lastname = isset($_POST['lastname']) ? $_POST['lastname'] : '';
@@ -33,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($stmt_insert && $stmt_update && $stmt_transaction) {
         // Bind parameters for insertion into payment_details
-        mysqli_stmt_bind_param($stmt_insert, 'iddss', $user_id, $amount, $change, $payment_method, $date);
+        mysqli_stmt_bind_param($stmt_insert, 'iddss', $user_id, $amount, $change_amount, $payment_method, $date);
 
         // Bind parameter for update of finish_jobs
         mysqli_stmt_bind_param($stmt_update, 'i', $user_id);

@@ -284,9 +284,7 @@ mysqli_close($connection);
     </div>
     <!-- main content -->
     <main>
-        <div class="container">
-            <a href="cashier-dashboard-payment.php"><button type="button" class="btn btn-primary">View Payments</button></a>
-        </div>
+        
     </main>
 
 

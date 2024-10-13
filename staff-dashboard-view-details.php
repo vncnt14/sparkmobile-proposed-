@@ -28,7 +28,7 @@ $user_result = mysqli_query($connection, $user_query);
 $customerData = mysqli_fetch_assoc($user_result);
 
 
-$query = "SELECT ss.*, sn.service_name, u.firstname, u.lastname, ss.status
+$query = "SELECT ss.*, sn.service_name, u.firstname, u.lastname, ss.status, ss.inventory_id, ss.quantity
 FROM service_details ss
 INNER JOIN service_names sn ON ss.servicename_id = sn.servicename_id
 INNER JOIN users u ON ss.user_id = u.user_id
@@ -325,12 +325,12 @@ $selectedData = mysqli_fetch_assoc($result);
       <div class="container py-5">
         <div class="row">
           <div class="col-12">
-            <h2 class="text-black">Service Name: <?php echo $selectedData['service_name']; ?></h2>
+            <h2 class="text-black">Customer Name: <?php echo $selectedData['firstname']; ?></h2>
             <hr class="mt-0 mb-4">
           </div>
         </div>
         <div class="row">
-          <div class="col-md-6 mx-auto">
+          <div class="col-md-8 mx-auto">
             <!-- Form to display service details and accept -->
             <form action="staff-dashboard-view-details-backend.php" method="POST">
               <!-- Hidden inputs -->
@@ -339,21 +339,25 @@ $selectedData = mysqli_fetch_assoc($result);
               <input type="hidden" name="servicename_id" value="<?php echo $selectedData['servicename_id']; ?>">
               <input type="hidden" name="user_id" value="<?php echo $selectedData['user_id']; ?>">
               <input type="hidden" name="status" id="status" value="<?php echo $selectedData['status']; ?>">
-              <input type="hidden" name="slotNumber" id="slotNumber" value="<?php echo $selectedData['slotNumber'];?>">
+              <input type="hidden" name="slotNumber" id="slotNumber" value="<?php echo $selectedData['slotNumber']; ?>">
+              <input type="hidden" name="inventory_id" id="inventory_id" value="<?php echo $selectedData['inventory_id'];?>">
+              <input type="hidden" name="quantity" id="inventory_id" value="<?php echo $selectedData['quantity'];?>">
+
 
               <!-- Display user name -->
-              <div class="mb-3">
-                <strong><label for="name" class="form-label">Customer Name:</label></strong>
-                <input type="text" class="form-control" id="name" name="name" value="<?php echo $selectedData['firstname'] . ' ' . $selectedData['lastname']; ?>" readonly>
-              </div>
 
               <?php
               // Fetch all services and prices grouped by slotNumber for the current user
               $user_id = $selectedData['user_id'];
-              $service_query = "SELECT slotNumber, GROUP_CONCAT(services) AS services, GROUP_CONCAT(price) AS prices 
-              FROM service_details 
-              WHERE user_id = '$user_id' 
-              GROUP BY slotNumber";
+              $service_query = "SELECT slotNumber, 
+                           GROUP_CONCAT(services) AS services, 
+                           GROUP_CONCAT(price) AS prices, 
+                           GROUP_CONCAT(product_name) AS product_names, 
+                           GROUP_CONCAT(product_price) AS product_prices,
+                          GROUP_CONCAT(inventory_id) AS inventory_id  
+                    FROM service_details 
+                    WHERE user_id = '$user_id' 
+                    GROUP BY slotNumber";
 
               $service_result = mysqli_query($connection, $service_query);
 
@@ -364,31 +368,56 @@ $selectedData = mysqli_fetch_assoc($result);
               while ($row = mysqli_fetch_assoc($service_result)) {
                 $slotNumber = $row['slotNumber'];
                 $services = explode(',', $row['services']);
+                $inventory_id = explode(',', $row['inventory_id']);
                 $prices = explode(',', $row['prices']);
+                $product_names = explode(',', $row['product_names']);
+                $product_prices = explode(',', $row['product_prices']);
 
                 // Calculate total price for each slot
-                $slotTotalPrice = array_sum($prices);
-                $totalPrice += $slotTotalPrice;
+                $service_total = array_sum($prices); // Array of service prices
+                $product_total = array_sum($product_prices); // Sum of product prices
+
+                // Calculate the total price (services + product)
+                $total_price = $service_total + $product_total
               ?>
                 <!-- Display grouped services by slot -->
-                <div class="mb-3">
-                  <strong><label for="services_<?php echo $slotNumber; ?>" class="form-label">Services:</label></strong>
-                  <input type="text" class="form-control" id="services_<?php echo $slotNumber; ?>" value="<?php echo implode(', ', $services); ?>" readonly>
+                <div class="row mb-3">
+                  <!-- Services -->
+                  <div class="col-md-6">
+                    <strong><label for="services_<?php echo $slotNumber; ?>" class="form-label">Services:</label></strong>
+                    <input type="text" class="form-control" id="services_<?php echo $slotNumber; ?>" value="<?php echo implode(', ', $services); ?>" readonly>
+                  </div>
+
+                  <!-- Prices -->
+                  <div class="col-md-6">
+                    <strong><label for="prices_<?php echo $slotNumber; ?>" class="form-label">Prices:</label></strong>
+                    <input type="text" class="form-control" id="prices_<?php echo $slotNumber; ?>" value="₱ <?php echo implode(', ₱ ', $prices); ?>" readonly>
+                  </div>
+
+                </div>
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <strong><label for="product_<?php echo $slotNumber; ?>" class="form-label">Cleaning Products:</label></strong>
+                    <input type="text" class="form-control" name="product_name" id="product_<?php echo $slotNumber; ?>" value="<?php echo implode(', ', $product_names); ?>" readonly>
+                  </div>
+
+                  <div class="col-md-6">
+                    <strong><label for="product_price_<?php echo $slotNumber; ?>" class="form-label">Product Prices:</label></strong>
+                    <input type="text" class="form-control" name="product_price" id="product_price_<?php echo $slotNumber; ?>" value="₱ <?php echo implode(', ₱ ', $product_prices); ?>" readonly>
+                  </div>
+
                 </div>
 
-                <!-- Display grouped prices by slot -->
-                <div class="mb-3">
-                  <strong><label for="prices_<?php echo $slotNumber; ?>" class="form-label">Prices:</label></strong>
-                  <input type="text" class="form-control" id="prices_<?php echo $slotNumber; ?>" value="₱ <?php echo implode(', ₱ ', $prices); ?>" readonly>
-                </div>
               <?php
               }
               ?>
 
               <!-- Total Price field -->
-              <div class="mb-3">
-                <strong><label for="total_price" class="form-label">Total Price (₱):</label></strong>
-                <input type="text" class="form-control" id="total_price" name="total_price" value="<?php echo $totalPrice; ?>.00" readonly>
+              <div class="row mb-3">
+                <div class="col-md-12">
+                  <strong><label for="total_price_<?php echo $slotNumber; ?>" class="form-label">Total Price:</label></strong>
+                  <input type="text" class="form-control" id="total_price_<?php echo $slotNumber; ?>" value="₱ <?php echo number_format($total_price, 2); ?>" readonly>
+                </div>
               </div>
 
               <!-- Submit Button -->

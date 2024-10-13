@@ -323,18 +323,23 @@ mysqli_close($connection);
                                     foreach ($result as $row) {
                                         echo '<div class="col-md-4 mb-3">';
                                         echo '<div class="card">';
-                                        echo '<div class="card-header">' . (isset($row['service_name']) ? $row['service_name'] : 'N/A') . '</div>';
+                                        echo '<div class="card-header">' . (isset($row['firstname']) ? $row['firstname'] : 'N/A') . " " . (isset($row['lastname']) ? $row['lastname'] : 'N/A') . '</div>';
                                         echo '<div class="card-body">';
-                                        echo '<p><strong>Name:</strong> ' . (isset($row['firstname']) ? $row['firstname'] : 'N/A') . " " . (isset($row['lastname']) ? $row['lastname'] : 'N/A') . '</p>';
                                         echo '<p><strong>Services:</strong> ';
+
                                         // Explode the services and display each one individually
                                         $services = isset($row['services']) ? explode(',', $row['services']) : array();
                                         foreach ($services as $service) {
-                                            echo $service . '<br>';
+                                            echo htmlspecialchars($service) . '<br>'; // Added htmlspecialchars for safety
                                         }
-                                        $price = isset($row['total_price']) ? $row['total_price'] : 0; // Get the price or default to 0 if not set
-                                        $totalPrice += $price; // Add price to total price
-                                        echo '<p><strong>Price (&#x20B1;):</strong> ' . $price . '</p>'; // Display individual price
+                                        echo '<p><strong>Cleaning Product:</strong> ';
+
+                                        $services = isset($row['product_name']) ? explode(',', $row['product_name']) : array();
+                                        foreach ($services as $service) {
+                                            echo htmlspecialchars($service) . '<br>'; // Added htmlspecialchars for safety
+                                        }
+
+                                        echo '<p><strong>Price:</strong> ₱ ' . number_format($paymentData['total_price'] / 100, 2) . '</p>'; // Display the total price directly
                                         echo '</div>';
                                         echo '</div>';
                                         echo '</div>';
@@ -359,9 +364,9 @@ mysqli_close($connection);
                                                     <label for="date" class="form-label">Date of Payment:</label>
                                                     <input type="text" class="form-control" name="date" id="date" value="<?php echo date('Y-m-d'); ?>" readonly>
                                                     <input type="hidden" name="user_id" id="user_id" value="<?php echo $paymentData['user_id']; ?>">
-                                                    <input type="hidden" name="vehicle_id" id="vehile_id" value="<?php echo $paymentData['vehicle_id']; ?>">
-                                                    <input type="hidden" name="firstname" id="fistname" value="<?php echo  $paymentData['firstname']; ?>">
-                                                    <input type="hidden" name="lastname" id="lasatname" value="<?php echo $paymentData['lastname']; ?>">
+                                                    <input type="hidden" name="vehicle_id" id="vehicle_id" value="<?php echo $paymentData['vehicle_id']; ?>">
+                                                    <input type="hidden" name="firstname" id="firstname" value="<?php echo $paymentData['firstname']; ?>">
+                                                    <input type="hidden" name="lastname" id="lastname" value="<?php echo $paymentData['lastname']; ?>">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="payment_method" class="form-label">Payment Method:</label>
@@ -374,10 +379,15 @@ mysqli_close($connection);
                                                     </select>
                                                 </div>
                                                 <div class="mb-3">
-                                                    <h4>Total Price: &#x20B1;<span id="modalTotalPrice" class="price text-dark" name="change_amount" value="<?php echo $totalPrice; ?>"><?php echo $totalPrice; ?>.00</span></h4>
+                                                    <?php
+                                                    // Convert the total price to a float
+                                                    $totalPriceFloat = $paymentData['total_price'] / 100;
+                                                    ?>
+                                                    <h4>Total Price: <span id="modalTotalPrice" class="price text-dark" data-price="<?php echo $totalPriceFloat; ?>">₱<?php echo number_format($paymentData['total_price'] / 100, 2); ?></span></h4>
                                                     <label for="modalAmount" class="form-label">Amount Paid (&#x20B1;): </label>
-                                                    <input type="text" class="form-control" name="modalAmount" id="modalAmount" value=".00">
-                                                    <h1 id="changeResult" name="change_payment" style="color:red; font-weight: bold;"></h1>
+                                                    <input type="number" class="form-control" name="modalAmount" id="modalAmount" value=".00" step="0.01" required>
+                                                    <h1 id="changeResult" style="color:red; font-weight: bold;"></h1>
+                                                    <input type="hidden" name="change_amount" id="change_amount">
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
@@ -387,20 +397,19 @@ mysqli_close($connection);
                                         </div>
                                     </div>
                                 </div>
-                            </form>
+
+
+                                <div style="margin-left: 10px; margin-bottom: 10px;">
+                                    <h4>Total Price: ₱<?php echo number_format($paymentData['total_price'] / 100, 2); ?></h4>
+
+                                </div>
+
+                                <button type="button" class="btn btn-primary" id="calculateChangeBtn" style="margin-left: 10px;">
+                                    Confirm
+                                </button>
                         </div>
                     </div>
-
-                    <div style="margin-left: 10px; margin-bottom: 10px;">
-                        <h4>Total Price: &#x20B1;<?php echo $totalPrice; ?>.00</h4>
-                    </div>
-
-                    <button type="button" class="btn btn-primary" id="calculateChangeBtn" style="margin-left: 10px;">
-                        Confirm
-                    </button>
                 </div>
-            </div>
-        </div>
     </main>
 
     <script>
@@ -410,25 +419,33 @@ mysqli_close($connection);
             changeModal.show();
         });
 
-        // Calculate change on Accept button click
-        document.getElementById('confirmChangeBtn').addEventListener('click', function() {
-            var totalPrice = <?php echo $totalPrice; ?>;
-            var amountPaid = parseFloat(document.getElementById('modalAmount').value);
+       // Calculate change on Accept button click
+document.getElementById('confirmChangeBtn').addEventListener('click', function() {
+    var totalPrice = parseFloat(document.getElementById('modalTotalPrice').dataset.price); // Ensure this is a float
+    var amountPaid = parseFloat(document.getElementById('modalAmount').value); // Get amount paid
 
-            if (isNaN(amountPaid)) {
-                alert('Please enter a valid amount.');
-                return;
-            }
+    // Validate amount paid
+    if (isNaN(amountPaid) || amountPaid < 0) {
+        alert('Please enter a valid amount.');
+        return;
+    }
 
-            var change = amountPaid - totalPrice;
-            var changeResult = document.getElementById('changeResult');
-            if (change >= 0) {
-                changeResult.innerHTML = 'Change: &#x20B1;' + change.toFixed(2);
-            } else {
-                changeResult.innerHTML = 'Insufficient amount paid.';
-            }
-        });
+    var change = amountPaid - totalPrice; // Calculate change
+    var changeResult = document.getElementById('changeResult');
+    var changeAmountInput = document.getElementById('change_amount'); // Hidden input field for change amount
+
+    // Display change or insufficient funds message
+    if (change >= 0) {
+        changeResult.innerHTML = 'Change: &#x20B1;' + change.toFixed(2);
+        changeAmountInput.value = change.toFixed(2); // Set the hidden input with the change amount
+    } else {
+        changeResult.innerHTML = 'Insufficient amount paid.';
+        changeAmountInput.value = ''; // Clear the hidden input if no change
+    }
+});
     </script>
+
+
 
 
     <script>

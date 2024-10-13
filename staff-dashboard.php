@@ -13,7 +13,6 @@ if (!isset($_SESSION['username'])) {
 // Fetch user information based on ID
 $userID = $_SESSION['user_id'];
 $vehicle_id = $_SESSION['vehicle_id'];
-
 $serviceID = $_SESSION['service_id'];
 
 // Fetch user information from the database based on the user's ID
@@ -23,8 +22,9 @@ $query = "SELECT * FROM users WHERE user_id = '$userID'";
 $result = mysqli_query($connection, $query);
 $userData = mysqli_fetch_assoc($result);
 
-$staff_query = "SELECT services, price, slotNumber, selected_id, servicename_id, user_id, product_name, product_price FROM service_details WHERE is_deleted = '0'";
+$staff_query = "SELECT services, price, slotNumber, selected_id, servicename_id, user_id, shop_id, product_name, product_price FROM service_details WHERE is_deleted = '0'";
 $staff_result = mysqli_query($connection, $staff_query);
+$staffData = mysqli_fetch_assoc($staff_result);
 
 // Close the database connection
 mysqli_close($connection);
@@ -416,7 +416,7 @@ mysqli_close($connection);
 
                                     <!-- Conditional Button Rendering -->
                                     <?php if (!$isFirstSlotRendered) { ?>
-                                        <a href="staff-dashboard-view-details.php?selected_id=<?php echo $slotData['selected_id']; ?>&servicename_id=<?php echo $slotData['servicename_id']; ?>&user_id=<?php echo $slotData['user_id']; ?>"
+                                        <a href="staff-dashboard-view-details.php?selected_id=<?php echo $slotData['selected_id']; ?>&servicename_id=<?php echo $slotData['servicename_id']; ?>&user_id=<?php echo $slotData['user_id']; ?>&shop_id=<?php echo $staffData['shop_id']; ?>"
                                             class="btn btn-primary w-100">
                                             View Details
                                         </a>
