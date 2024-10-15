@@ -383,7 +383,7 @@ mysqli_close($connection);
                                                     // Convert the total price to a float
                                                     $totalPriceFloat = $paymentData['total_price'] / 100;
                                                     ?>
-                                                    <h4>Total Price: <span id="modalTotalPrice" class="price text-dark" data-price="<?php echo $totalPriceFloat; ?>">₱<?php echo number_format($paymentData['total_price'] / 100, 2); ?></span></h4>
+                                                    <h4>Total Price: <span id="modalTotalPrice" name="subtotal" class="price text-dark" data-price="<?php echo $totalPriceFloat; ?>">₱<?php echo number_format($paymentData['total_price'] / 100, 2); ?></span></h4>
                                                     <label for="modalAmount" class="form-label">Amount Paid (&#x20B1;): </label>
                                                     <input type="number" class="form-control" name="modalAmount" id="modalAmount" value=".00" step="0.01" required>
                                                     <h1 id="changeResult" style="color:red; font-weight: bold;"></h1>
@@ -419,30 +419,30 @@ mysqli_close($connection);
             changeModal.show();
         });
 
-       // Calculate change on Accept button click
-document.getElementById('confirmChangeBtn').addEventListener('click', function() {
-    var totalPrice = parseFloat(document.getElementById('modalTotalPrice').dataset.price); // Ensure this is a float
-    var amountPaid = parseFloat(document.getElementById('modalAmount').value); // Get amount paid
+        // Calculate change on Accept button click
+        document.getElementById('confirmChangeBtn').addEventListener('click', function() {
+            var totalPrice = parseFloat(document.getElementById('modalTotalPrice').dataset.price); // Ensure this is a float
+            var amountPaid = parseFloat(document.getElementById('modalAmount').value); // Get amount paid
 
-    // Validate amount paid
-    if (isNaN(amountPaid) || amountPaid < 0) {
-        alert('Please enter a valid amount.');
-        return;
-    }
+            // Validate amount paid
+            if (isNaN(amountPaid) || amountPaid < 0) {
+                alert('Please enter a valid amount.');
+                return;
+            }
 
-    var change = amountPaid - totalPrice; // Calculate change
-    var changeResult = document.getElementById('changeResult');
-    var changeAmountInput = document.getElementById('change_amount'); // Hidden input field for change amount
+            var change = amountPaid - totalPrice; // Calculate change
+            var changeResult = document.getElementById('changeResult');
+            var changeAmountInput = document.getElementById('change_amount'); // Hidden input field for change amount
 
-    // Display change or insufficient funds message
-    if (change >= 0) {
-        changeResult.innerHTML = 'Change: &#x20B1;' + change.toFixed(2);
-        changeAmountInput.value = change.toFixed(2); // Set the hidden input with the change amount
-    } else {
-        changeResult.innerHTML = 'Insufficient amount paid.';
-        changeAmountInput.value = ''; // Clear the hidden input if no change
-    }
-});
+            // Display change or insufficient funds message
+            if (change >= 0) {
+                changeResult.innerHTML = 'Change: &#x20B1;' + change.toFixed(2);
+                changeAmountInput.value = change.toFixed(2); // Set the hidden input with the change amount
+            } else {
+                changeResult.innerHTML = 'Insufficient amount paid.';
+                changeAmountInput.value = ''; // Clear the hidden input if no change
+            }
+        });
     </script>
 
 

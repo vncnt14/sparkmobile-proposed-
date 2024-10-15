@@ -42,8 +42,7 @@ LEFT JOIN
 INNER JOIN 
     service_details ss ON ss.user_id = pd.user_id 
 WHERE 
-    pd.user_id = '$user_id' 
-LIMIT 1
+    pd.user_id = '$user_id'
 ";
 
 $invoice_result = mysqli_query($connection, $invoice_query);
@@ -365,12 +364,24 @@ mysqli_close($connection);
 
     // Calculate subtotal
     $subtotal = 0;
+
+    // Calculate subtotal for services
     foreach ($invoiceDataArray as $invoiceData) {
-      $subtotal += $invoiceData['total_price'];
+      $subtotal += $invoiceData['total_price']; // Sum up service total prices
+    }
+
+    // Calculate subtotal for cleaning products
+    foreach ($invoiceDataArray as $invoiceData) {
+      // Explode product prices into an array
+      $product_prices = explode(',', $invoiceData['product_price']); // Assuming you have a column for product prices
+
+      foreach ($product_prices as $price) {
+        $priceFloat = floatval(str_replace(['₱', ' ', ','], '', $price)); // Clean price format
+        $subtotal += $priceFloat; // Add each product price to subtotal
+      }
     }
 
     // Initialize amount paid (you can get this from form submission or the invoice data)
-    // Ensure the amount paid is properly retrieved; it might be in the invoiceDataArray as well.
     $amountPaid = isset($invoiceDataArray[0]['amount']) ? $invoiceDataArray[0]['amount'] : 0; // Make sure to reference the right index
 
     // Ensure amountPaid is treated as a float
@@ -401,7 +412,6 @@ mysqli_close($connection);
       </div>
 
       <div class="table-responsive">
-        <!-- First Table: Services -->
         <!-- First Table: Services -->
         <table class="table table-striped table-bordered">
           <thead class="table-dark">
@@ -443,9 +453,6 @@ mysqli_close($connection);
         </table>
 
         <!-- Second Table: Cleaning Products -->
-        </table>
-
-        <!-- Second Table: Cleaning Products -->
         <table class="table table-striped table-bordered">
           <thead class="table-dark">
             <tr>
@@ -456,10 +463,13 @@ mysqli_close($connection);
           </thead>
           <tbody>
             <?php
+            // Flag to track if any products exist
+            $hasProducts = false;
+
             foreach ($invoiceDataArray as $invoiceData) {
               // Explode product names and prices into arrays
               $product_names = explode(',', $invoiceData['product_name']); // Split product names
-              $product_prices = explode(',', $invoiceData['product_price']); // Assuming you have a column for product prices
+              $product_prices = explode(',', $invoiceData['product_price']); // Split product prices
 
               // Ensure both arrays have the same count
               $count = max(count($product_names), count($product_prices));
@@ -472,19 +482,33 @@ mysqli_close($connection);
                 // Clean up the product price and convert to float
                 $productPrice = isset($product_prices[$j]) ? trim($product_prices[$j]) : '';
                 $productPriceFloat = floatval(str_replace(['₱', ' ', ','], '', $productPrice)); // Remove currency symbol, spaces, and commas
+
+                // Check if product name is not empty
+                if (!empty($productName)) {
+                  $hasProducts = true; // Set flag to true if at least one product exists
             ?>
-                <tr>
-                  <td class="text-center"><?php echo htmlspecialchars($productName); ?></td> <!-- Display product name -->
-                  <td class="text-center"><?php echo htmlspecialchars($invoiceData['quantity']);?></td> <!-- Set quantity to always be '1' -->
-                  <td class="text-center">₱<?php echo number_format($productPriceFloat, 2); ?></td> <!-- Display product price -->
-                </tr>
-            <?php
+                  <tr>
+                    <td class="text-center"><?php echo htmlspecialchars($productName); ?></td> <!-- Display product name -->
+                    <td class="text-center"><?php echo htmlspecialchars($invoiceData['quantity']); ?></td> <!-- Display quantity -->
+                    <td class="text-center">₱<?php echo number_format($productPriceFloat, 2); ?></td> <!-- Display product price -->
+                  </tr>
+              <?php
+                }
               }
+            }
+
+            // If no products exist, display empty placeholders
+            if (!$hasProducts) {
+              ?>
+              <tr>
+                <td class="text-center" colspan="3">No cleaning products available.</td>
+              </tr>
+            <?php
             }
             ?>
             <tr class="thick-border">
               <td colspan="2" class="text-end"><strong>Subtotal:</strong></td>
-              <td class="text-center">₱<?php echo number_format($subtotal / 100, 2); ?></td>
+              <td class="text-center">₱<?php echo number_format($subtotal, 2); ?></td>
             </tr>
             <tr>
               <td colspan="2" class="text-end"><strong>Amount Paid:</strong></td>
@@ -492,12 +516,10 @@ mysqli_close($connection);
             </tr>
             <tr>
               <td colspan="2" class="text-end"><strong>Change:</strong></td>
-              <td class="text-center">₱<?php echo number_format($paymentData['change_amount'], 2);?></td>
+              <td class="text-center">₱<?php echo number_format($change, 2); ?></td> <!-- Ensure to use the calculated change -->
             </tr>
           </tbody>
         </table>
-
-
       </div>
       <button id="print-button" class="btn btn-primary" type="button" onclick="printInvoice()">Print Invoice</button>
     </div>
@@ -509,6 +531,7 @@ mysqli_close($connection);
       }
     </script>
   </main>
+
 
 
   <script>

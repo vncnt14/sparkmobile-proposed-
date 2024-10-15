@@ -25,12 +25,51 @@ $result = mysqli_query($connection, $query);
 $vehicleData = mysqli_fetch_assoc($result);
 
 
-$query1 = "SELECT *FROM service_names WHERE shop_id = '$shop_id'";
-$result1 = mysqli_query($connection, $query1);
-
 $shop_query = "SELECT *FROM shops WHERE shop_id = '$shop_id'";
 $shop_result = mysqli_query($connection, $shop_query);
 $shopData = mysqli_fetch_assoc($shop_result);
+
+$appearance_query = "SELECT * FROM carappearance WHERE shop_id = '$shop_id'";
+$appearance_result = mysqli_query($connection, $appearance_query);
+
+if ($appearance_result && mysqli_num_rows($appearance_result) > 0) {
+    $appearance_data = mysqli_fetch_assoc($appearance_result);
+    
+    // Build the condition to show only services where appearance is '0'
+    $conditions = [];
+    
+    if ($appearance_data['tires'] == '0') {
+        $conditions[] = "'Tires'";
+    }
+    if ($appearance_data['windshield'] == '0') {
+        $conditions[] = "'Wind shield'";
+    }
+    if ($appearance_data['body'] == '0') {
+        $conditions[] = "'Body'";
+    }
+    if ($appearance_data['interior'] == '0') {
+        $conditions[] = "'Interior'";
+    }
+    if ($appearance_data['sidemirror'] == '0') {
+        $conditions[] = "'Side mirror'";
+    }
+
+    if (count($conditions) > 0) {
+        // Create the query to fetch only the required services
+        $services_query = "SELECT * FROM service_names WHERE shop_id = '$shop_id' AND service_name IN (" . implode(',', $conditions) . ")";
+        $result1 = mysqli_query($connection, $services_query);
+
+        if ($result1) {
+            // Display the services as per your existing logic
+        } else {
+            echo 'Error fetching services: ' . mysqli_error($connection);
+        }
+    } else {
+        echo 'No services are needed.';
+    }
+} else {
+    echo 'Error fetching appearance data: ' . mysqli_error($connection);
+}
 
 
 
@@ -471,7 +510,7 @@ mysqli_close($connection);
         <form action="csprocess3_deleteslot.php" method="post">
           <input type="hidden" name="vehicle_id" id="vehicle_id" value="<?php echo $vehicleData['vehicle_id']; ?>">
           <input type="hidden" name="user_id" id="user_id" value="<?php echo $vehicleData['user_id']; ?>">
-          <input type="hidden" name="shop_id" id="shop_id" value="<?php echo $shop_id;?>">
+          <input type="hidden" name="shop_id" id="shop_id" value="<?php echo $shop_id; ?>">
         </form>
 
 
@@ -553,7 +592,7 @@ mysqli_close($connection);
           <form action="" method="">
             <input type="hidden" id="user_id" name="user_id" value="<?php echo $userID; ?>">
             <input type="hidden" id="vehicle_id" name="vehicle_id" value="<?php echo $vehicleData['vehicle_id']; ?>">
-            <input type="hidden" name="shop_id" id="shop_id" value="<?php echo $shopData['shop_id'];?>">
+            <input type="hidden" name="shop_id" id="shop_id" value="<?php echo $shopData['shop_id']; ?>">
 
             <!-- Collapsible container -->
             <div class="accordion" id="serviceAccordion">
@@ -570,7 +609,7 @@ mysqli_close($connection);
                 foreach ($result1 as $row) {
                   echo '<tr>';
                   echo '<td>' . (isset($row['service_name']) ? $row['service_name'] : 'Service Name') . '</td>';
-                  echo '<td class="text-center"><a href="csprocess3.3.php?vehicle_id=' . (isset($vehicleData['vehicle_id']) ? $vehicleData['vehicle_id'] : '') . '&servicename_id=' . (isset($row['servicename_id']) ? $row['servicename_id'] : '') . '&user_id=' . (isset($vehicleData['user_id']) ? $vehicleData['user_id'] : '') . '&shop_id=' . (isset($shopData['shop_id']) ? $shopData['shop_id'] : '') .'" class="btn btn-primary btn-md">View Services</a></td>'; // Aligning the button to center
+                  echo '<td class="text-center"><a href="csprocess3.3.php?vehicle_id=' . (isset($vehicleData['vehicle_id']) ? $vehicleData['vehicle_id'] : '') . '&servicename_id=' . (isset($row['servicename_id']) ? $row['servicename_id'] : '') . '&user_id=' . (isset($vehicleData['user_id']) ? $vehicleData['user_id'] : '') . '&shop_id=' . (isset($shopData['shop_id']) ? $shopData['shop_id'] : '') . '" class="btn btn-primary btn-md">View Services</a></td>'; // Aligning the button to center
                   echo '</tr>';
                 }
 

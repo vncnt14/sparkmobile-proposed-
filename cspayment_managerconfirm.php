@@ -8,6 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user_id = isset($_POST['user_id']) ? $_POST['user_id'] : '';
     $date = isset($_POST['date']) ? $_POST['date'] : '';
     $payment_method = isset($_POST['payment_method']) ? $_POST['payment_method'] : '';
+    $subtotal = isset($_POST['subtotal']) ? $_POST['subtotal'] : '';
     $amount = isset($_POST['modalAmount']) ? $_POST['modalAmount'] : '';
     $change_amount = isset($_POST['change_amount']) ? $_POST['change_amount'] : 0.00;
     $totalPrice = isset($_POST['totalPrice']) ? $_POST['totalPrice'] : '';
@@ -23,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $change = $amount - $totalPrice;
 
     // Prepare and execute the SQL statements
-    $insert_query = "INSERT INTO payment_details (user_id, amount, change_amount, payment_method, date) VALUES (?, ?, ?, ?, ?)";
+    $insert_query = "INSERT INTO payment_details (user_id, subtotal, amount, change_amount, payment_method, date) VALUES (?, ?, ?, ?, ?, ?)";
     $update_query = "UPDATE finish_jobs SET is_deleted = '1' WHERE user_id = ?";
     $transaction_query = "INSERT INTO payment_transaction (user_id, vehicle_id, date, firstname, lastname) VALUES (?, ?, ?, ?, ?)";
 
@@ -34,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($stmt_insert && $stmt_update && $stmt_transaction) {
         // Bind parameters for insertion into payment_details
-        mysqli_stmt_bind_param($stmt_insert, 'iddss', $user_id, $amount, $change_amount, $payment_method, $date);
+        mysqli_stmt_bind_param($stmt_insert, 'idddss', $user_id, $subtotal, $amount, $change_amount, $payment_method, $date);
 
         // Bind parameter for update of finish_jobs
         mysqli_stmt_bind_param($stmt_update, 'i', $user_id);

@@ -357,9 +357,7 @@ mysqli_close($connection);
     </div>
     <!-- main content -->
     <main>
-        <div class="container">
-            <a href="csservice_adminview.php"><button type="button" class="btn btn-primary">Services</button></a>
-        </div>
+        >
     </main>
 
 

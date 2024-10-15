@@ -5,12 +5,12 @@ include('config.php');
 // Check if form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Retrieve form data
-    $servicename_id = $_POST['servicename_id'];
-    $selected_id = $_POST['selected_id'];
-    $vehicle_id = $_POST['vehicle_id'];
-    $user_id = $_POST['user_id'];
-    $services = $_POST['services'];
-    $price = $_POST['price'];
+    $servicename_id = $_POST['servicename_id']. '';
+    $selected_id = $_POST['selected_id']. '';
+    $vehicle_id = $_POST['vehicle_id']. '';
+    $user_id = $_POST['user_id']. '';
+    $services = $_POST['services']. '';
+    $price = $_POST['price']. '';
     
     // Clean and convert total_price
     $total_price = $_POST['total_price'];
