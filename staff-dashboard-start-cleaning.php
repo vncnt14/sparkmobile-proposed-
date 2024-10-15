@@ -16,9 +16,14 @@ $selected_id = $_GET['selected_id'];
 $servicename_id = $_GET['servicename_id'];
 $user_id = $_GET['user_id'];
 
+
+$staff_query = "SELECT *FROM users WHERE user_id = '$userID'";
+$staff_result = mysqli_query($connection, $staff_query);
+$staffData = mysqli_fetch_assoc($staff_result);
+
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
-$query = "SELECT * FROM users WHERE user_id = '$user_id'";
+$query = "SELECT * FROM vehicles WHERE user_id = '$user_id'";
 // Execute the query and fetch the user data
 $result = mysqli_query($connection, $query);
 $userData = mysqli_fetch_assoc($result);
@@ -148,11 +153,10 @@ $selectedData = mysqli_fetch_assoc($selected_result);
   }
 
   .img-account-profile {
-    width: 80%;
-    height: auto;
-    border-radius: 50%;
-    display: block;
-    margin: auto;
+    width: 400px;
+    /* Adjust the size as needed */
+    height: 200px;
+    object-fit: cover;
   }
 
   li:hover {
@@ -197,13 +201,6 @@ $selectedData = mysqli_fetch_assoc($selected_result);
     color: white;
   }
 
-  .img-account-profile {
-    width: 200px;
-    /* Adjust the size as needed */
-    height: 200px;
-    object-fit: cover;
-    border-radius: 50%;
-  }
 
   .game-card {
     background-color: #fff;
@@ -273,7 +270,7 @@ $selectedData = mysqli_fetch_assoc($selected_result);
 
 
         <div class=" welcome fw-bold px-3 mb-3">
-          <h5 class="text-center">Welcome back <?php echo $userData['firstname']; ?>!</h5>
+          <h5 class="text-center">Welcome back <?php echo $staffData['firstname']; ?>!</h5>
         </div>
         <div class="ms-3" id="dateTime"></div>
         </li>
@@ -331,7 +328,7 @@ $selectedData = mysqli_fetch_assoc($selected_result);
               </div>
               <div class="card-body text-center">
                 <!-- Profile Image -->
-                <img src="<?php echo $userData['profile'];?>" alt="Profile Image" class="img-account-profile mb-3">
+                <img src="<?php echo $userData['profile']; ?>" alt="Profile Image" class="img-account-profile mb-3">
 
                 <!-- Customer Name -->
                 <h4 class="text-black">Customer Name: <?php echo $selectedData['firstname']; ?> <?php echo $selectedData['lastname']; ?></h4>
@@ -392,25 +389,39 @@ $selectedData = mysqli_fetch_assoc($selected_result);
                     </div>
 
                     <!-- Products and Product Prices -->
-                    <?php if (!empty($product_names[0])) { ?>
+                    <?php if (!empty($product_names)) { ?>
                       <div class="row mb-3">
                         <div class="col-md-6">
                           <strong><label for="product_<?php echo $slotNumber; ?>" class="form-label">Cleaning Products:</label></strong>
-                          <textarea class="form-control" name="product_name" id="product_<?php echo $slotNumber; ?>" rows="3" readonly><?php echo implode(', ', $product_names); ?></textarea>
+                          <textarea class="form-control" name="product_name" id="product_<?php echo $slotNumber; ?>" rows="3" readonly>
+    <?php
+                      // Filter out empty product names before displaying
+                      $cleaned_product_names = array_filter($product_names, function ($product_name) {
+                        return !empty(trim($product_name)); // Remove empty or whitespace-only values
+                      });
+
+                      // Display the cleaned product names without unnecessary commas
+                      echo implode(', ', $cleaned_product_names);
+    ?>
+  </textarea>
                         </div>
+
                         <div class="col-md-6">
                           <strong><label for="product_price_<?php echo $slotNumber; ?>" class="form-label">Product Prices:</label></strong>
                           <textarea class="form-control" name="product_price" id="product_price_<?php echo $slotNumber; ?>" rows="3" readonly>
-    ₱ <?php
-                      // Add ".00" to each product price
-                      $formatted_prices = array_map(function ($price) {
-                        return number_format(floatval(str_replace(['₱', ' ', ','], '', $price)), 2); // Convert to float and format to two decimal places
-                      }, $product_prices);
+                          ₱ <?php
+                            // Format product prices, add ".00" and hide unnecessary values
+                            $formatted_prices = array_map(function ($price) {
+                              if (!empty($price)) {
+                                return number_format(floatval(str_replace(['₱', ' ', ','], '', $price)), 2);
+                              } else {
+                                return ''; // Hide empty prices
+                              }
+                            }, $product_prices);
 
-                      // Display the formatted prices
-                      echo implode(', ₱ ', $formatted_prices) . "";
-      ?>
-</textarea>
+                            echo implode(', ₱ ', array_filter($formatted_prices)); // Filter empty prices
+                            ?>
+                          </textarea>
                         </div>
                       </div>
                     <?php } ?>

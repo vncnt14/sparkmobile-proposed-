@@ -23,7 +23,7 @@ $query = "SELECT * FROM users WHERE user_id = '$userID'";
 $result = mysqli_query($connection, $query);
 $userData = mysqli_fetch_assoc($result);
 
-$user_query = "SELECT * FROM users WHERE user_id = '$user_id'";
+$user_query = "SELECT * FROM vehicles WHERE user_id = '$user_id'";
 $user_result = mysqli_query($connection, $user_query);
 $customerData = mysqli_fetch_assoc($user_result);
 
@@ -32,7 +32,7 @@ $query = "SELECT ss.*, sn.service_name, u.firstname, u.lastname, ss.status, ss.i
 FROM service_details ss
 INNER JOIN service_names sn ON ss.servicename_id = sn.servicename_id
 INNER JOIN users u ON ss.user_id = u.user_id
-WHERE ss.selected_id = '$selected_id' AND ss.servicename_id = '$servicename_id'";
+WHERE ss.selected_id = '$selected_id' AND ss.servicename_id = '$servicename_id' AND ss.user_id = '$user_id'";
 
 
 // Execute the query and fetch the user data
@@ -148,13 +148,7 @@ $selectedData = mysqli_fetch_assoc($result);
     margin: auto;
   }
 
-  .img-account-profile {
-    width: 80%;
-    height: auto;
-    border-radius: 50%;
-    display: block;
-    margin: auto;
-  }
+
 
   li:hover {
     background: #072797;
@@ -199,11 +193,10 @@ $selectedData = mysqli_fetch_assoc($result);
   }
 
   .img-account-profile {
-    width: 200px;
+    width: 400px;
     /* Adjust the size as needed */
     height: 200px;
     object-fit: cover;
-    border-radius: 50%;
   }
 
   .game-card {
@@ -335,7 +328,7 @@ $selectedData = mysqli_fetch_assoc($result);
                 <img src="<?php echo $customerData['profile']; ?>" alt="Profile Image" class="img-account-profile mb-3">
 
                 <!-- Customer Name -->
-                <h4 class="text-black">Customer Name: <?php echo $selectedData['firstname']; ?></h4>
+                <h4 class="text-black">Customer Name: <?php echo $selectedData['firstname']; ?> <?php echo $selectedData['lastname']; ?></h4>
 
                 <hr class="mt-4 mb-4">
 
@@ -348,8 +341,6 @@ $selectedData = mysqli_fetch_assoc($result);
                   <input type="hidden" name="user_id" value="<?php echo $selectedData['user_id']; ?>">
                   <input type="hidden" name="status" id="status" value="<?php echo $selectedData['status']; ?>">
                   <input type="hidden" name="slotNumber" id="slotNumber" value="<?php echo $selectedData['slotNumber']; ?>">
-                  <input type="hidden" name="inventory_id" id="inventory_id" value="<?php echo $selectedData['inventory_id']; ?>">
-                  <input type="hidden" name="quantity" id="inventory_id" value="<?php echo $selectedData['quantity']; ?>">
 
                   <?php
                   // Fetch all services and prices grouped by slotNumber for the current user
@@ -359,7 +350,8 @@ $selectedData = mysqli_fetch_assoc($result);
                                                    GROUP_CONCAT(price) AS prices, 
                                                    GROUP_CONCAT(product_name) AS product_names, 
                                                    GROUP_CONCAT(product_price) AS product_prices,
-                                                   GROUP_CONCAT(inventory_id) AS inventory_id  
+                                                   GROUP_CONCAT(inventory_id) AS inventory_id,
+                                                   GROUP_CONCAT(quantity) AS quantity    
                                                    FROM service_details 
                                                    WHERE user_id = '$user_id' 
                                                    GROUP BY slotNumber";
@@ -374,8 +366,11 @@ $selectedData = mysqli_fetch_assoc($result);
                     $slotNumber = $row['slotNumber'];
                     $services = explode(',', $row['services']);
                     $inventory_id = explode(',', $row['inventory_id']);
+                    $quantity = explode(',', $row['quantity']);
                     $prices = explode(',', $row['prices']);
-                    $product_names = explode(',', $row['product_names']);
+                    $product_names = array_filter(explode(',', $row['product_names']), function ($name) {
+                      return $name != ''; // Filter out empty product names to remove unnecessary commas
+                    });
                     $product_prices = explode(',', $row['product_prices']);
 
                     // Calculate total price for each slot
@@ -387,21 +382,34 @@ $selectedData = mysqli_fetch_assoc($result);
                   ?>
                     <!-- Display grouped services by slot -->
                     <div class="row mb-3">
+                      <input type="hidden" name="inventory_id" id="services_<?php echo $slotNumber; ?>" value="<?php echo implode(', ', $inventory_id); ?>">
+                      <input type="hidden" name="quantity" id="services_<?php echo $slotNumber; ?>" value="<?php echo implode(', ', $quantity); ?>">
                       <!-- Services -->
                       <div class="col-md-6">
                         <strong><label for="services_<?php echo $slotNumber; ?>" class="form-label">Services:</label></strong>
                         <textarea class="form-control" id="services_<?php echo $slotNumber; ?>" rows="3" readonly><?php echo implode(', ', $services); ?></textarea>
                       </div>
 
+
                       <!-- Prices -->
                       <div class="col-md-6">
                         <strong><label for="prices_<?php echo $slotNumber; ?>" class="form-label">Prices:</label></strong>
-                        <textarea class="form-control" id="prices_<?php echo $slotNumber; ?>" rows="3" readonly>₱ <?php echo implode(', ₱ ', $prices); ?></textarea>
+                        <textarea class="form-control" id="prices_<?php echo $slotNumber; ?>" rows="3" readonly>
+                          <?php
+                          if (!empty($prices[0])) {
+                            echo '₱ ' . implode(', ₱ ', array_map(function ($price) {
+                              return number_format(floatval($price), 2);
+                            }, $prices));
+                          } else {
+                            echo ''; // No price data, show nothing
+                          }
+                          ?>
+                        </textarea>
                       </div>
                     </div>
 
                     <!-- Products and Product Prices -->
-                    <?php if (!empty($product_names[0])) { ?>
+                    <?php if (!empty($product_names)) { ?>
                       <div class="row mb-3">
                         <div class="col-md-6">
                           <strong><label for="product_<?php echo $slotNumber; ?>" class="form-label">Cleaning Products:</label></strong>
@@ -410,16 +418,19 @@ $selectedData = mysqli_fetch_assoc($result);
                         <div class="col-md-6">
                           <strong><label for="product_price_<?php echo $slotNumber; ?>" class="form-label">Product Prices:</label></strong>
                           <textarea class="form-control" name="product_price" id="product_price_<?php echo $slotNumber; ?>" rows="3" readonly>
-    ₱ <?php
-                      // Add ".00" to each product price
-                      $formatted_prices = array_map(function ($price) {
-                        return number_format(floatval(str_replace(['₱', ' ', ','], '', $price)), 2); // Convert to float and format to two decimal places
-                      }, $product_prices);
+                          ₱ <?php
+                            // Format product prices, add ".00" and hide unnecessary values
+                            $formatted_prices = array_map(function ($price) {
+                              if (!empty($price)) {
+                                return number_format(floatval(str_replace(['₱', ' ', ','], '', $price)), 2);
+                              } else {
+                                return ''; // Hide empty prices
+                              }
+                            }, $product_prices);
 
-                      // Display the formatted prices
-                      echo implode(', ₱ ', $formatted_prices) . "";
-      ?>
-</textarea>
+                            echo implode(', ₱ ', array_filter($formatted_prices)); // Filter empty prices
+                            ?>
+                          </textarea>
                         </div>
                       </div>
                     <?php } ?>
@@ -447,6 +458,7 @@ $selectedData = mysqli_fetch_assoc($result);
       </div>
     </div>
   </main>
+
 
 
 
