@@ -11,21 +11,11 @@ if (!isset($_SESSION['username'])) {
 }
 
 // Fetch user information based on ID
-$user_id = $_SESSION['user_id'];
+$userID = $_SESSION['user_id'];
 
-// Fetch user information from the database based on the user's ID
-$query = "SELECT * FROM shops";
+$query = "SELECT *FROM users WHERE user_id = '$userID'";
 $result = mysqli_query($connection, $query);
-
-if (!$result) {
-  echo 'Error: ' . mysqli_error($connection);
-  exit;
-}
-
-$shops = [];
-while ($row = mysqli_fetch_assoc($result)) {
-  $shops[] = $row;
-}
+$userData = mysqli_fetch_assoc($result);
 
 // Close the database connection
 mysqli_close($connection);
@@ -295,12 +285,12 @@ mysqli_close($connection);
 
 
         <div class=" welcome fw-bold px-3 mb-3">
-          <h5 class="text-center">Welcome back <?php echo isset($_SESSION['firstname']) ? $_SESSION['firstname'] : ''; ?>!</h5>
+          <h5 class="text-center">Welcome back <?php echo isset($userData['username']) ? $userData['username'] : ''; ?>!</h5>
         </div>
         <div class="ms-3" id="dateTime"></div>
         </li>
         <li class="v-1">
-          <a href="owner-dashboard.php" class="nav-link px-3">
+          <a href="admin-dashboard.php" class="nav-link px-3">
             <span class="me-2"><i class="fas fa-home"></i></i></span>
             <span>DASHBOARD</span>
           </a>
@@ -312,20 +302,13 @@ mysqli_close($connection);
             <span class="start">PROFILE</span>
           </a>
         </li>
-
-        <li class="">
-          <a href="cars-profile.php" class="nav-link px-3">
-            <span class="me-2"><i class="fas fa-car"></i></i></span>
-            <span>SHOPS</span>
-          </a>
-        </li>
         <li class="">
           <a
             class="nav-link px-3 sidebar-link"
             data-bs-toggle="collapse"
             href="#layouts">
-            <span class="me-2"><i class="fas fa-calendar"></i></i></span>
-            <span>BOOKINGS</span>
+            <span class="me-2"><i class="fas fa-database"></i></i></span>
+            <span>DATABASE</span>
             <span class="ms-auto">
               <span class="right-icon">
                 <i class="bi bi-chevron-down"></i>
@@ -336,38 +319,28 @@ mysqli_close($connection);
         <div class="collapse" id="layouts">
           <ul class="navbar-nav ps-3">
             <li class="v-1">
-              <a href="setappoinment.php" class="nav-link px-3">
-                <span class="me-2">Set Appointment</span>
+              <a href="admin-database.php" class="nav-link px-3">
+                <span class="me-2">Users</span>
               </a>
             </li>
             <li class="v-1">
-              <a href="checkingcar.php" class="nav-link px-3">
-                <span class="me-2">Checking car condition</span>
+              <a href="admin-database-vehicle.php" class="nav-link px-3">
+                <span class="me-2">Vehicles</span>
               </a>
             </li>
             <li class="v-1">
-              <a href="csrequest_slot.php" class="nav-link px-3">
-                <span class="me-2">Request Slot</span>
+              <a href="admin-database-finish-jobs.php" class="nav-link px-3">
+                <span class="me-2">Finish jobs</span>
               </a>
             </li>
             <li class="v-1">
               <a href="csprocess3.php" class="nav-link px-3">
-                <span class="me-2">Select Service</span>
+                <span class="me-2">Payment Details</span>
               </a>
             </li>
             <li class="v-1">
               <a href="#" class="nav-link px-3">
-                <span class="me-2">Register your car</span>
-              </a>
-            </li>
-            <li class="v-1">
-              <a href="#" class="nav-link px-3">
-                <span class="me-2">Booking Summary</span>
-              </a>
-            </li>
-            <li class="v-1">
-              <a href="#" class="nav-link px-3">
-                <span class="me-2">Booking History</span>
+                <span class="me-2">Finish jobs</span>
               </a>
             </li>
           </ul>
@@ -429,10 +402,8 @@ mysqli_close($connection);
   </div>
   <!-- main content -->
   <main>
-    <div class="container-vinfo text-dark me-4">
-    
 
-    </div>
+  </main>
 
 
     <!-- Custom JavaScript to display the range value -->
