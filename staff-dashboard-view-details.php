@@ -394,30 +394,19 @@ $selectedData = mysqli_fetch_assoc($result);
                       <!-- Prices -->
                       <div class="col-md-6">
                         <strong><label for="prices_<?php echo $slotNumber; ?>" class="form-label">Prices:</label></strong>
-                        <textarea class="form-control" id="prices_<?php echo $slotNumber; ?>" rows="3" readonly>
-                          <?php
-                          if (!empty($prices[0])) {
-                            echo '₱ ' . implode(', ₱ ', array_map(function ($price) {
-                              return number_format(floatval($price), 2);
-                            }, $prices));
-                          } else {
-                            echo ''; // No price data, show nothing
-                          }
-                          ?>
-                        </textarea>
+                        <textarea class="form-control" name="price" id="prices_<?php echo $slotNumber; ?>" rows="3" readonly>₱ <?php echo implode(', ₱ ', $prices); ?></textarea>
                       </div>
-                    </div>
 
-                    <!-- Products and Product Prices -->
-                    <?php if (!empty($product_names)) { ?>
-                      <div class="row mb-3">
-                        <div class="col-md-6">
-                          <strong><label for="product_<?php echo $slotNumber; ?>" class="form-label">Cleaning Products:</label></strong>
-                          <textarea class="form-control" name="product_name" id="product_<?php echo $slotNumber; ?>" rows="3" readonly><?php echo implode(', ', $product_names); ?></textarea>
-                        </div>
-                        <div class="col-md-6">
-                          <strong><label for="product_price_<?php echo $slotNumber; ?>" class="form-label">Product Prices:</label></strong>
-                          <textarea class="form-control" name="product_price" id="product_price_<?php echo $slotNumber; ?>" rows="3" readonly>
+                      <!-- Products and Product Prices -->
+                      <?php if (!empty($product_names)) { ?>
+                        <div class="row mb-3">
+                          <div class="col-md-6">
+                            <strong><label for="product_<?php echo $slotNumber; ?>" class="form-label">Cleaning Products:</label></strong>
+                            <textarea class="form-control" name="product_name" id="product_<?php echo $slotNumber; ?>" rows="3" readonly><?php echo implode(', ', $product_names); ?></textarea>
+                          </div>
+                          <div class="col-md-6">
+                            <strong><label for="product_price_<?php echo $slotNumber; ?>" class="form-label">Product Prices:</label></strong>
+                            <textarea class="form-control" name="product_price" id="product_price_<?php echo $slotNumber; ?>" rows="3" readonly>
                           ₱ <?php
                             // Format product prices, add ".00" and hide unnecessary values
                             $formatted_prices = array_map(function ($price) {
@@ -431,25 +420,25 @@ $selectedData = mysqli_fetch_assoc($result);
                             echo implode(', ₱ ', array_filter($formatted_prices)); // Filter empty prices
                             ?>
                           </textarea>
+                          </div>
                         </div>
-                      </div>
+                      <?php } ?>
+
                     <?php } ?>
 
-                  <?php } ?>
-
-                  <!-- Total Price field -->
-                  <div class="row mb-3">
-                    <div class="col-md-12">
-                      <strong><label for="total_price_<?php echo $slotNumber; ?>" class="form-label">Total Price:</label></strong>
-                      <input type="text" class="form-control" id="total_price_<?php echo $slotNumber; ?>" value="₱ <?php echo number_format($total_price, 2); ?>" readonly>
+                    <!-- Total Price field -->
+                    <div class="row mb-3">
+                      <div class="col-md-12">
+                        <strong><label for="total_price_<?php echo $slotNumber; ?>" class="form-label">Total Price:</label></strong>
+                        <input type="text" class="form-control" id="total_price_<?php echo $slotNumber; ?>" value="₱ <?php echo number_format($total_price, 2); ?>" readonly>
+                      </div>
                     </div>
-                  </div>
 
-                  <!-- Submit Button -->
-                  <div class="d-grid">
-                    <button type="submit" class="btn btn-primary btn-md">Accept</button>
-                    <a href="staff-dashboard.php"><button type="button" class="btn btn-primary btn-md">Cancel</button></a>
-                  </div>
+                    <!-- Submit Button -->
+                    <div class="d-grid">
+                      <button type="submit" class="btn btn-primary btn-md">Accept</button>
+                      <a href="staff-dashboard.php"><button type="button" class="btn btn-primary btn-md">Cancel</button></a>
+                    </div>
                 </form>
               </div>
             </div> <!-- End of Card -->
