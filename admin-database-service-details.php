@@ -1,33 +1,29 @@
 <?php
 session_start();
+
 // Include database connection file
-include('config.php'); // You'll need to replace this with your actual database connection code
+include('config.php');  // You'll need to replace this with your actual database connection code
 
 // Redirect to the login page if the user is not logged in
-if (!isset($_SESSION['user_id'])) {
-    header("Location index.php");
+if (!isset($_SESSION['username'])) {
+    header("Location: index.php");
     exit;
 }
 
 // Fetch user information based on ID
 $userID = $_SESSION['user_id'];
-$role = $_SESSION['role'];
 
-// Fetch user information from the database based on the user's ID
-// Replace this with your actual database query
-$query = "SELECT * FROM users WHERE user_id = '$userID' AND role='$role'";
-// Execute the query and fetch the user data
+$query = "SELECT *FROM users WHERE user_id = '$userID'";
 $result = mysqli_query($connection, $query);
-$shopownerData = mysqli_fetch_assoc($result);
+$userData = mysqli_fetch_assoc($result);
 
-// Assuming you have already established a database connection
+$finish_query = "SELECT users.firstname, users.lastname, service_details.product_name, service_details.services,
+service_details.selected_id, service_details.total_price
+FROM service_details
+LEFT JOIN users ON users.user_id = service_details.user_id";
+$finish_result = mysqli_query($connection, $finish_query);
+$serviceData = mysqli_fetch_assoc($finish_result);
 
-// Query to retrieve all data from the database
-$query1 = "SELECT vehicles.*, vehicles.model, users.user_id, users.firstname, users.lastname, users.contact, vehicles.platenumber, vehicles.color, vehicles.brand
-           FROM vehicles
-           INNER JOIN users ON vehicles.user_id = users.user_id";
-
-$result1 = mysqli_query($connection, $query1);
 // Close the database connection
 mysqli_close($connection);
 ?>
@@ -224,7 +220,7 @@ mysqli_close($connection);
 
     .container-table {
 
-        margin-left: 15.5%;
+        margin-left: 17%;
         margin-bottom: 10%;
     }
 </style>
@@ -346,7 +342,7 @@ mysqli_close($connection);
                             </a>
                         </li>
                         <li class="v-1">
-                            <a href="" class="nav-link px-3">
+                            <a href="admin-database-service-details.php" class="nav-link px-3">
                                 <span class="me-2">Service Details</span>
                             </a>
                         </li>
@@ -356,18 +352,8 @@ mysqli_close($connection);
                             </a>
                         </li>
                         <li class="v-1">
-                            <a href="admin-database-finish-jobs.php" class="nav-link px-3">
+                            <a href="admin-database-finish-jobs" class="nav-link px-3">
                                 <span class="me-2">Finish jobs</span>
-                            </a>
-                        </li>
-                        <li class="v-1">
-                            <a href="#" class="nav-link px-3">
-                                <span class="me-2"></span>
-                            </a>
-                        </li>
-                        <li class="v-1">
-                            <a href="#" class="nav-link px-3">
-                                <span class="me-2"></span>
                             </a>
                         </li>
                     </ul>
@@ -428,47 +414,42 @@ mysqli_close($connection);
     </div>
     </div>
     <!-- main content -->
-    <main class="container-table text-dark">
+    <main class="container-table mt-5 text-dark">
         <!-- Page Title -->
-        <h1 class="col-md-9">DATABASE</h1>
+        <h1 class="mb-4">DATABASE</h1>
 
         <!-- Section Title -->
-        <h3 class="text-center">Vehicle</h3>
+        <h3 class="text-center">Finish jobs</h3>
 
         <div class="row">
             <?php
-            if (mysqli_num_rows($result1) > 0) {
-                echo '<div class="table-responsive">'; // Bootstrap responsive table wrapper
-                echo '<table class="table table-striped table-hover table-bordered">'; // Bootstrap 5 table classes
-                echo '<thead class="table-dark">'; // Dark header for table
+            if (mysqli_num_rows($finish_result) > 0) {
+                echo '<table class="table table-striped table-hover">';
+                echo '<thead class="table-dark">';
                 echo '<tr>';
                 echo '<th>Firstname</th>';
                 echo '<th>Lastname</th>';
-                echo '<th>Contact</th>';
-                echo '<th>Platenumber</th>';
-                echo '<th>Model</th>';
-                echo '<th>Brand</th>';
-                echo '<th>Color</th>';
-                echo '<th>Action</th>';
+                echo '<th>Services</th>';
+                echo '<th>Product Name</th>';
+                echo '<th>Total Price</th>';
+                echo '<th>Action</th>'; // Only one "Action" header
                 echo '</tr>';
                 echo '</thead>';
                 echo '<tbody>';
 
                 // Loop through each row of the result set
-                while ($row = mysqli_fetch_assoc($result1)) {
+                while ($row = mysqli_fetch_assoc($finish_result)) {
                     echo '<tr>';
-                    echo '<td>' . $row['firstname'] . '</td>';
-                    echo '<td>' . $row['lastname'] . '</td>';
-                    echo '<td>' . $row['contact'] . '</td>';
-                    echo '<td>' . $row['platenumber'] . '</td>';
-                    echo '<td>' . $row['model'] . '</td>';
-                    echo '<td>' . $row['brand'] . '</td>';
-                    echo '<td>' . $row['color'] . '</td>';
-                    echo '<td>';
-                    echo '<button class="btn btn-primary btn-sm me-2">Edit</button>'; // Smaller edit button with margin
-                    echo '<form action="csadmin_database-vehicles-delete.php" method="POST" class="d-inline">'; // Inline form to keep buttons together
-                    echo '<input type="hidden" name="vehicle_id" id="vehicle_id" value="' . $row['vehicle_id'] . '">';
-                    echo '<button class="btn btn-danger btn-sm">Delete</button>'; // Smaller delete button
+                    echo '<td>' . htmlspecialchars($row['firstname']) . '</td>';
+                    echo '<td>' . htmlspecialchars($row['lastname']) . '</td>';
+                    echo '<td>' . htmlspecialchars($row['services']) . '</td>';
+                    echo '<td>' . htmlspecialchars($row['product_name']) . '</td>';
+                    echo '<td>' . htmlspecialchars($row['total_price']) . '</td>';
+                    echo '<td>'; // Single cell for both buttons
+                    echo '<button class="btn btn-sm btn-primary">Edit</button> ';
+                    echo '<form action="admin-database-service-details-delete.php" method="POST" style="display:inline;">';
+                    echo '<input type="hidden" name="selected_id" value="' . htmlspecialchars($row['selected_id']) . '">';
+                    echo '<button type="submit" class="btn btn-sm btn-danger">Delete</button>';
                     echo '</form>';
                     echo '</td>';
                     echo '</tr>';
@@ -476,13 +457,13 @@ mysqli_close($connection);
 
                 echo '</tbody>';
                 echo '</table>';
-                echo '</div>'; // End of table-responsive
             } else {
-                echo '<div class="alert alert-warning">No data found.</div>'; // Bootstrap alert for no data
+                echo '<div class="alert alert-warning" role="alert">No data found.</div>';
             }
             ?>
         </div><!-- /row -->
-    </main>
+    </main><!-- /container -->
+
 
 
 

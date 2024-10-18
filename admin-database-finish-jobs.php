@@ -342,17 +342,17 @@ mysqli_close($connection);
                             </a>
                         </li>
                         <li class="v-1">
-                            <a href="admin-database-finish-jobs.php" class="nav-link px-3">
-                                <span class="me-2">Finish jobs</span>
+                            <a href="admin-database-service-details.php" class="nav-link px-3">
+                                <span class="me-2">Service Details</span>
                             </a>
                         </li>
                         <li class="v-1">
-                            <a href="csprocess3.php" class="nav-link px-3">
+                            <a href="admin-database-payment-details.php" class="nav-link px-3">
                                 <span class="me-2">Payment Details</span>
                             </a>
                         </li>
                         <li class="v-1">
-                            <a href="#" class="nav-link px-3">
+                            <a href="admin-database-finish-jobs" class="nav-link px-3">
                                 <span class="me-2">Finish jobs</span>
                             </a>
                         </li>

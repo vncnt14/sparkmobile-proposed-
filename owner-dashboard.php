@@ -189,6 +189,32 @@ mysqli_close($connection);
         object-fit: cover;
         border-radius: 50%;
     }
+
+    .sidebar {
+        height: 100vh;
+        position: fixed;
+        width: 220px;
+        background-color: #343a40;
+    }
+
+    .sidebar a {
+        color: #fff;
+        padding: 15px;
+        display: block;
+        text-decoration: none;
+    }
+
+    .sidebar a:hover {
+        background-color: #495057;
+    }
+
+    .card-header {
+        font-weight: bold;
+    }
+
+    .chart {
+        min-height: 300px;
+    }
 </style>
 
 <body>
@@ -356,9 +382,131 @@ mysqli_close($connection);
     </div>
     </div>
     <!-- main content -->
-    <main>
-        >
+    <main class="text-dark">
+        <!-- Main Content -->
+        <div class="dashboard-content">
+            <div class="container-fluid">
+                <!-- Stats Row -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card text-white bg-dark">
+                            <div class="card-body">
+                                <h4 class="card-title">11,871,522</h4>
+                                <p class="card-text">Total Online Today</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-white bg-dark">
+                            <div class="card-body">
+                                <h4 class="card-title">47%</h4>
+                                <p class="card-text">Users Online</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-white bg-dark">
+                            <div class="card-body">
+                                <h4 class="card-title">51%</h4>
+                                <p class="card-text">Offline</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-white bg-dark">
+                            <div class="card-body">
+                                <h4 class="card-title">177 sec</h4>
+                                <p class="card-text">Vacant Slot Number</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                Visits
+                            </div>
+                            <div class="card-body">
+                                <canvas id="visitsChart" class="chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                Visits by Region
+                            </div>
+                            <div class="card-body">
+                                <canvas id="regionChart" class="chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Chart for Visits
+        const ctxVisits = document.getElementById('visitsChart').getContext('2d');
+        const visitsChart = new Chart(ctxVisits, {
+            type: 'line',
+            data: {
+                labels: ['2023', '2024'],
+                datasets: [{
+                    label: 'Online',
+                    data: [2000, 10000],
+                    borderColor: 'blue',
+                    fill: false,
+                }, {
+                    label: 'Offline',
+                    data: [20000, 30000],
+                    borderColor: 'red',
+                    fill: false,
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        beginAtZero: true
+                    },
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Chart for Visits by Region
+        const ctxRegion = document.getElementById('regionChart').getContext('2d');
+        const regionChart = new Chart(ctxRegion, {
+            type: 'bar',
+            data: {
+                labels: ['2019', '2020', '2021', '2022', '2023'],
+                datasets: [{
+                    label: 'Users',
+                    data: [310000, 550000, 700000, 850000, 1200000],
+                    backgroundColor: 'orangered'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        beginAtZero: true
+                    },
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
 
 
     <script>
@@ -381,13 +529,8 @@ mysqli_close($connection);
         updateDateTime();
     </script>
 
-
-
-
-
-
+    
     <script src="./js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
     <script src="./js/jquery-3.5.1.js"></script>
     <script src="./js/jquery.dataTables.min.js"></script>
     <script src="./js/dataTables.bootstrap5.min.js"></script>

@@ -329,12 +329,12 @@ mysqli_close($connection);
               </a>
             </li>
             <li class="v-1">
-              <a href="admin-database-finish-jobs.php" class="nav-link px-3">
-                <span class="me-2">Finish jobs</span>
+              <a href="admin-database-service-details.php" class="nav-link px-3">
+                <span class="me-2">Service Details</span>
               </a>
             </li>
             <li class="v-1">
-              <a href="csprocess3.php" class="nav-link px-3">
+              <a href="admin-database-payment.php" class="nav-link px-3">
                 <span class="me-2">Payment Details</span>
               </a>
             </li>
@@ -406,36 +406,36 @@ mysqli_close($connection);
   </main>
 
 
-    <!-- Custom JavaScript to display the range value -->
-    <script>
-      function updateDateTime() {
-        // Get the current date and time
-        var currentDateTime = new Date();
+  <!-- Custom JavaScript to display the range value -->
+  <script>
+    function updateDateTime() {
+      // Get the current date and time
+      var currentDateTime = new Date();
 
-        // Format the date and time
-        var date = currentDateTime.toDateString();
-        var time = currentDateTime.toLocaleTimeString();
+      // Format the date and time
+      var date = currentDateTime.toDateString();
+      var time = currentDateTime.toLocaleTimeString();
 
-        // Display the formatted date and time
-        document.getElementById('dateTime').innerHTML = '<p>Date: ' + date + '</p><p>Time: ' + time + '</p>';
-      }
+      // Display the formatted date and time
+      document.getElementById('dateTime').innerHTML = '<p>Date: ' + date + '</p><p>Time: ' + time + '</p>';
+    }
 
-      // Update the date and time every second
-      setInterval(updateDateTime, 1000);
+    // Update the date and time every second
+    setInterval(updateDateTime, 1000);
 
-      // Initial call to display date and time immediately
-      updateDateTime();
-    </script>
+    // Initial call to display date and time immediately
+    updateDateTime();
+  </script>
 
-    <script src="./js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
-    <script src="./js/jquery-3.5.1.js"></script>
-    <script src="./js/jquery.dataTables.min.js"></script>
-    <script src="./js/dataTables.bootstrap5.min.js"></script>
-    <script src="./js/script.js"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <script src="./js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
+  <script src="./js/jquery-3.5.1.js"></script>
+  <script src="./js/jquery.dataTables.min.js"></script>
+  <script src="./js/dataTables.bootstrap5.min.js"></script>
+  <script src="./js/script.js"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </body>
 
 </html>

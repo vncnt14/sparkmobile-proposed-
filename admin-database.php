@@ -315,65 +315,48 @@ mysqli_close($connection);
                 </li>
 
                 <li class="">
-                    <a href="admin-database.php" class="nav-link px-3">
-                        <span class="me-2"><i class="fas fa-database"></i></i></span>
-                        <span>DATABASE</span>
-                    </a>
-                </li>
-                <li class="">
-                    <a
-                        class="nav-link px-3 sidebar-link"
-                        data-bs-toggle="collapse"
-                        href="#layouts">
-                        <span class="me-2"><i class="fas fa-calendar"></i></i></span>
-                        <span>BOOKINGS</span>
-                        <span class="ms-auto">
-                            <span class="right-icon">
-                                <i class="bi bi-chevron-down"></i>
-                            </span>
-                        </span>
-                    </a>
-                </li>
-                <div class="collapse" id="layouts">
-                    <ul class="navbar-nav ps-3">
-                        <li class="v-1">
-                            <a href="setappoinment.php" class="nav-link px-3">
-                                <span class="me-2">Set Appointment</span>
-                            </a>
-                        </li>
-                        <li class="v-1">
-                            <a href="checkingcar.php" class="nav-link px-3">
-                                <span class="me-2">Checking car condition</span>
-                            </a>
-                        </li>
-                        <li class="v-1">
-                            <a href="csrequest_slot.php" class="nav-link px-3">
-                                <span class="me-2">Request Slot</span>
-                            </a>
-                        </li>
-                        <li class="v-1">
-                            <a href="csprocess3.php" class="nav-link px-3">
-                                <span class="me-2">Select Service</span>
-                            </a>
-                        </li>
-                        <li class="v-1">
-                            <a href="#" class="nav-link px-3">
-                                <span class="me-2">Register your car</span>
-                            </a>
-                        </li>
-                        <li class="v-1">
-                            <a href="#" class="nav-link px-3">
-                                <span class="me-2">Booking Summary</span>
-                            </a>
-                        </li>
-                        <li class="v-1">
-                            <a href="#" class="nav-link px-3">
-                                <span class="me-2">Booking History</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                </li>
+          <a
+            class="nav-link px-3 sidebar-link"
+            data-bs-toggle="collapse"
+            href="#layouts">
+            <span class="me-2"><i class="fas fa-database"></i></i></span>
+            <span>DATABASE</span>
+            <span class="ms-auto">
+              <span class="right-icon">
+                <i class="bi bi-chevron-down"></i>
+              </span>
+            </span>
+          </a>
+        </li>
+        <div class="collapse" id="layouts">
+          <ul class="navbar-nav ps-3">
+            <li class="v-1">
+              <a href="admin-database.php" class="nav-link px-3">
+                <span class="me-2">Users</span>
+              </a>
+            </li>
+            <li class="v-1">
+              <a href="admin-database-vehicle.php" class="nav-link px-3">
+                <span class="me-2">Vehicles</span>
+              </a>
+            </li>
+            <li class="v-1">
+              <a href="admin-database-finish-jobs.php" class="nav-link px-3">
+                <span class="me-2">Service Details</span>
+              </a>
+            </li>
+            <li class="v-1">
+              <a href="csprocess3.php" class="nav-link px-3">
+                <span class="me-2">Payment Details</span>
+              </a>
+            </li>
+            <li class="v-1">
+              <a href="admin-database-finish-jobs.php" class="nav-link px-3">
+                <span class="me-2">Finish jobs</span>
+              </a>
+            </li>
+          </ul>
+        </div>
                 <li>
                     <a
                         class="nav-link px-3 sidebar-link"
