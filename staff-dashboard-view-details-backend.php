@@ -5,13 +5,14 @@ include('config.php');
 // Check if form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Retrieve form data
-    $selected_id = $_POST['selected_id'];
-    $vehicle_id = $_POST['vehicle_id'];
-    $servicename_id = $_POST['servicename_id'];
-    $user_id = $_POST['user_id'];
-    $slotNumber = $_POST['slotNumber'];
-    $inventory_id = $_POST['inventory_id']; // The imploded inventory_id list
-    $quantity = (int)$_POST['quantity']; // Ensure quantity is an integer
+    $selected_id = isset($_POST['selected_id']) ? $_POST['selected_id'] : '';
+    $vehicle_id = isset($_POST['vehicle_id']) ? $_POST['vehicle_id'] : '';
+    $servicename_id = isset($_POST['servicename_id']) ? $_POST['servicename_id'] : '';
+    $user_id = isset($_POST['user_id']) ? $_POST['user_id'] : '';
+    $slotNumber = isset($_POST['slotNumber']) ? $_POST['slotNumber'] : '';
+    $inventory_id = isset($_POST['inventory_id']) ? $_POST['inventory_id'] : ''; // The imploded inventory_id list
+    $quantity = isset($_POST['quantity']) ? (int)$_POST['quantity'] : 0; // Ensure quantity is an integer
+    
 
     // Explode the inventory_ids back into an array
     $inventory_id_array = explode(', ', $inventory_id);

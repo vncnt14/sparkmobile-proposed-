@@ -5,22 +5,24 @@ include('config.php');
 // Check if form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Retrieve form data
-    $servicename_id = $_POST['servicename_id']. '';
-    $selected_id = $_POST['selected_id']. '';
-    $vehicle_id = $_POST['vehicle_id']. '';
-    $user_id = $_POST['user_id']. '';
-    $services = $_POST['services']. '';
-    $price = $_POST['price']. '';
-    
+    $servicename_id = isset($_POST['servicename_id']) ? $_POST['servicename_id'] : '';
+    $selected_id = isset($_POST['selected_id']) ? $_POST['selected_id'] : '';
+    $vehicle_id = isset($_POST['vehicle_id']) ? $_POST['vehicle_id'] : '';
+    $user_id = isset($_POST['user_id']) ? $_POST['user_id'] : '';
+    $services = isset($_POST['services']) ? $_POST['services'] : '';
+    $price = isset($_POST['price']) ? $_POST['price'] : '';
+
+
     // Clean and convert total_price
     $total_price = $_POST['total_price'];
     $total_price = intval(preg_replace('/[^\d]/', '', $total_price)); // Ensure it's an integer
 
-    $timer = $_POST['timer'];
-    $is_deleted = $_POST['is_deleted'];
-    $product_name = $_POST['product_name'];
-    $product_price = $_POST['product_price'];
-    $slotNumber = $_POST['slotNumber'];
+    $timer = isset($_POST['timer']) ? $_POST['timer'] : '';
+    $is_deleted = isset($_POST['is_deleted']) ? $_POST['is_deleted'] : '';
+    $product_name = isset($_POST['product_name']) ? $_POST['product_name'] : '';
+    $product_price = isset($_POST['product_price']) ? $_POST['product_price'] : '';
+    $slotNumber = isset($_POST['slotNumber']) ? $_POST['slotNumber'] : '';
+
 
     // Debug output to check values being submitted
     error_log("Total Price: " . $total_price);
@@ -62,4 +64,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Close database connection
     mysqli_close($connection);
 }
-?>

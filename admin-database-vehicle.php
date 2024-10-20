@@ -346,7 +346,7 @@ mysqli_close($connection);
                             </a>
                         </li>
                         <li class="v-1">
-                            <a href="" class="nav-link px-3">
+                            <a href="admin-database-service-details.php" class="nav-link px-3">
                                 <span class="me-2">Service Details</span>
                             </a>
                         </li>

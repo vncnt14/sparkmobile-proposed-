@@ -494,13 +494,8 @@ mysqli_close($connection);
 
         <ul class="list-inline mt-5">
           <h2>Car Appearance</h2>
-          <li class="list-inline-item">(How dirty is your vehicle)</li>
+          <li class="list-inline-item">Slide the sliding bar to know if your vehicle is dirty or not.</li>
         </ul>
-        <ul class="list-inline mt-3 text-start font-weight-bold">
-          <li class="v-3 list-inline-item">LEGENDS:</li>
-          <strong class="v-3 list-inline-item">0 = NEED TO CLEAN, 300 = SLIGHTLY CLEAN, 500 = VERY CLEAN</strong>
-        </ul>
-        <p class="mt-3">Slide the sliding bar to know if your vehicle is dirty or not.</p>
         <form action="checkingcar2-backend.php" method="POST">
           <input type="hidden" name="vehicle_id" id="vehicle_id" value="<?php echo $vehicle_id; ?>">
           <input type="hidden" name="user_id" id="user_id" value="<?php echo $userID; ?>">
@@ -513,13 +508,20 @@ mysqli_close($connection);
             foreach ($appearances as $appearance) {
               echo '<div class="form-group col-md-3">';
               echo '<label for="' . $appearance . '">' . ucfirst($appearance) . ':</label>';
+
+              // Dirty and Clean Labels
+              echo '<div class="d-flex justify-content-between">';
+              echo '<span class="text-dark">Dirty</span>';
+              echo '<span class="text-dark">Clean</span>';
+              echo '</div>';
+
+              // Range input
               echo '<input type="range" class="form-range" id="' . $appearance . 'Range" name="' . $appearance . '" min="0" max="100" step="50" required>';
-              echo '<label for="' . $appearance . 'Range">' . ucfirst($appearance) . ' Condition:</label>';
-              echo '<input type="text" class="form-control" id="' . $appearance . 'Value" readonly>';
+
               echo '</div>';
             }
 
-            // Total Result
+            // Total Result (can be removed if not needed)
             echo '<div class="form-group col-md-4">';
             echo '<label for="appearanceResult">Total Result:</label>';
             echo '<input class="form-control" id="appearanceResult" name="appearanceResult" readonly>';
@@ -530,8 +532,8 @@ mysqli_close($connection);
             echo '<button type="submit" class="col-md-4 mb-4 mt-2 offset-md-3 btn btn-primary btn-md">PROCEED</button>';
             echo '</div>';
             ?>
-
           </div>
+
         </form>
 
     </div>

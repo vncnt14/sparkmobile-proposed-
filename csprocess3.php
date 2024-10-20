@@ -29,7 +29,7 @@ $shop_query = "SELECT *FROM shops WHERE shop_id = '$shop_id'";
 $shop_result = mysqli_query($connection, $shop_query);
 $shopData = mysqli_fetch_assoc($shop_result);
 
-$appearance_query = "SELECT * FROM carappearance WHERE shop_id = '$shop_id'";
+$appearance_query = "SELECT * FROM carappearance WHERE shop_id = '$shop_id' AND user_id = '$userID' AND vehicle_id = '$vehicle_id'";
 $appearance_result = mysqli_query($connection, $appearance_query);
 
 if ($appearance_result && mysqli_num_rows($appearance_result) > 0) {

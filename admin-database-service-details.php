@@ -25,7 +25,7 @@ $finish_result = mysqli_query($connection, $finish_query);
 $serviceData = mysqli_fetch_assoc($finish_result);
 
 // Close the database connection
-mysqli_close($connection);
+
 ?>
 
 
@@ -419,36 +419,44 @@ mysqli_close($connection);
         <h1 class="mb-4">DATABASE</h1>
 
         <!-- Section Title -->
-        <h3 class="text-center">Finish jobs</h3>
+        <h3 class="text-center">Service Details</h3>
 
         <div class="row">
             <?php
+            // Execute the query
+            $finish_query = "SELECT users.firstname, users.lastname, service_details.product_name, service_details.services,
+    service_details.selected_id, service_details.total_price
+    FROM service_details
+    LEFT JOIN users ON users.user_id = service_details.user_id";
+            $finish_result = mysqli_query($connection, $finish_query);
+
+            // Check if the result set has rows
             if (mysqli_num_rows($finish_result) > 0) {
                 echo '<table class="table table-striped table-hover">';
                 echo '<thead class="table-dark">';
                 echo '<tr>';
-                echo '<th>Firstname</th>';
-                echo '<th>Lastname</th>';
+                echo '<th>First Name</th>';
+                echo '<th>Last Name</th>';
                 echo '<th>Services</th>';
                 echo '<th>Product Name</th>';
                 echo '<th>Total Price</th>';
-                echo '<th>Action</th>'; // Only one "Action" header
+                echo '<th>Action</th>';
                 echo '</tr>';
                 echo '</thead>';
                 echo '<tbody>';
 
                 // Loop through each row of the result set
-                while ($row = mysqli_fetch_assoc($finish_result)) {
+                while ($serviceData = mysqli_fetch_assoc($finish_result)) {
                     echo '<tr>';
-                    echo '<td>' . htmlspecialchars($row['firstname']) . '</td>';
-                    echo '<td>' . htmlspecialchars($row['lastname']) . '</td>';
-                    echo '<td>' . htmlspecialchars($row['services']) . '</td>';
-                    echo '<td>' . htmlspecialchars($row['product_name']) . '</td>';
-                    echo '<td>' . htmlspecialchars($row['total_price']) . '</td>';
+                    echo '<td>' . htmlspecialchars($serviceData['firstname']) . '</td>';
+                    echo '<td>' . htmlspecialchars($serviceData['lastname']) . '</td>';
+                    echo '<td>' . htmlspecialchars($serviceData['services']) . '</td>';
+                    echo '<td>' . htmlspecialchars($serviceData['product_name']) . '</td>';
+                    echo '<td>' . htmlspecialchars($serviceData['total_price']) . '</td>';
                     echo '<td>'; // Single cell for both buttons
                     echo '<button class="btn btn-sm btn-primary">Edit</button> ';
                     echo '<form action="admin-database-service-details-delete.php" method="POST" style="display:inline;">';
-                    echo '<input type="hidden" name="selected_id" value="' . htmlspecialchars($row['selected_id']) . '">';
+                    echo '<input type="hidden" name="selected_id" value="' . htmlspecialchars($serviceData['selected_id']) . '">';
                     echo '<button type="submit" class="btn btn-sm btn-danger">Delete</button>';
                     echo '</form>';
                     echo '</td>';
@@ -462,6 +470,7 @@ mysqli_close($connection);
             }
             ?>
         </div><!-- /row -->
+
     </main><!-- /container -->
 
 
