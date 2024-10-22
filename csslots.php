@@ -54,9 +54,10 @@ unset($_SESSION['date']);
 
 // Main code to handle slot request
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $userID = $_POST['user_id'];
+    $userID = $_POST ['user_id'];
     $vehicle_id = $_POST['vehicle_id'];
     $shop_id = $_POST['shop_id'];
+    $shop_id = $_POST['shop_id'] ?? 0;
     
 
 

@@ -15,6 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $firstname = isset($_POST['firstname']) ? $_POST['firstname'] : '';
     $lastname = isset($_POST['lastname']) ? $_POST['lastname'] : '';
     $vehicle_id = isset($_POST['vehicle_id']) ? $_POST['vehicle_id'] : '';
+    $servicedone_id = isset($_POST['servicedone_id']) ? $_POST['servicedone_id'] : '';
 
     // Convert amount and total price to float
     $amount = floatval($amount);
@@ -24,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $change = $amount - $totalPrice;
 
     // Prepare and execute the SQL statements
-    $insert_query = "INSERT INTO payment_details (user_id, subtotal, amount, change_amount, payment_method, date) VALUES (?, ?, ?, ?, ?, ?)";
+    $insert_query = "INSERT INTO payment_details (user_id, servicedone_id, subtotal, amount, change_amount, payment_method, date) VALUES (?, ?, ?, ?, ?, ?, ?)";
     $update_query = "UPDATE finish_jobs SET is_deleted = '1' WHERE user_id = ?";
     $transaction_query = "INSERT INTO payment_transaction (user_id, vehicle_id, date, firstname, lastname) VALUES (?, ?, ?, ?, ?)";
 
@@ -35,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($stmt_insert && $stmt_update && $stmt_transaction) {
         // Bind parameters for insertion into payment_details
-        mysqli_stmt_bind_param($stmt_insert, 'idddss', $user_id, $subtotal, $amount, $change_amount, $payment_method, $date);
+        mysqli_stmt_bind_param($stmt_insert, 'iidddss', $user_id, $servicedone_id, $subtotal, $amount, $change_amount, $payment_method, $date);
 
         // Bind parameter for update of finish_jobs
         mysqli_stmt_bind_param($stmt_update, 'i', $user_id);
@@ -76,7 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 // Show success message and redirect
                 echo '<script>alert("Payment successful!");</script>';
-                echo '<script>window.location.href = "cashier-dashboard-payment-invoice.php?user_id=' . $user_id . '";</script>';
+                echo '<script>window.location.href = "cashier-dashboard-payment-invoice.php?user_id=' . $user_id . '&servicedone_id=' . $servicedone_id . '";</script>';
             } else {
                 echo "Error: Unable to execute transaction insert.<br>" . mysqli_error($connection);
             }

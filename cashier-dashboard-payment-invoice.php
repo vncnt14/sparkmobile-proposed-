@@ -16,6 +16,7 @@ $userID = $_SESSION['user_id'];
 $vehicle_id = $_SESSION['vehicle_id'];
 $serviceID = $_SESSION['service_id'];
 $user_id = $_GET['user_id'];
+$servicedone_id = $_GET['servicedone_id'];
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query

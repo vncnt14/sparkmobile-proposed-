@@ -471,8 +471,7 @@ li :hover{
                           <input type="hidden" id="vehicle_id" name="vehicle_id" value="<?php echo $vehicleData['vehicle_id'];?>">
                           <input type="hidden" id="user_id" name="user_id" value="<?php echo $userID ?>">
                           <input type="hidden" name="shop_id" id="shop_id" value="<?php echo $shop_id?>">
-                          
-                      
+                        
                       <div class="col-sm">
                           
                       </div>

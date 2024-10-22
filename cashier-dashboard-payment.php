@@ -25,11 +25,12 @@ $userData = mysqli_fetch_assoc($result);
 
 
 
-$finish_query = "SELECT sd.*, sn.service_name, co.firstname, co.lastname, v.vehicle_id, sd.total_price
+$finish_query = "SELECT sd.*, sn.service_name, co.firstname, co.lastname, v.vehicle_id, sd.total_price, ss.services, sd.servicedone_id
           FROM finish_jobs sd
+          INNER JOIN service_details ss ON ss.selected_id = sd.selected_id
           INNER JOIN service_names sn ON sd.servicename_id = sn.servicename_id
           INNER JOIN users co ON sd.user_id = co.user_id
-          INNER JOIN vehicles v ON sd.vehicle_id = v.vehicle_id WHERE is_deleted = '0'";
+          INNER JOIN vehicles v ON sd.vehicle_id = v.vehicle_id WHERE sd.is_deleted = '0'";
 // Ordering by first name in ascending order
 $finish_result = mysqli_query($connection, $finish_query);
 $finisData = mysqli_fetch_assoc($finish_result);
@@ -322,6 +323,7 @@ mysqli_close($connection);
                             $finishData = array();
                             foreach ($finish_result as $row) {
                                 $userId = $row['user_id'];
+                                $servicedoneId = $row['servicedone_id'];
                                 if (!isset($finishData[$userId])) {
                                     $finishData[$userId] = array(
                                         'firstname' => $row['firstname'],
@@ -363,7 +365,7 @@ mysqli_close($connection);
                                 // Display the total_price directly without a loop
                                 echo '<td>₱ ' . number_format($user['totalPrice'] / 100, 2) . '</td>'; // Directly display total_price as a decimal
 
-                                echo '<td><a href="cashier-dashboard-payment-compute.php?user_id=' . urlencode($userId) . '" class="btn btn-primary">View Details</a></td>';
+                                echo '<td><a href="cashier-dashboard-payment-compute.php?user_id=' . urlencode($userId) . '&servicedone_id=' . urlencode($servicedoneId) . '" class="btn btn-primary">View Details</a></td>';
                                 echo '</tr>';
                             }
                         } else {

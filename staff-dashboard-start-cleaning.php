@@ -347,16 +347,18 @@ $selectedData = mysqli_fetch_assoc($selected_result);
                   <input type="hidden" name="slotNumber" id="slotNumber" value="<?php echo $selectedData['slotNumber']; ?>">
 
                   <?php
-                  // Fetch services, prices, and products grouped by slotNumber for the current user
+                  // Fetch all services and prices grouped by slotNumber for the current user
                   $user_id = $selectedData['user_id'];
                   $service_query = "SELECT slotNumber, 
-                                                       GROUP_CONCAT(services) AS services, 
-                                                       GROUP_CONCAT(price) AS prices, 
-                                                       GROUP_CONCAT(product_name) AS product_names, 
-                                                       GROUP_CONCAT(product_price) AS product_prices 
-                                                FROM service_details 
-                                                WHERE user_id = '$user_id' 
-                                                GROUP BY slotNumber";
+                                                   GROUP_CONCAT(services) AS services, 
+                                                   GROUP_CONCAT(price) AS prices, 
+                                                   GROUP_CONCAT(product_name) AS product_names, 
+                                                   GROUP_CONCAT(product_price) AS product_prices,
+                                                   GROUP_CONCAT(inventory_id) AS inventory_id,
+                                                   GROUP_CONCAT(quantity) AS quantity    
+                                                   FROM service_details 
+                                                   WHERE user_id = '$user_id' 
+                                                   GROUP BY slotNumber";
 
                   $service_result = mysqli_query($connection, $service_query);
 
@@ -367,48 +369,48 @@ $selectedData = mysqli_fetch_assoc($selected_result);
                   while ($row = mysqli_fetch_assoc($service_result)) {
                     $slotNumber = $row['slotNumber'];
                     $services = explode(',', $row['services']);
+                    $inventory_id = explode(',', $row['inventory_id']);
+                    $quantity = explode(',', $row['quantity']);
                     $prices = explode(',', $row['prices']);
-                    $product_names = explode(',', $row['product_names']);
+                    $product_names = array_filter(explode(',', $row['product_names']), function ($name) {
+                      return $name != ''; // Filter out empty product names to remove unnecessary commas
+                    });
                     $product_prices = explode(',', $row['product_prices']);
 
-                    // Calculate total price for services and products
-                    $service_total = array_sum($prices);
-                    $product_total = array_sum($product_prices);
+                    // Calculate total price for each slot
+                    $service_total = array_sum($prices); // Array of service prices
+                    $product_total = array_sum($product_prices); // Sum of product prices
+
+                    // Calculate the total price (services + product)
                     $total_price = $service_total + $product_total;
                   ?>
-                    <!-- Services and Prices -->
+                    <!-- Display grouped services by slot -->
                     <div class="row mb-3">
+                      <input type="hidden" name="inventory_id" id="services_<?php echo $slotNumber; ?>" value="<?php echo implode(', ', $inventory_id); ?>">
+                      <input type="hidden" name="quantity" id="services_<?php echo $slotNumber; ?>" value="<?php echo implode(', ', $quantity); ?>">
+                      <!-- Services -->
                       <div class="col-md-6">
                         <strong><label for="services_<?php echo $slotNumber; ?>" class="form-label">Services:</label></strong>
-                        <textarea class="form-control" name="services" id="services_<?php echo $slotNumber; ?>" rows="3" readonly><?php echo implode(', ', $services); ?></textarea>
+                        <textarea class="form-control" id="services_<?php echo $slotNumber; ?>" rows="3" readonly><?php echo implode(', ', $services); ?></textarea>
                       </div>
+
+
+                      <!-- Prices -->
                       <div class="col-md-6">
                         <strong><label for="prices_<?php echo $slotNumber; ?>" class="form-label">Prices:</label></strong>
                         <textarea class="form-control" name="price" id="prices_<?php echo $slotNumber; ?>" rows="3" readonly>₱ <?php echo implode(', ₱ ', $prices); ?></textarea>
                       </div>
-                    </div>
 
-                    <!-- Products and Product Prices -->
-                    <?php if (!empty($product_names)) { ?>
-                      <div class="row mb-3">
-                        <div class="col-md-6">
-                          <strong><label for="product_<?php echo $slotNumber; ?>" class="form-label">Cleaning Products:</label></strong>
-                          <textarea class="form-control" name="product_name" id="product_<?php echo $slotNumber; ?>" rows="3" readonly>
-    <?php
-                      // Filter out empty product names before displaying
-                      $cleaned_product_names = array_filter($product_names, function ($product_name) {
-                        return !empty(trim($product_name)); // Remove empty or whitespace-only values
-                      });
-
-                      // Display the cleaned product names without unnecessary commas
-                      echo implode(', ', $cleaned_product_names);
-    ?>
-  </textarea>
-                        </div>
-
-                        <div class="col-md-6">
-                          <strong><label for="product_price_<?php echo $slotNumber; ?>" class="form-label">Product Prices:</label></strong>
-                          <textarea class="form-control" name="product_price" id="product_price_<?php echo $slotNumber; ?>" rows="3" readonly>
+                      <!-- Products and Product Prices -->
+                      <?php if (!empty($product_names)) { ?>
+                        <div class="row mb-3">
+                          <div class="col-md-6">
+                            <strong><label for="product_<?php echo $slotNumber; ?>" class="form-label">Cleaning Products:</label></strong>
+                            <textarea class="form-control" name="product_name" id="product_<?php echo $slotNumber; ?>" rows="3" readonly><?php echo implode(', ', $product_names); ?></textarea>
+                          </div>
+                          <div class="col-md-6">
+                            <strong><label for="product_price_<?php echo $slotNumber; ?>" class="form-label">Product Prices:</label></strong>
+                            <textarea class="form-control" name="product_price" id="product_price_<?php echo $slotNumber; ?>" rows="3" readonly>
                           ₱ <?php
                             // Format product prices, add ".00" and hide unnecessary values
                             $formatted_prices = array_map(function ($price) {
@@ -422,11 +424,11 @@ $selectedData = mysqli_fetch_assoc($selected_result);
                             echo implode(', ₱ ', array_filter($formatted_prices)); // Filter empty prices
                             ?>
                           </textarea>
+                          </div>
                         </div>
-                      </div>
-                    <?php } ?>
+                      <?php } ?>
 
-                  <?php } ?>
+                    <?php } ?>
 
                   <!-- Total Price -->
                   <div class="row mb-3">

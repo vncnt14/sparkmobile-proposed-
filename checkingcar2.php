@@ -496,6 +496,8 @@ mysqli_close($connection);
           <h2>Car Appearance</h2>
           <li class="list-inline-item">Slide the sliding bar to know if your vehicle is dirty or not.</li>
         </ul>
+        <p class="v-3 list-inline-item">LEGENDS:</p>
+        <p class="v-3 list-inline-item mt-3 text-danger">0 = NEED TO CLEAN<p class="v-3 list-inline-item mt-3 ms-2 text-success">500 = ALL CLEAN</p></p>
         <form action="checkingcar2-backend.php" method="POST">
           <input type="hidden" name="vehicle_id" id="vehicle_id" value="<?php echo $vehicle_id; ?>">
           <input type="hidden" name="user_id" id="user_id" value="<?php echo $userID; ?>">

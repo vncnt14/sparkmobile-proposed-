@@ -16,6 +16,7 @@ $userID = $_SESSION['user_id'];
 $vehicle_id = $_SESSION['vehicle_id'];
 $serviceID = $_SESSION['service_id'];
 $user_id = $_GET['user_id'];
+$servicedone_id = $_GET['servicedone_id'];
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
@@ -27,8 +28,9 @@ $userData = mysqli_fetch_assoc($result);
 
 
 $query = "SELECT finish_jobs.*, users.firstname, users.lastname, 
-service_names.service_name, vehicles.vehicle_id, finish_jobs.services
+service_names.service_name, vehicles.vehicle_id, finish_jobs.services, service_details.services
 FROM finish_jobs
+INNER JOIN service_details ON service_details.selected_id = finish_jobs.selected_id
 INNER JOIN vehicles ON vehicles.vehicle_id = finish_jobs.vehicle_id
 INNER JOIN users ON finish_jobs.user_id = users.user_id
 INNER JOIN service_names ON finish_jobs.servicename_id = service_names.servicename_id WHERE finish_jobs.user_id = $user_id AND finish_jobs.is_deleted = '0'";
@@ -367,6 +369,7 @@ mysqli_close($connection);
                                                     <input type="hidden" name="vehicle_id" id="vehicle_id" value="<?php echo $paymentData['vehicle_id']; ?>">
                                                     <input type="hidden" name="firstname" id="firstname" value="<?php echo $paymentData['firstname']; ?>">
                                                     <input type="hidden" name="lastname" id="lastname" value="<?php echo $paymentData['lastname']; ?>">
+                                                    <input type="hidden" name="servicedone_id" id="servicedone_id" value="<?php echo $servicedone_id;?>">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="payment_method" class="form-label">Payment Method:</label>
