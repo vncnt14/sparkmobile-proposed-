@@ -293,6 +293,12 @@ mysqli_close($connection);
         </li>
         <li>
         <li class="">
+                    <a href="user-dashboard.php" class="nav-link px-3">
+                        <span class="me-2"><i class="fas fa-home"></i></i></span>
+                        <span class="start">DASHBOARD</span>
+                    </a>
+                </li>
+        <li class="">
           <a href="csdashboard.php" class="nav-link px-3">
             <span class="me-2"><i class="fas fa-user"></i></i></span>
             <span class="start">PROFILE</span>
@@ -460,6 +466,7 @@ mysqli_close($connection);
         <form action="checkingcar_output.php" method="POST">
           <input type="hidden" class="form-control" id="vehicle_id" name="vehicle_id" value="<?php echo $vehicleData['vehicle_id']; ?>">
           <input type="hidden" name="user_id" value="<?php echo $userID ?>">
+          <input type="hidden" name="shop_id" id="shop_id" value="<?php echo $shop_id; ?>">
 
           <div class="row g-3 needs-validation" novalidate>
             <!-- Each input group for a car condition -->

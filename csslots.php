@@ -54,10 +54,10 @@ unset($_SESSION['date']);
 
 // Main code to handle slot request
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $userID = $_POST ['user_id'];
-    $vehicle_id = $_POST['vehicle_id'];
-    $shop_id = $_POST['shop_id'];
-    $shop_id = $_POST['shop_id'] ?? 0;
+    $userID = isset($_POST['user_id']) ? (int)$_POST['user_id'] : 0;
+    $vehicle_id = isset($_POST['vehicle_id']) ? (int)$_POST['vehicle_id'] : 0;
+    $shop_id = isset($_POST['shop_id']) && is_numeric($_POST['shop_id']) ? (int)$_POST['shop_id'] : NULL;  // Modified to handle shop_id correctly
+    $is_serving = isset($_POST['is_serving']) ? (int)$_POST['is_serving'] : 0;
     
 
 

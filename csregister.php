@@ -12,12 +12,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$password = isset($_POST["password"]) ? $_POST["password"] : '';
 	$role = isset($_POST["role"]) ? $_POST["role"] : '';
 	$profile = isset($_POST["profile"]) ? $_POST["profile"] : '';
+	$gender = isset($_POST["gender"]) ? $_POST["gender"] : '';
 
 
 
 	
-	$query = "INSERT INTO users (firstname, lastname, contact, address, email, username, password, role, profile) 
-	VALUES ('$firstname', '$lastname', '$contact', '$address', '$email', '$username', '$password', '$role', '$profile')";
+	$query = "INSERT INTO users (firstname, lastname, contact, address, email, username, password, role, gender, profile) 
+	VALUES ('$firstname', '$lastname', '$contact', '$address', '$email', '$username', '$password', '$role', '$gender', '$profile')";
 
 	
 	if (mysqli_query($connection, $query)) {

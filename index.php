@@ -6,7 +6,7 @@
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title>Spark Mobile</title>
   <link rel="icon" href="NEW SM LOGO.png" type="image/x-icon">
-    <link rel="shortcut icon" href="NEW SM LOGO.png" type="image/x-icon">
+  <link rel="shortcut icon" href="NEW SM LOGO.png" type="image/x-icon">
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -42,17 +42,21 @@
 
     window.onload = showAlertAndRedirect;
   </script>
-  
+
   <style>
     .modal-content {
       border-radius: 12px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 0 20px rgba(0, 0, 0, 0.1);
-      backdrop-filter: blur(30px); /* This adds blur to the modal background */
-      background: rgba(255, 255, 255, 0.75); /* Add a semi-transparent background to enhance the blur effect */
+      backdrop-filter: blur(30px);
+      /* This adds blur to the modal background */
+      background: rgba(255, 255, 255, 0.75);
+      /* Add a semi-transparent background to enhance the blur effect */
     }
 
-    .modal-header, .modal-footer {
-      background-color: rgba(248, 249, 250, 0.8); /* Semi-transparent header and footer for better blur effect */
+    .modal-header,
+    .modal-footer {
+      background-color: rgba(248, 249, 250, 0.8);
+      /* Semi-transparent header and footer for better blur effect */
     }
 
     .modal-header h5 {
@@ -62,7 +66,8 @@
     }
 
     .modal-body {
-      background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent body for better blur effect */
+      background-color: rgba(255, 255, 255, 0.8);
+      /* Semi-transparent body for better blur effect */
     }
 
     .modal-footer {
@@ -116,11 +121,14 @@
     }
 
     #signupModal .form-control {
-      height: 31px; /* Adjust the height as needed */
-      font-size: 18px; /* Adjust the font size as needed */
+      height: 31px;
+      /* Adjust the height as needed */
+      font-size: 18px;
+      /* Adjust the font size as needed */
     }
+
     .icon {
-        color: orangered;
+      color: orangered;
     }
   </style>
 
@@ -165,7 +173,7 @@
           </div>
         </div>
         <div class="text-center" data-aos="zoom-out" data-aos-delay="100">
-          <a href="#" class="btn-get-started" data-bs-toggle="modal" data-bs-target="#loginModal">Get Started</a> 
+          <a href="#" class="btn-get-started" data-bs-toggle="modal" data-bs-target="#loginModal">Get Started</a>
         </div>
 
         <div class="row gy-4 mt-5">
@@ -195,7 +203,7 @@
                 <span>Affordable cleaning products.</span>
               </li>
               <li class="d-flex align-items-center mb-3">
-                <i class= " icon bi bi-check-circle  me-3"></i>
+                <i class=" icon bi bi-check-circle  me-3"></i>
                 <span>Door to door cleaning services.</span>
               </li>
             </ul>
@@ -217,21 +225,21 @@
           <?php
           // Dynamically fetch feature data (replace with your actual data fetching)
           $features = [
-              ['icon' => 'bi bi-geo-alt', 'title' => 'Real-time Tracking', 'description' => 'Track the location of your houses in real-time and know exactly when the Washers will arrive.'],
-              ['icon' => 'bi bi-calendar-check', 'title' => 'Easy Booking', 'description' => 'Book your schedule in advance and avoid the hassle of finding a Car Washers during peak hours.'],
-              ['icon' => 'bi bi-shield-lock', 'title' => 'Secure Payments', 'description' => 'Make payments securely through the app and enjoy a cashless Car Wash experience.'],
-              ['icon' => 'bi bi-bar-chart', 'title' => 'Analytics Dashboard', 'description' => 'Monitor your Car wash history statistics and manage your account effectively.']
+            ['icon' => 'bi bi-geo-alt', 'title' => 'Real-time Tracking', 'description' => 'Track the location of your houses in real-time and know exactly when the Washers will arrive.'],
+            ['icon' => 'bi bi-calendar-check', 'title' => 'Easy Booking', 'description' => 'Book your schedule in advance and avoid the hassle of finding a Car Washers during peak hours.'],
+            ['icon' => 'bi bi-shield-lock', 'title' => 'Secure Payments', 'description' => 'Make payments securely through the app and enjoy a cashless Car Wash experience.'],
+            ['icon' => 'bi bi-bar-chart', 'title' => 'Analytics Dashboard', 'description' => 'Monitor your Car wash history statistics and manage your account effectively.']
           ];
 
           foreach ($features as $feature) {
           ?>
-          <div class="col-md-6 col-lg-3">
-            <div class="icon-box">
-              <div class="icon"><i class="<?php echo $feature['icon']; ?>"></i></div>
-              <h4 class="title"><a href="#"><?php echo $feature['title']; ?></a></h4>
-              <p class="description"><?php echo $feature['description']; ?></p>
+            <div class="col-md-6 col-lg-3">
+              <div class="icon-box">
+                <div class="icon"><i class="<?php echo $feature['icon']; ?>"></i></div>
+                <h4 class="title"><a href="#"><?php echo $feature['title']; ?></a></h4>
+                <p class="description"><?php echo $feature['description']; ?></p>
+              </div>
             </div>
-          </div>
           <?php } ?>
         </div>
       </div>
@@ -344,6 +352,15 @@
               <input type="text" class="form-control" id="lastname" name="lastname" required>
             </div>
             <div class="mb-3">
+              <label for="gender" class="form-label">Gender</label>
+              <select class="form-control" id="gender" name="gender" required>
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
               <label for="email" class="form-label">Email</label>
               <input type="email" class="form-control" id="email" name="email" required>
             </div>
@@ -371,7 +388,7 @@
     function toggleDriverFields() {
       const userType = document.getElementById('signupUserType').value;
       const driverFields = document.getElementById('driverFields');
-      
+
       if (userType === 'driver') {
         driverFields.style.display = 'block';
       } else {

@@ -17,15 +17,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $engine = isset($_POST["engine"]) ? $_POST["engine"] : "";
     $tire = isset($_POST["tire"]) ? $_POST["tire"] : "";
     $self = isset($_POST["self"]) ? $_POST["self"] : "";
+    $shop_id = isset($_POST['shop_id']) && is_numeric($_POST['shop_id']) ? (int)$_POST['shop_id'] : NULL;  // Modified to handle shop_id correctly
 
     // Use prepared statements to prevent SQL injection
-    $query = "INSERT INTO carcondition_details (user_id, vehicle_id, battery, lights, oil, water, brake, air, gas, engine, tire, self) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $query = "INSERT INTO carcondition_details (user_id, vehicle_id, shop_id, battery, lights, oil, water, brake, air, gas, engine, tire, self) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     $stmt = mysqli_prepare($connection, $query);
 
     // Bind parameters
-    mysqli_stmt_bind_param($stmt, "iissssssssss", $userID, $vehicle_id, $battery, $lights, $oil, $water, $brake, $air, $gas, $engine, $tire, $self);
+    mysqli_stmt_bind_param($stmt, "iiissssssssss", $userID, $vehicle_id, $shop_id, $battery, $lights, $oil, $water, $brake, $air, $gas, $engine, $tire, $self);
 
     // Execute the statement
     try {
@@ -36,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "<script>alert('Condition Submitted!. Please wait for the notification ');</script>";
         echo "<script>
         setTimeout(function() {
-            window.location.href = 'checkingcar2.php?vehicle_id=" . (isset($vehicleData['vehicle_id']) ? $vehicleData['vehicle_id'] : '') . "';
+            window.location.href = 'checkingcar2.php?vehicle_id=" . (isset($vehicleData['vehicle_id']) ? $vehicleData['vehicle_id'] : '') . "&shop_id=" . (isset($shop_id) ? $shop_id : '') . "';
         }, 1000); // Redirect after 1 second
         </script>";
 

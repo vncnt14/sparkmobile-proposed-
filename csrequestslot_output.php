@@ -289,6 +289,12 @@ li :hover{
               <div class="ms-3"id="dateTime"></div>
             </li>
             <li>
+            <li class="">
+                    <a href="user-dashboard.php" class="nav-link px-3">
+                        <span class="me-2"><i class="fas fa-home"></i></i></span>
+                        <span class="start">DASHBOARD</span>
+                    </a>
+                </li>
                 <li class="">
                     <a href="csdashboard.php" class="nav-link px-3">
                       <span class="me-2"><i class="fas fa-user"></i></i></span>

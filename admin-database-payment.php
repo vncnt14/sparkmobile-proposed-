@@ -344,12 +344,12 @@ mysqli_close($connection);
                             </a>
                         </li>
                         <li class="v-1">
-                            <a href="" class="nav-link px-3">
+                            <a href="admin-database-service-details.php" class="nav-link px-3">
                                 <span class="me-2">Service Details</span>
                             </a>
                         </li>
                         <li class="v-1">
-                            <a href="csprocess3.php" class="nav-link px-3">
+                            <a href="admin-database-payment.php" class="nav-link px-3">
                                 <span class="me-2">Payment Details</span>
                             </a>
                         </li>
@@ -400,6 +400,11 @@ mysqli_close($connection);
                             <li class="v-1">
                                 <a href="#" class="nav-link px-3">
                                     <span class="me-2">Payment History</span>
+                                </a>
+                            </li>
+                            <li class="v-1">
+                                <a href="admin-database-car-appearance.php" class="nav-link px-3">
+                                    <span class="me-2">Car Appearance</span>
                                 </a>
                             </li>
                         </ul>

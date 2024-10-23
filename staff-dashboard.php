@@ -272,7 +272,7 @@ mysqli_close($connection);
                     </a>
                 </li>
                 <li class="">
-                    <a href="staff-profile.php" class="nav-link px-3">
+                    <a href="user-profile.php" class="nav-link px-3">
                         <span class="me-2"><i class="fas fa-user"></i></i></span>
                         <span class="start">PROFILE</span>
                     </a>

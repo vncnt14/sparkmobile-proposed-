@@ -352,8 +352,13 @@ $serviceData = mysqli_fetch_assoc($finish_result);
                             </a>
                         </li>
                         <li class="v-1">
-                            <a href="admin-database-finish-jobs" class="nav-link px-3">
+                            <a href="admin-database-finish-jobs.php" class="nav-link px-3">
                                 <span class="me-2">Finish jobs</span>
+                            </a>
+                        </li>
+                        <li class="v-1">
+                            <a href="admin-database-car-appearance.php" class="nav-link px-3">
+                                <span class="me-2">Car Appearance</span>
                             </a>
                         </li>
                     </ul>
@@ -388,6 +393,11 @@ $serviceData = mysqli_fetch_assoc($finish_result);
                             <li class="v-1">
                                 <a href="#" class="nav-link px-3">
                                     <span class="me-2">Payment History</span>
+                                </a>
+                            </li>
+                            <li class="v-1">
+                                <a href="admin-database-car-appearance.php" class="nav-link px-3">
+                                    <span class="me-2">Car Appearance</span>
                                 </a>
                             </li>
                         </ul>
