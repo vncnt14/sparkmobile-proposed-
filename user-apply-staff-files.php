@@ -13,6 +13,7 @@ if (!isset($_SESSION['username'])) {
 // Fetch user information based on ID
 $userID = $_SESSION['user_id'];
 $vehicle_id = $_SESSION['vehicle_id'];
+$shop_id = $_GET['shop_id'];
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
@@ -213,8 +214,7 @@ $shop_result = mysqli_query($connection, $shop_query);
     }
     
     .apply-staff:hover{
-        background-color: orangered;
-        delay: 
+        background-color: orangered; 
     }
     .asterisk{
         color: red;
@@ -431,6 +431,7 @@ $shop_result = mysqli_query($connection, $shop_query);
                     <div class="col-md-8 mt-5">
                         <a href="user-apply-staff.php"><button type="button" class="btn btn-primary mb-5">Back</button></a>
                         <input type="hidden" name="user_id" id="user_id" value="<?php echo $userData['user_id'];?>">
+                        <input type="hidden" name="shop_id" id="shop_id" value="<?php echo $shop_id;?>">
                         <h5>Upload Cover Letter <span class="asterisk">*</span></h5>
                         <input type="file" name="coverletter" id="coverletter" class="form-control">
                         <label for="coverletter">You can scan the cover letter and upload it here only if it's written</label>

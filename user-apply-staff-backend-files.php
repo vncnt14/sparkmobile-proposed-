@@ -8,7 +8,8 @@ $uploadDir = 'uploads/';
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Initialize file paths
-    $user_id = $_POST['user_id'];
+    $user_id = isset($_POST['user_id']) ? $_POST['user_id'] : null;
+    $shop_id = isset($_POST['shop_id']) ? $_POST['shop_id'] : null;
     $coverletterPath = null;
     $resumePath = null;
     $otherdocumentsPath = null;
@@ -38,25 +39,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Prepare SQL statement to insert file paths into the database
-    $stmt = $connection->prepare("UPDATE application SET coverletter=?, resume=?, otherdocuments=? WHERE user_id= ?");
+    $stmt = $connection->prepare("UPDATE application SET coverletter=?, resume=?, otherdocuments=? WHERE user_id= ? AND shop_id= ?");
 
     if ($stmt === false) {
         die("Error preparing statement: " . $connection->error);
     }
 
     // Bind parameters (use 's' for strings)
-    $stmt->bind_param("ssss", $coverletterPath, $resumePath, $otherdocumentsPath, $user_id);
+    $stmt->bind_param("sssii", $coverletterPath, $resumePath, $otherdocumentsPath, $user_id, $shop_id);
 
     // Execute the statement
     if ($stmt->execute()) {
         echo '<script language="javascript">';
         echo 'alert("Files Uploaded Successfully!");';
-        echo 'window.location="user-apply-staff-files.php?user_id=' . $user_id . '";'; 
+        echo 'window.location="user-apply-staff-files.php?user_id=' . $user_id . '&shop_id=' . $shop_id . '";'; 
         echo '</script>';
     } else {
         echo '<script language="javascript">';
         echo 'alert("Error saving file paths to the database.");';
-        echo 'window.location="user-apply-staff-files.php?user_id=' . $user_id . '";'; 
+        echo 'window.location="user-apply-staff-files.php?user_id=' . $user_id . '&shop_id=' . $shop_id . '";'; 
         echo '</script>';
     }
 

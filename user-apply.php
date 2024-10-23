@@ -23,7 +23,6 @@ $userData = mysqli_fetch_assoc($result);
 
 $shop_query = "SELECT * FROM shops";
 $shop_result = mysqli_query($connection, $shop_query);
-$shopData = mysqli_fetch_assoc($result);
 
 
 
@@ -206,15 +205,60 @@ $shopData = mysqli_fetch_assoc($result);
 
 
     .card {
-      max-width: 400px;
-      margin: 20px auto;
-      padding: 20px;
-      text-align: center;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        margin: 20px auto;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .apply-staff:hover {
+        background-color: orangered;
+    }
+
+    .bi-star-fill {
+        color: orangered;
+    }
+
+    .ratings {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .ratings .star {
+        color: orangered;
+        font-size: 1.5em;
+        margin-right: 5px;
+    }
+
+    .ratings .rating-value {
+        font-size: 1.2em;
+        margin-left: 12px;
+        color: #666;
+    }
+    .card {
+        width: 18rem; /* Set a smaller width for the card */
+        height: auto; /* Let the height adjust based on content */
+        margin: 0 auto; /* Center the card horizontally if needed */
     }
     
-    .apply-staff:hover{
-        background-color: orangered;
+    .card-img-top {
+        height: 200px; /* Adjust the height of the image */
+        object-fit: cover; /* Crop the image if necessary */
+    }
+    
+    .card-body {
+        padding: 10px; /* Adjust padding inside the card */
+    }
+    
+    .card-title {
+        font-size: 1.2rem; /* Adjust the title font size */
+    }
+    
+    .btn {
+        padding: 5px 10px; /* Adjust button size */
+        font-size: 0.9rem; /* Reduce button font size */
     }
 </style>
 
@@ -232,22 +276,33 @@ $shopData = mysqli_fetch_assoc($result);
             </button>
             <div class="collapse navbar-collapse" id="topNavBar">
                 <form class="d-flex ms-auto my-3 my-lg-0">
-                    </form>
-                    <ul class="navbar-nav">
-                        
-                        <li class="nav-item dropdown">
-                            <li class="">
-                                <a href="csnotification.php" class="nav-link px-3">
-                                    <span class="me-2"><i class="fas fa-bell"></i></i></span>
-                                </a>
-                            </li>
-                            <a class="nav-link dropdown-toggle ms-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-person-fill"></i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#">Profile</a></li>
-                                <li><a class="dropdown-item" href="#">Visual</a></li>
-                                <li>
+                </form>
+                <ul class="navbar-nav">
+                    <div class="dropdown">
+                        <a class="apply-staff navbar-brand me-5 ms-lg-5 text-uppercase dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                            Apply as Staff
+                        </a>
+
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <li><a class="dropdown-item" href="user-apply.php?role=cashier">Cashier</a></li>
+                            <li><a class="dropdown-item" href="user-apply.php?role=manager">Manager</a></li>
+                            <li><a class="dropdown-item" href="user-apply.php?role=car_wash_staff">Car Wash Staff</a></li>
+                        </ul>
+                    </div>
+
+                    <li class="nav-item dropdown">
+                    <li class="">
+                        <a href="csnotification.php" class="nav-link px-3">
+                            <span class="me-2"><i class="fas fa-bell"></i></i></span>
+                        </a>
+                    </li>
+                    <a class="nav-link dropdown-toggle ms-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-person-fill"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#">Profile</a></li>
+                        <li><a class="dropdown-item" href="#">Visual</a></li>
+                        <li>
                             <a class="dropdown-item" href="logout.php">Log out</a>
                         </li>
                     </ul>
@@ -304,7 +359,7 @@ $shopData = mysqli_fetch_assoc($result);
                     <div class="collapse" id="layouts">
                         <ul class="navbar-nav ps-3">
                             <li class="v-1">
-                                <a href="setappoinment.php" class="nav-link px-3">
+                                <a href="user-appoinment.php" class="nav-link px-3">
                                     <span class="me-2">Appointments</span>
                                 </a>
                             </li>
@@ -403,9 +458,9 @@ $shopData = mysqli_fetch_assoc($result);
                     <a href=""><button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button></a>
                     <a href="logout.php"><button type="button" class="btn btn-primary" id="confirmLogout">Logout</button></a>
                 </div>
-                </div>
             </div>
         </div>
+    </div>
     </div>
     </div>
     <!-- main content -->
@@ -440,6 +495,7 @@ $shopData = mysqli_fetch_assoc($result);
                     echo '<ul class="list-group">';
                     while ($row = $result->fetch_assoc()) {
                         echo '<div class="list-group-item">';
+                        echo '<a href="user-dashboard-select-shop.php?shop_id=' . urlencode($row["shop_id"]) . '" class="text-decoration-none list-group-item-action">';
                         echo '<h5>' . htmlspecialchars($row["shop_name"]) . '</h5>';
                         echo '<p>' . htmlspecialchars($row["barangay"]) . '</p>';
                         echo '</div>';
@@ -457,9 +513,9 @@ $shopData = mysqli_fetch_assoc($result);
 
 
         <div>
-            <h2 class="ms-3 text-dark text-center mt-3">Choose Shops you want to apply</h2>
+            <h2 class="ms-3 text-dark text-center mt-3">Hiring Shops Near You</h2>
         </div>
-        
+
         <div class="container mt-3 text-dark">
 
             <div class="row">
@@ -469,10 +525,20 @@ $shopData = mysqli_fetch_assoc($result);
                             <div class="card">
 
                                 <img src="<?php echo htmlspecialchars($shopData['profile']); ?>" class="card-img-top" alt="<?php echo htmlspecialchars($shopData['shop_name']); ?> Profile Image">
-                                <h5 class="card-title text-center"><?php echo htmlspecialchars($shopData['shop_name']); ?></h5>
-                                <p>hiring</p>
+                                <h5 class="card-title text-center mb-5"><?php echo htmlspecialchars($shopData['shop_name']); ?></h5>
+                                <p>Hiring</p>
+                                <div class="container">
+                                    <div class="ratings justify-content-center">
+                                        <i class="bi-star-fill"></i>
+                                        <i class="bi-star-fill"></i>
+                                        <i class="bi-star-fill"></i>
+                                        <i class="bi-star-fill"></i>
+                                        <i class="bi-star-fill"></i>
+                                        <span class="rating-value">5.0</span>
+                                    </div>
+                                </div>
                                 <div class="card-body">
-                                    <center><a href="user-apply-staff.php?shop_id=<?php echo $shopData['shop_id'];?>"><button type="button" class="btn btn-primary">Apply Shop</button></a></center>
+                                    <center><a class="btn btn-primary" href="user-apply-staff.php?shop_id=<?php echo $shopData['shop_id']; ?>">Apply Shop</a></center>
                                 </div>
                             </div>
                         </div>
@@ -489,7 +555,7 @@ $shopData = mysqli_fetch_assoc($result);
 
 
     </main>
-    
+
 
     <script src="./js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
@@ -502,7 +568,7 @@ $shopData = mysqli_fetch_assoc($result);
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
 
 
-   
+
 
     <script>
         $(document).ready(function() {

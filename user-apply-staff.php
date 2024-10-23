@@ -13,6 +13,7 @@ if (!isset($_SESSION['username'])) {
 // Fetch user information based on ID
 $userID = $_SESSION['user_id'];
 $vehicle_id = $_SESSION['vehicle_id'];
+$shop_id = $_GET['shop_id'];
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
@@ -431,8 +432,8 @@ $shopData = mysqli_fetch_assoc($shop_result);
                         <h5>Name <span class="asterisk">*</span></h5>
                         <div class="row">
                             <div class="col-md-6">
-                                <input type="hidden" id="user_id" name="user_id" value="<?php echo $userData['user_id'];?>">
-                                <input type="hidden" id="shop_id" name="shop_id" value="<?php echo $shopData['shop_id'];?>">
+                                <input type="hidden" id="user_id" name="user_id" value="<?php echo $userID;?>">
+                                <input type="hidden" id="shop_id" name="shop_id" value="<?php echo $shop_id;?>">
                                 <input type="text" id="firstname" name="firstname" class="form-control" value="<?php echo $userData['firstname'];?>" readonly>
                                 <label for="firstname">First Name</label>
                             </div>
