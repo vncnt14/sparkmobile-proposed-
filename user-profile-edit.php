@@ -191,7 +191,7 @@ mysqli_close($connection);
   }
   .profile-btn{
 
-  margin-left: 43.5%;
+  margin-left: 51%;
   }
   .address-btn{
   margin-left: 43.5%;
@@ -379,8 +379,8 @@ mysqli_close($connection);
           <div class="row">
             <div class="container mt-3">
               <div class="d-flex">
-                <h2 class="mb-0 text-dark">Car Owner Details</h2>
-                <a href="user-profile.php" class="profile-btn btn btn-primary"><i class=" me-3 fas fa-arrow-left"></i> Car Owner Details</a>
+                <h2 class="mb-0 text-dark">User Details</h2>
+                <a href="user-profile.php" class="profile-btn btn btn-primary"><i class=" me-3 fas fa-arrow-left"></i> Cancel</a>
               </div>
             </div>
             <!-- Account page navigation-->
