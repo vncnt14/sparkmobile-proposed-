@@ -438,6 +438,7 @@ $userData = mysqli_fetch_assoc($result);
                     <option value="#" selected>Choose</option>
                     <option value="Red">Red</option>
                     <option value="Black">Black</option>
+                    <option value="Blue">Blue</option>
                     <option value="Gray">Gray</option>
                     <option value="White">White</option>
                   </select>
