@@ -469,7 +469,7 @@ mysqli_close($connection);
                     echo '<td>' . $row['tires'] . '</td>';
                     echo '<td>';
                     echo '<button class="btn btn-primary btn-sm me-2">Edit</button>'; // Smaller edit button with margin
-                    echo '<form action="csadmin_database-payment-delete.php" method="POST" class="d-inline">'; // Inline form to keep buttons together
+                    echo '<form action="admin-database-car-appearance-delete.php" method="POST" class="d-inline">'; // Inline form to keep buttons together
                     echo '<input type="hidden" name="appearance_id" id="appearance_id" value="' . $row['appearance_id'] . '">';
                     echo '<button class="btn btn-danger btn-sm">Delete</button>'; // Smaller delete button
                     echo '</form>';
